@@ -1,0 +1,40 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./database.sqlite"
+}
+
+model User {
+  userId         String    @id
+  tasksCompleted Int       @default(0)
+  totalPoints    Int       @default(0)
+  Faction        Faction[]
+}
+
+model Guild {
+  guildId      String @id
+  prefix       String @default(">")
+  eventManager String @default("0")
+  staff        String @default("0")
+  moderator    String @default("0")
+  admin        String @default("0")
+}
+
+model Faction {
+  factionId Int    @id @unique @default(autoincrement())
+  owner     User   @relation(fields: [userUserId], references: [userId])
+  ownerId   String
+  level     Int    @default(0)
+
+  tag         String
+  description String
+  name        String @unique
+
+  userUserId String
+}
