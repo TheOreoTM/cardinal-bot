@@ -5,8 +5,8 @@ import { container } from '@sapphire/framework';
 import { cast } from '@sapphire/utilities';
 import { RESTJSONErrorCodes } from 'discord-api-types/v9';
 import { DiscordAPIError } from 'discord.js';
-import { BaseController } from './BaseController';
-import type { BaseReactionGame } from './BaseReactionGame';
+import { BaseController } from './BaseController.js';
+import type { BaseReactionGame } from './BaseReactionGame.js';
 
 export abstract class BaseReactionController<T> extends BaseController<T> {
 	public readonly userId: string;

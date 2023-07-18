@@ -2,9 +2,9 @@ import { BucketScope, LogLevel, type ClientLoggerOptions, type CooldownOptions, 
 import type { ScheduledTaskHandlerOptions } from '@sapphire/plugin-scheduled-tasks';
 import type { RedisOptions } from 'bullmq';
 import { ActivityType, GatewayIntentBits, Partials, type ClientOptions, type MessageMentionOptions, type PresenceData } from 'discord.js';
-import { BotPrefix, CooldownFiltered } from './constants';
+import { BotPrefix, CooldownFiltered } from '#constants';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
-import { seconds } from './common';
+import { seconds } from '#utils/common';
 
 export const Presence = {
 	activities: [{ name: `for ${BotPrefix}help`, type: ActivityType.Watching }],

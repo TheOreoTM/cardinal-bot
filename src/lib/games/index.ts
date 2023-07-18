@@ -1,3 +1,3 @@
-export * from './HungerGamesUsage';
-export * from './TriviaManager';
-export * from './hungerGamesMessages';
+export * from './HungerGamesUsage.js';
+export * from './TriviaManager.js';
+export * from './hungerGamesMessages.js';

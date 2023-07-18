@@ -1,42 +1,18 @@
 import { CardinalColors, CardinalEmojis } from '#constants';
 import { CardinalEmbedStyles } from '#lib/types';
-import { type EmbedData, type APIEmbed, EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, type APIEmbed, type EmbedData } from 'discord.js';
 
 export class CardinalEmbedBuilder extends EmbedBuilder {
 	readonly style: CardinalEmbedStyle = CardinalEmbedStyles.Default;
+
 	public constructor(data?: EmbedData | APIEmbed) {
 		super(data);
 	}
 
-	public setDescription(description: string | null): this {
-		switch (this.style) {
-			case 'default':
-				super.setDescription(description);
-				break;
-			case 'success':
-				super.setDescription(`***${CardinalEmojis.Success} ${description}***`);
-				break;
-			case 'fail':
-				super.setDescription(`${CardinalEmojis.Fail} ${description}`);
-				break;
-			case 'info':
-				super.setDescription(`${CardinalEmojis.Info} ${description}`);
-				break;
-			case 'loading':
-				super.setDescription(`${CardinalEmojis.Loading} ${description}`);
-				break;
-			default:
-				this.setDescription(description);
-				break;
-		}
-		return this;
-	}
-
-	public setStyle(style: CardinalEmbedStyle): this {
+	setStyle(style: CardinalEmbedStyle): this {
 		switch (style) {
 			case 'default':
 			case 'loading':
-			case 'info':
 				super.setColor(CardinalColors.Default);
 				break;
 			case 'success':
@@ -45,10 +21,31 @@ export class CardinalEmbedBuilder extends EmbedBuilder {
 			case 'fail':
 				super.setColor(CardinalColors.Fail);
 				break;
-			case 'info':
-				break;
 			default:
 				super.setColor(CardinalColors.Default);
+				break;
+		}
+		return this;
+	}
+
+	setDescription(description: string | null): this {
+		switch (this.data.color) {
+			case CardinalColors.Default:
+				super.setDescription(description);
+				break;
+			case CardinalColors.Success:
+				return super.setDescription(`***${CardinalEmojis.Success} ${description}***`);
+			case CardinalColors.Fail:
+				super.setDescription(`${CardinalEmojis.Fail} ${description}`);
+				break;
+			case CardinalColors.Default:
+				super.setDescription(`${CardinalEmojis.Info} ${description}`);
+				break;
+			case CardinalColors.Default:
+				super.setDescription(`${CardinalEmojis.Loading} ${description}`);
+				break;
+			default:
+				super.setDescription(description);
 				break;
 		}
 		return this;

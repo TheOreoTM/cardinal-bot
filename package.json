@@ -1,11 +1,13 @@
 {
 	"name": "cardinal-bot",
 	"version": "1.0.0",
-	"main": "dist/index.js",
+	"main": "./dist/index.js",
 	"author": "@sapphire",
 	"license": "UNLICENSE",
-	"type": "commonjs",
+	"type": "module",
 	"imports": {
+		"#config": "./dist/config.js",
+		"#constants": "./dist/lib/util/constants.js",
 		"#lib/*": "./dist/lib/*.js",
 		"#lib/structures": "./dist/lib/structures/index.js",
 		"#lib/discord": "./dist/lib/discord/index.js",
@@ -14,9 +16,7 @@
 		"#utils/*": "./dist/lib/util/*.js",
 		"#utils/common": "./dist/lib/util/common/index.js",
 		"#utils/functions": "./dist/lib/util/functions/index.js",
-		"#root/*": "./dist/*.js",
-		"#config": "./dist/lib/util/config.js",
-		"#constants": "./dist/lib/util/constants.js"
+		"#root/*": "./dist/*.js"
 	},
 	"dependencies": {
 		"@prisma/client": "^5.0.0",
@@ -53,10 +53,10 @@
 	"scripts": {
 		"sapphire": "sapphire",
 		"generate": "sapphire generate",
-		"build": "tsc",
+		"build": "tsc -b src",
 		"watch": "tsc -w",
 		"start": "node dist/index.js",
-		"dev": "npm run build && npm run start",
+		"dev": "yarn build && yarn start",
 		"watch:start": "tsc-watch --onSuccess \"npm run start\"",
 		"format": "prettier --write \"src/\""
 	},

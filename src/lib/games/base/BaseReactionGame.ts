@@ -3,7 +3,7 @@ import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector'
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Message } from 'discord.js';
 import type { BaseController } from './BaseController';
-import { BaseGame } from './BaseGame';
+import { BaseGame } from './BaseGame.js';
 import { CardinalEmbedBuilder } from '#lib/structures';
 
 export abstract class BaseReactionGame<T> extends BaseGame<T> {

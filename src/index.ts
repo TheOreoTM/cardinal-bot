@@ -1,6 +1,6 @@
 // Setup
-import './lib/setup';
-import { CardinalClient } from './lib/CardinalClient';
+import '#lib/setup';
+import { CardinalClient } from '#lib/CardinalClient';
 
 const client = new CardinalClient();
 

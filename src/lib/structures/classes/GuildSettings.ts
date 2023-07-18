@@ -1,5 +1,5 @@
 import type { Guild } from 'discord.js';
-import { RoleConfig } from './RolesConfig';
+import { RoleConfig } from '#lib/structures';
 
 export class GuildSettings {
 	public roles: RoleConfig;

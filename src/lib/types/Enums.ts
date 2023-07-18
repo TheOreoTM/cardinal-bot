@@ -1,4 +1,5 @@
 import { Events } from '@sapphire/framework';
+import { SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
 
 export const enum PermissionLevels {
 	Everyone = 0,
@@ -11,6 +12,7 @@ export const enum PermissionLevels {
 
 export const CardinalEvents = {
 	...Events,
+	...SubcommandPluginEvents,
 	RawReactionAdd: 'rawReactionAdd'
 	// TODO: Add custom events here
 };

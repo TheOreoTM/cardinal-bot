@@ -19,9 +19,3 @@ export class UserPrecondition extends Precondition {
 		return interaction.guild ? this.ok() : this.error({ message: this.#message });
 	}
 }
-
-declare module '@sapphire/framework' {
-	interface Preconditions {
-		GuildOnly: never;
-	}
-}

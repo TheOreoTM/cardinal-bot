@@ -1,3 +1,4 @@
-export * from './GuildSettings';
-export * from './RolesConfig';
-export * from './CardinalEmbedBuilder';
+export * from './GuildSettings.js';
+export * from './RolesConfig.js';
+export * from './CardinalEmbedBuilder.js';
+export * from './Faction.js';

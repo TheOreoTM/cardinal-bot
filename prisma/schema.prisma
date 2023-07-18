@@ -6,15 +6,24 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = "file:./database.sqlite"
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-  userId         String    @id
-  tasksCompleted Int       @default(0)
-  totalPoints    Int       @default(0)
-  Faction        Faction[]
+  id                     BigInt          @id @unique @default(autoincrement())
+  userId                 String          @unique
+  tasksCompletedLifetime Int             @default(0)
+  tasksCompleted         Int             @default(0)
+  pointsEarnedLifetime   Int             @default(0)
+  pointsEarned           Int             @default(0)
+  positionInFaction      FactionPosition @default(member)
+  factionId              BigInt?
+  faction                Faction?        @relation(fields: [factionId], references: [id])
+  createdAt              DateTime        @default(now())
+
+  @@index([userId])
+  @@index([factionId])
 }
 
 model Guild {
@@ -27,14 +36,34 @@ model Guild {
 }
 
 model Faction {
-  factionId Int    @id @unique @default(autoincrement())
-  owner     User   @relation(fields: [userUserId], references: [userId])
-  ownerId   String
-  level     Int    @default(0)
-
+  id          BigInt        @id @unique @default(autoincrement())
+  ownerId     String
+  level       Int           @default(0)
+  status      FactionStatus @default(open)
   tag         String
   description String
-  name        String @unique
+  name        String        @unique
+  members     User[]
+  createdAt   DateTime      @default(now())
+}
 
-  userUserId String
+model Blacklist {
+  id        BigInt   @id @default(autoincrement())
+  userId    String   @unique
+  reason    String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum FactionStatus {
+  open
+  restricted
+  closed
+}
+
+enum FactionPosition {
+  member
+  senior
+  co_leader
+  leader
 }

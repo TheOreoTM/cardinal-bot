@@ -1,3 +1,4 @@
+import type { CardinalClient } from '#lib/CardinalClient';
 import {
 	container,
 	type ChatInputCommandSuccessPayload,
@@ -7,7 +8,7 @@ import {
 } from '@sapphire/framework';
 import { cyan } from 'colorette';
 import type { APIUser, Guild, User } from 'discord.js';
-import { ZeroWidthSpace } from './constants';
+import { ZeroWidthSpace } from '#constants';
 
 /**
  * Shuffles an array, returning it
@@ -91,4 +92,18 @@ function getAuthorInfo(author: User | APIUser) {
 function getGuildInfo(guild: Guild | null) {
 	if (guild === null) return 'Direct Messages';
 	return `${guild.name}[${cyan(guild.id)}]`;
+}
+
+export async function mention(command: string, client: CardinalClient) {
+	const commands = await (await client.application?.fetch())?.commands.fetch();
+
+	if (!commands) throw new Error('Failed to fetch commands!');
+
+	const commandNames = command.split(' ');
+
+	const slash = commands.find((c) => c.name === commandNames[0]);
+
+	if (!slash) return `/${command}`;
+
+	return `</${command}:${slash.id}>`;
 }

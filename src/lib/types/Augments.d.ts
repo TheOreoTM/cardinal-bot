@@ -1,6 +1,6 @@
 import type { PrismaClient } from '@prisma/client';
 import type { ArrayString, NumberString } from '@skyra/env-utilities';
-import type { GuildSettings } from '../structures';
+import type { GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User } from 'discord.js';
 
@@ -26,6 +26,9 @@ declare module '@sapphire/pieces' {
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
+		GuildOnly: never;
+		OwnerMode: never;
+		Blacklisted: never;
 		BotOwner: never;
 		Everyone: never;
 		Trainee: never;
@@ -36,6 +39,7 @@ declare module '@sapphire/framework' {
 		ServerOwner: never;
 		Community: never;
 	}
+
 	export interface DetailedDescriptionCommand {
 		usages?: string[];
 		extendedHelp?: string;

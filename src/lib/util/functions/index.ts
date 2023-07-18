@@ -1,3 +1,3 @@
-export * from './messages';
-export * from './permissions';
-export * from './emojis';
+export * from './messages.js';
+export * from './permissions.js';
+export * from './emojis.js';

@@ -11,7 +11,7 @@ import {
 	type PreconditionResult
 } from '@sapphire/framework';
 import type { CommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
-import { CardinalCommand } from '../commands';
+import { CardinalCommand } from '#lib/structures';
 
 export abstract class PermissionsPrecondition extends Precondition {
 	private readonly guildOnly: boolean;

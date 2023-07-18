@@ -5,6 +5,7 @@ node_modules/
 *.iml
 .prettierignore
 .sapphirerc.json
+.templates/
 
 # Yarn files
 .yarn/install-state.gz

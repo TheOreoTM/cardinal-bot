@@ -1,25 +1,9 @@
-import {
-	ApplicationCommandRegistry,
-	Command,
-	CommandOptionsRunTypeEnum,
-	PreconditionContainerArray,
-	Args as SapphireArgs,
-	UserError,
-	type MessageCommandContext
-} from '@sapphire/framework';
-import {
-	AutocompleteInteraction,
-	ContextMenuCommandInteraction as CTXMenuCommandInteraction,
-	ChatInputCommandInteraction as ChatInputInteraction,
-	Message,
-	MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
-	PermissionFlagsBits,
-	PermissionsBitField,
-	UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction
-} from 'discord.js';
-import type { GuildMessage } from '#lib/types';
-import { PermissionLevels } from '#lib/types';
-export abstract class CardinalCommand extends Command {
+import { PermissionLevels, type GuildMessage } from '#lib/types';
+import { CommandOptionsRunTypeEnum, PreconditionContainerArray, UserError, Command, Args as SapphireArgs } from '@sapphire/framework';
+import { Subcommand, type SubcommandOptions } from '@sapphire/plugin-subcommands';
+import { PermissionFlagsBits, PermissionsBitField, type CacheType } from 'discord.js';
+
+export abstract class CardinalSubcommand extends Subcommand {
 	/**
 	 * Whether the command can be disabled.
 	 */
@@ -37,7 +21,7 @@ export abstract class CardinalCommand extends Command {
 	 */
 	public readonly community?: boolean;
 
-	public constructor(context: Command.Context, options: CardinalCommand.Options) {
+	public constructor(context: CardinalSubcommand.Context, options: CardinalSubcommand.Options) {
 		const perms = new PermissionsBitField(options.requiredClientPermissions).add(
 			PermissionFlagsBits.SendMessages,
 			PermissionFlagsBits.EmbedLinks,
@@ -55,15 +39,11 @@ export abstract class CardinalCommand extends Command {
 			(this.community = options.community ?? false);
 	}
 
-	public async prefix(message: Message) {
-		return await this.container.client.fetchPrefix(message);
+	protected error(identifier: string | UserError, context?: unknown): never {
+		throw typeof identifier === 'string' ? new UserError({ identifier, context }) : identifier;
 	}
 
-	protected error(message: string | UserError, context?: unknown): never {
-		throw typeof message === 'string' ? new UserError({ identifier: 'Error', message, context }) : message;
-	}
-
-	protected override parseConstructorPreConditions(options: CardinalCommand.Options): void {
+	protected parseConstructorPreConditions(options: CardinalSubcommand.Options): void {
 		super.parseConstructorPreConditions(options);
 		this.parseConstructorPreConditionsPermissionLevel(options);
 		if (options.community) {
@@ -71,7 +51,7 @@ export abstract class CardinalCommand extends Command {
 		}
 	}
 
-	protected parseConstructorPreConditionsPermissionLevel(options: CardinalCommand.Options): void {
+	protected parseConstructorPreConditionsPermissionLevel(options: CardinalSubcommand.Options): void {
 		if (options.permissionLevel === PermissionLevels.BotOwner) {
 			this.preconditions.append('BotOwner');
 			return;
@@ -93,18 +73,18 @@ export abstract class CardinalCommand extends Command {
 				break;
 			default:
 				throw new Error(
-					`CardinalCommand[${this.name}]: "permissionLevel" was specified as an invalid permission level (${options.permissionLevel}).`
+					`CardinalSubcommand[${this.name}]: "permissionLevel" was specified as an invalid permission level (${options.permissionLevel}).`
 				);
 		}
 
 		this.preconditions.append(container);
 	}
 }
-export namespace CardinalCommand {
+export namespace CardinalSubcommand {
 	/**
-	 * The CardinalCommand Options
+	 * The CardinalSubcommand Options
 	 */
-	export type Options = Command.Options & {
+	export type Options = SubcommandOptions & {
 		/**
 		 * Whether the command can be disabled.
 		 */
@@ -122,15 +102,13 @@ export namespace CardinalCommand {
 		 */
 		community?: boolean;
 	};
-	export type MessageContext = MessageCommandContext;
-	export type ChatInputCommandInteraction = ChatInputInteraction<'cached'>;
-	export type ContextMenuCommandInteraction = CTXMenuCommandInteraction<'cached'>;
-	export type UserContextMenuCommandInteraction = UserCTXMenuCommandInteraction<'cached'>;
-	export type MessageContextMenuCommandInteraction = MessageCTXCommandInteraction<'cached'>;
-	export type AutoComplete = AutocompleteInteraction;
-	export type Context = MessageCommandContext;
-
 	export type Args = SapphireArgs;
 	export type Message = GuildMessage;
-	export type Registry = ApplicationCommandRegistry;
+	export type JSON = Command.JSON;
+	export type Context = Command.Context;
+	export type RunInTypes = Command.RunInTypes;
+	export type ChatInputCommandInteraction<Cached extends CacheType = CacheType> = Command.ChatInputCommandInteraction<Cached>;
+	export type ContextMenuCommandInteraction<Cached extends CacheType = CacheType> = Command.ContextMenuCommandInteraction<Cached>;
+	export type AutocompleteInteraction<Cached extends CacheType = CacheType> = Command.AutocompleteInteraction<Cached>;
+	export type Registry = Command.Registry;
 }

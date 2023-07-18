@@ -7,7 +7,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { EmbedBuilder, MessageCollector, type Message, type User } from 'discord.js';
-import { decode } from 'he';
+import * as he from 'he';
+const { decode } = he;
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Play a game of trivia',

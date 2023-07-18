@@ -1,4 +1,5 @@
 import { CardinalClient } from '#lib/CardinalClient';
+import type { CardinalCommand } from '#lib/structures';
 import type {
 	ButtonInteraction,
 	CommandInteraction,
@@ -53,3 +54,5 @@ export interface CardinalButtonInteraction extends ButtonInteraction {
 	readonly message: Message;
 	client: CardinalClient<true>;
 }
+
+export type InteractionOrMessage = Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction;

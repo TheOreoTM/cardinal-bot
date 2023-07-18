@@ -20,6 +20,8 @@ export class UserListener extends Listener {
 				return await sendTemporaryMessage(message, {
 					content: `${message.author}, a little too quick there. Wait ${ms(remaining)}`
 				});
+			} else if (error.identifier === 'NotRegistered') {
+				content = `Please register your account using \`${await this.container.client.fetchPrefix(message)}register\``;
 			} else if (error.identifier === 'argsMissing') {
 				content = `You are missing some arguments`;
 			} else if (error.identifier === 'argsUnavailable') {
@@ -42,8 +44,8 @@ export class UserListener extends Listener {
 				});
 			}
 
-			await sendTemporaryMessage(message, {
-				embeds: [new CardinalEmbedBuilder().setDescription(error.message).setTitle(error.identifier)]
+			return await sendTemporaryMessage(message, {
+				embeds: [new CardinalEmbedBuilder().setDescription(content === '' ? error.message : content).setTitle(error.identifier)]
 			});
 		}
 		return undefined;
