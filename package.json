@@ -57,11 +57,10 @@
 	"scripts": {
 		"sapphire": "sapphire",
 		"generate": "sapphire generate",
-		"build": "tsc -b src",
-		"watch": "tsc -w",
+		"build": "tsup",
+		"watch": "tsup --watch --onSuccess \"node ./dist/index.js\"",
 		"start": "node dist/index.js",
 		"dev": "npm run build && npm run start",
-		"watch:start": "tsc-watch --onSuccess \"npm run start\"",
 		"format": "prettier --write \"src/\"",
 		"prisma:push": "npx prisma db push",
 		"prisma:generate": "npx prisma generate"
