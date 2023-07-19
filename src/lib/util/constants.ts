@@ -1,5 +1,6 @@
 import { envParseArray, envParseString } from '@skyra/env-utilities';
 
+export const CardinalEpoch = 1689677721;
 export const ZeroWidthSpace = '\u200B';
 export const LongWidthSpace = '\u3000';
 

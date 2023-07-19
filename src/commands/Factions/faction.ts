@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { minutes } from '#utils/common';
+import { getUser } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { UserError } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -16,6 +17,7 @@ import {
 	type Interaction,
 	ComponentType
 } from 'discord.js';
+import randomatic from 'randomatic';
 
 @ApplyOptions<CardinalSubcommand.Options>({
 	name: 'faction',
@@ -67,6 +69,7 @@ export class factionCommand extends CardinalSubcommand {
 	}
 
 	public async messageFactionCreate(message: CardinalSubcommand.Message) {
+		// TODO: Remove this from this function and put it in a seperate function
 		const factionCreateModal = new ModalBuilder().setTitle('Create a Faction').setCustomId(`${message.author.id}-faction-create`);
 		const factionNameInput = new TextInputBuilder()
 			.setCustomId('factionNameInput')
@@ -92,9 +95,9 @@ export class factionCommand extends CardinalSubcommand {
 
 		const factionInvitionTypeSelectMenu = new StringSelectMenuBuilder()
 			.setCustomId('factionInvitionType')
-			.setPlaceholder('open')
+			.setPlaceholder('Pick your faction status type...')
 			.addOptions(
-				new StringSelectMenuOptionBuilder().setLabel('Open').setValue('open').setDescription('Anyone can join this faction').setDefault(true),
+				new StringSelectMenuOptionBuilder().setLabel('Open').setValue('open').setDescription('Anyone can join this faction'),
 				new StringSelectMenuOptionBuilder()
 					.setLabel('Invite Only')
 					.setValue('restricted')
@@ -135,9 +138,9 @@ export class factionCommand extends CardinalSubcommand {
 
 				if (submitted) {
 					const { fields } = submitted;
-					const factionEmbed = new CardinalEmbedBuilder()
-						.setTitle(fields.getTextInputValue('factionNameInput'))
-						.setDescription(fields.getTextInputValue('factionDescriptionInput'));
+					const description = fields.getTextInputValue('factionDescriptionInput');
+					const name = fields.getTextInputValue('factionNameInput');
+					const factionEmbed = new CardinalEmbedBuilder().setTitle(name).setDescription(description);
 					const selectmenu = await submitted.reply({ embeds: [factionEmbed], components: components });
 
 					const confirmation = await selectmenu.awaitMessageComponent({
@@ -156,6 +159,21 @@ export class factionCommand extends CardinalSubcommand {
 						await selectmenu.edit({ embeds: [embed], components: [] });
 
 						// TODO: Make factions
+						const user = await getUser(message.author.id, { faction: true });
+						if (!user)
+							throw new UserError({
+								message: 'Something is wrong, it seems you dont exist. Try re-registering.',
+								identifier: 'UserNotFound'
+							});
+						const factionTag = randomatic('Aa0', 8);
+						const faction = await this.container.db.faction.create({
+							data: { description, name, ownerId: message.author.id, tag: factionTag }
+						});
+						user.factionId = faction.id;
+						await this.container.db.user.update({
+							where: { userId: message.author.id },
+							data: { positionInFaction: 'leader', factionId: faction.id }
+						});
 					}
 				}
 			}

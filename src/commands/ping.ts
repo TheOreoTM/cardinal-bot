@@ -1,7 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
 import { ApplicationCommandType, Message } from 'discord.js';
-import { BotOwner, CooldownFiltered } from '#constants';
 
 @ApplyOptions<Command.Options>({
 	description: 'ping pong'
@@ -30,7 +29,6 @@ export class UserCommand extends Command {
 
 	// Message command
 	public async messageRun(message: Message) {
-		message.channel.send(`${CooldownFiltered} || ${BotOwner}`);
 		return this.sendPing(message);
 	}
 

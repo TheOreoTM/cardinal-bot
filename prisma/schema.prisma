@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,18 +8,17 @@ datasource db {
 }
 
 model User {
-  id                     BigInt          @id @unique @default(autoincrement())
+  id                     Int             @id @default(sequence(maxValue: 4294967295))
   userId                 String          @unique
   tasksCompletedLifetime Int             @default(0)
   tasksCompleted         Int             @default(0)
   pointsEarnedLifetime   Int             @default(0)
   pointsEarned           Int             @default(0)
   positionInFaction      FactionPosition @default(member)
-  factionId              BigInt?
   faction                Faction?        @relation(fields: [factionId], references: [id])
+  factionId              Int?
   createdAt              DateTime        @default(now())
 
-  @@index([userId])
   @@index([factionId])
 }
 
@@ -36,7 +32,7 @@ model Guild {
 }
 
 model Faction {
-  id          BigInt        @id @unique @default(autoincrement())
+  id          Int           @id @default(sequence(maxValue: 4294967295))
   ownerId     String
   level       Int           @default(0)
   status      FactionStatus @default(open)
@@ -44,11 +40,12 @@ model Faction {
   description String
   name        String        @unique
   members     User[]
-  createdAt   DateTime      @default(now())
+
+  createdAt DateTime @default(now())
 }
 
 model Blacklist {
-  id        BigInt   @id @default(autoincrement())
+  id        Int      @id @default(sequence(maxValue: 4294967295))
   userId    String   @unique
   reason    String   @default("")
   createdAt DateTime @default(now())
@@ -66,4 +63,9 @@ enum FactionPosition {
   senior
   co_leader
   leader
+}
+
+enum crdb_internal_region {
+  aws_ap_southeast_1 @map("aws-ap-southeast-1")
+  aws_us_west_2      @map("aws-us-west-2")
 }

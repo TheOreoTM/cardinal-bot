@@ -48,6 +48,7 @@ export class registerCommand extends CardinalCommand {
 		}
 
 		const newUser = await this.container.db.user.create({ data: { userId: user.id } });
+		console.log(newUser);
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('success')
 			.setDescription(`You are now successfully registered. Welcome to Cardinal, user \`#${newUser.id}\`.`);
