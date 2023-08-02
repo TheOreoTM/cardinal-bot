@@ -5,13 +5,13 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<ModerationCommand.Options>({
-	description: '',
+	description: 'View modlogs of a user',
 	name: 'modlogs',
 	aliases: ['ml', 'modlog'],
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'View all the actions a moderator has performed on a user (modnicks, warns, mutes, bans, etc)',
+		usages: ['', 'User'],
+		examples: ['', '@Oreo']
 	}
 })
 export class modlogCommand extends ModerationCommand {

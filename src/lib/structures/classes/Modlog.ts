@@ -105,8 +105,6 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	}
 
 	public async createMute(data: MuteCreateInput) {
-		if (!data.expiresAt) return this;
-
 		await container.db.mute.create({
 			data: {
 				expiresAt: data.expiresAt,
@@ -130,8 +128,6 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	}
 
 	public async createBan(data: BanCreateInput) {
-		if (!data.expiresAt) return this;
-
 		await container.db.ban.create({
 			data: {
 				expiresAt: data.expiresAt,

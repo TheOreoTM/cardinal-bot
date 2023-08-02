@@ -10,6 +10,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 	detailedDescription: {
 		extendedHelp: 'Remove a warn from a user',
 		usages: ['WarnID Reason', 'WarnID'],
+		explainedUsage: [['WarnID', 'The Id of the warn (eg: *`5008509a-d4ce-4947-8796-ac3e285244ca`*)']],
 		examples: ['a721251f-201a-4f40-b364-23d436ea67b1 wrong person', '5008509a-d4ce-4947-8796-ac3e285244ca']
 	}
 })

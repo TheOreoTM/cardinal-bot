@@ -1,5 +1,6 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { Command } from '@sapphire/framework';
+import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationCommandType, Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
@@ -48,7 +49,7 @@ export class UserCommand extends Command {
 	private async sendPing(interactionOrMessage: Message | Command.ChatInputCommandInteraction | Command.ContextMenuCommandInteraction) {
 		const pingMessage =
 			interactionOrMessage instanceof Message
-				? await interactionOrMessage.channel.send({ content: 'Ping?' })
+				? await send(interactionOrMessage, { content: 'Ping?' })
 				: await interactionOrMessage.reply({ content: 'Ping?', fetchReply: true });
 
 		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
@@ -56,7 +57,7 @@ export class UserCommand extends Command {
 		}ms.`;
 
 		if (interactionOrMessage instanceof Message) {
-			return pingMessage.edit({ content });
+			return send(interactionOrMessage, { content });
 		}
 
 		return interactionOrMessage.editReply({

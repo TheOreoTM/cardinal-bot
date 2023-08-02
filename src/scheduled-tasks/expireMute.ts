@@ -14,7 +14,8 @@ export class ExpireMuteTask extends ScheduledTask {
 		const mutes = await mute.findMany({
 			where: {
 				expiresAt: {
-					lt: now
+					lt: now,
+					not: null
 				}
 			},
 			select: { modlog: true, id: true }

@@ -10,8 +10,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 	detailedDescription: {
 		extendedHelp: 'Get warnings for a member displayed in a paged format',
 		usages: ['User', ''],
-		examples: ['@Yuuki', ''],
-		possibleFormats: [['test2', 'yesy1']]
+		examples: ['@Yuuki', '']
 	}
 })
 export class warningsCommand extends ModerationCommand {

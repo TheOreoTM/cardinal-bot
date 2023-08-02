@@ -1,4 +1,5 @@
 import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
+import { canManage } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -19,6 +20,12 @@ export class warnCommand extends ModerationCommand {
 		if (!target) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to warn')]
+			});
+		}
+
+		if (!(await canManage(message.member, target))) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant warn that member')]
 			});
 		}
 

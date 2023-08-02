@@ -13,9 +13,13 @@ export class UserEvent extends Listener<typeof CardinalEvents.MessageCommandDeni
 		if (Reflect.get(Object(context), 'silent')) return;
 		if (identifier === Identifiers.PreconditionCooldown) {
 			const { remaining } = context as { remaining: number };
-			return await sendTemporaryMessage(message, {
-				content: `${message.author}, a little too quick there. Wait ${ms(remaining)}`
-			});
+			return await sendTemporaryMessage(
+				message,
+				{
+					content: `${message.author}, a little too quick there. Wait ${ms(remaining)}`
+				},
+				seconds(7)
+			);
 		}
 		const embed = new CardinalEmbedBuilder().setStyle('fail').setDescription(content);
 		return sendTemporaryMessage(message, { embeds: [embed], allowedMentions: { users: [message.author.id], roles: [] } }, seconds(7));

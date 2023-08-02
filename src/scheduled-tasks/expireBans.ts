@@ -14,7 +14,8 @@ export class ExpireBanTask extends ScheduledTask {
 		const bans = await ban.findMany({
 			where: {
 				expiresAt: {
-					lt: now
+					lt: now,
+					not: null
 				}
 			},
 			select: { modlog: true, id: true }

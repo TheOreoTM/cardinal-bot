@@ -4,6 +4,7 @@ import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
 import type { InteractionOrMessage } from '#lib/types';
 import { Sql } from '@prisma/client/runtime/library.js';
 import { Stopwatch } from '@sapphire/stopwatch';
+import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View basic information about the bot',
@@ -43,7 +44,7 @@ export class botinfoCommand extends CardinalCommand {
 		const initialEmbed = new CardinalEmbedBuilder().setStyle('loading').setDescription('Fetching info...');
 		const initialMessage =
 			interactionOrMessage instanceof Message
-				? await interactionOrMessage.channel.send({ embeds: [initialEmbed] })
+				? await send(interactionOrMessage, { embeds: [initialEmbed] })
 				: await interactionOrMessage.reply({ embeds: [initialEmbed] });
 
 		const ping = `${Math.round(this.container.client.ws.ping)}ms`;
@@ -72,7 +73,7 @@ export class botinfoCommand extends CardinalCommand {
 		]);
 
 		if (interactionOrMessage instanceof Message) {
-			return initialMessage.edit({ embeds: [embed] });
+			return send(interactionOrMessage, { embeds: [embed] });
 		}
 
 		return interactionOrMessage.editReply({ embeds: [embed] });

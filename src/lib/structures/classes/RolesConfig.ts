@@ -6,6 +6,13 @@ export class RoleConfig {
 		this.guild = guild;
 	}
 
+	public get mute() {
+		return async () => {
+			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
+			return data?.roleMuted ?? '0';
+		};
+	}
+
 	public get admin() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });

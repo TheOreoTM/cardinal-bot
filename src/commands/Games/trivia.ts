@@ -11,6 +11,7 @@ import * as he from 'he';
 const { decode } = he;
 
 @ApplyOptions<CardinalCommand.Options>({
+	enabled: false,
 	description: 'Play a game of trivia',
 	name: 'trivia',
 	detailedDescription: {

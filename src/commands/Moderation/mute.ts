@@ -1,6 +1,5 @@
 import { ModerationCommand, CardinalEmbedBuilder, Modlog } from '#lib/structures';
-import { seconds } from '#utils/common';
-import { sendMessageAsGuild } from '#utils/functions';
+import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -28,6 +27,12 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
+		if (!(await canManage(message.member, target))) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant mute that member')]
+			});
+		}
+
 		if (!muteRole) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription("I couldn't find role named `Muted`")]
@@ -38,7 +43,7 @@ export class muteCommand extends ModerationCommand {
 		let length: string | null = null;
 
 		if (duration) {
-			const timeDifference = duration.getTime() - new Date().getTime() + seconds(1);
+			const timeDifference = duration.getTime() - new Date().getTime();
 			length = new DurationFormatter().format(timeDifference);
 
 			modlog = new Modlog({

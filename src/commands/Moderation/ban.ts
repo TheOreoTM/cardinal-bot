@@ -1,6 +1,6 @@
 import { ModerationCommand, CardinalEmbedBuilder, Modlog } from '#lib/structures';
 import { days } from '#utils/common';
-import { sendMessageAsGuild } from '#utils/functions';
+import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -27,6 +27,12 @@ export class banCommand extends ModerationCommand {
 			});
 		}
 
+		if (!(await canManage(message.member, target))) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant ban that member')]
+			});
+		}
+
 		let modlog: Modlog;
 		let length: string | null = null;
 
@@ -37,7 +43,7 @@ export class banCommand extends ModerationCommand {
 			modlog = new Modlog({
 				member: target,
 				staff: message.member,
-				type: ModerationType.Mute,
+				type: ModerationType.Ban,
 				length: length,
 				reason: reason
 			});
@@ -45,13 +51,13 @@ export class banCommand extends ModerationCommand {
 			modlog = new Modlog({
 				member: target,
 				staff: message.member,
-				type: ModerationType.Mute,
+				type: ModerationType.Ban,
 				length: null,
 				reason: reason
 			});
 		}
 
-		if (!target.bannable) {
+		if (!target.bannable || !target.manageable || !target.moderatable) {
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant ban that user')]
 			});

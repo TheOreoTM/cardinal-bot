@@ -8,16 +8,19 @@ import { send } from '@sapphire/plugin-editable-commands';
 	name: 'modnick',
 	detailedDescription: {
 		extendedHelp: 'Change the nickname of a member to something random or something of your choosing',
-		reminder: 'Use `--freeze` to freeze the nickname given and disallow the member from changing it themselves',
-		usages: ['User', 'User Modnick'],
-		examples: ['@gayballs Golf', '@dick_muncher']
+		explainedUsage: [
+			['--freeze/--frozen/--f', 'Use `--freeze/--frozen/--f` to freeze the nickname given and disallow the member from changing it themselves'],
+			['Modnick', 'The nickname you want to change the users display name to. (max of 32 characters)']
+		],
+		usages: ['User', 'User Modnick', 'User --f', 'User Modnick --freeze'],
+		examples: ['@gayballs Golf', '@dick_muncher', '@clink cant change --f']
 	},
 	flags: ['frozen']
 })
 export class modnickCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const target = await args.pick('member').catch(() => null);
-		const isFrozen = args.getFlags('frozen');
+		const isFrozen = args.getFlags('frozen', 'freeze', 'f');
 
 		if (!target) {
 			return send(message, {
@@ -39,7 +42,7 @@ export class modnickCommand extends ModerationCommand {
 
 		const fullNick = `${nick}${isFrozen ? ' ❄️' : ''}`;
 		await modlog.createModnick({ moderatedNickname: nick, originalNickname: target.displayName, frozen: isFrozen });
-		await target.setNickname(fullNick);
+		await target.setNickname(fullNick.slice(0, 32));
 
 		return await send(message, {
 			embeds: [

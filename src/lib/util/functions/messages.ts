@@ -14,7 +14,7 @@ import {
 	MessagePayload
 } from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
-import { floatPromise, minutes, resolveOnErrorCodes } from '#utils/common';
+import { floatPromise, minutes, resolveOnErrorCodes, seconds } from '#utils/common';
 import { CardinalCommand } from '#lib/structures';
 
 export const deletedMessages = new WeakSet<Message>();
@@ -111,7 +111,7 @@ export async function deleteMessage(message: Message, time = 0): Promise<Message
  * @param timer The timer in which the message should be deleted, using {@link deleteMessage}.
  * @returns The response message.
  */
-export async function sendTemporaryMessage(message: Message, options: string | MessageCreateOptions, timer = minutes(1)): Promise<Message> {
+export async function sendTemporaryMessage(message: Message, options: string | MessageCreateOptions, timer = seconds(7)): Promise<Message> {
 	if (typeof options === 'string') options = { content: options };
 
 	const response = (await send(message, options)) as Message;

@@ -25,20 +25,20 @@ model Modlog {
 }
 
 model Ban {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   memberId  String
-  modlog    Modlog   @relation(fields: [modlogId], references: [id])
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  modlog    Modlog    @relation(fields: [modlogId], references: [id])
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
   modlogId  Int
 }
 
 model Mute {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   memberId  String
-  modlog    Modlog   @relation(fields: [modlogId], references: [id])
-  createdAt DateTime @default(now())
-  expiresAt DateTime
+  modlog    Modlog    @relation(fields: [modlogId], references: [id])
+  createdAt DateTime  @default(now())
+  expiresAt DateTime?
   modlogId  Int
 }
 

@@ -14,7 +14,7 @@ export async function isStaff(member: GuildMember) {
 }
 
 export async function isModerator(member: GuildMember) {
-	return isGuildOwner(member) || (await checkModerator(member)) || (await checkAdministrator(member));
+	return (await isAdmin(member)) || (await checkModerator(member));
 }
 
 export async function isAdmin(member: GuildMember) {
@@ -31,7 +31,6 @@ export function isOwner(member: GuildMember) {
 
 async function checkTrainee(member: GuildMember) {
 	const role = await member.guild.settings.roles.trainee();
-	console.log(role);
 	return role === '0' ? member.permissions.has(PermissionFlagsBits.BanMembers) : hasAtLeastOneKeyInMap(member.roles.cache, [role]);
 }
 
@@ -48,4 +47,14 @@ async function checkModerator(member: GuildMember) {
 async function checkAdministrator(member: GuildMember) {
 	const role = await member.guild.settings.roles.admin();
 	return role === '0' ? member.permissions.has(PermissionFlagsBits.BanMembers) : hasAtLeastOneKeyInMap(member.roles.cache, [role]);
+}
+
+export async function canManage(member: GuildMember, target: GuildMember) {
+	if (member.id === target.id) return false;
+
+	if (member.roles.highest.position <= target.roles.highest.position) return false;
+
+	if (await isTrainee(target)) return false;
+
+	return true;
 }

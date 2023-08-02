@@ -11,6 +11,7 @@ import type { User } from 'discord.js';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['ttt'],
 	description: 'Play Tic-Tac-Toe with somebody.',
+	enabled: false,
 	detailedDescription: {
 		usages: ['User'],
 		extendedHelp:
