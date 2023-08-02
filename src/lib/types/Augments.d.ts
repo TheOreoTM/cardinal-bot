@@ -1,8 +1,9 @@
+import '@sapphire/pieces';
 import type { PrismaClient } from '@prisma/client';
 import type { ArrayString, NumberString } from '@skyra/env-utilities';
-import type { GuildSettings } from '#lib/structures';
+import type { CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
-import type { User } from 'discord.js';
+import type { User, Snowflake } from 'discord.js';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -31,8 +32,6 @@ declare module '@sapphire/framework' {
 		Blacklisted: never;
 		BotOwner: never;
 		Everyone: never;
-		Trainee: never;
-		Staff: never;
 		Moderator: never;
 		Administrator: never;
 		ModeratorCommand: never;
@@ -49,10 +48,11 @@ declare module '@sapphire/framework' {
 		reminder?: string;
 	}
 	interface ArgType {
+		snowflake: Snowflake;
 		commandCategory: string;
-		duration: number;
-		// commandName: CardinalCommand;
+		duration: Date;
 		userName: User;
+		commandName: CardinalCommand;
 	}
 }
 

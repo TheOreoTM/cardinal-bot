@@ -3,6 +3,7 @@ import { envParseArray, envParseString } from '@skyra/env-utilities';
 export const CardinalEpoch = 1689677721;
 export const ZeroWidthSpace = '\u200B';
 export const LongWidthSpace = '\u3000';
+export const UsernameRegex = new RegExp('[^a-zA-Z0-9_]');
 
 export const RandomLoadingMessage = ['Computing...', 'Thinking...', 'Give me a moment', 'Loading...'];
 
@@ -11,10 +12,14 @@ export const BotPrivilegedUsers = envParseArray('BOT_PRIVILEGED_USERS');
 export const BotPrefix = envParseString('BOT_PREFIX');
 export const CooldownFiltered = [BotOwner, ...BotPrivilegedUsers];
 
+export const MainServerID = '519734247519420438';
+
 export const enum CardinalColors {
 	Success = 0x46b485,
 	Fail = 0xf05050,
 	Warn = 0xfee65c,
+	Info = 0x297bd1,
+	Loading = 0x23272a,
 	Default = 0x2b2d31
 }
 
@@ -36,5 +41,9 @@ export const enum CardinalEmojis {
 	C4PlayerTwo = '<:c4two:1109863929838047273>',
 	C4WinnerTwo = '<:c4twowin:1109864141713313872>',
 	On = '<:on:1111978402405175376>',
-	Off = '<:off:1111978397585907732>'
+	Off = '<:off:1111978397585907732>',
+	Online = '<:online:1131233305782669403>',
+	Invisible = '<:invisible:1131233401731567666>',
+	Dnd = '<:dnd:1131233360925163652>',
+	Idle = '<:idle:1131233326523490424> '
 }

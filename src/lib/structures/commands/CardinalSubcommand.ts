@@ -1,7 +1,8 @@
 import { PermissionLevels, type GuildMessage } from '#lib/types';
-import { CommandOptionsRunTypeEnum, PreconditionContainerArray, UserError, Command, Args as SapphireArgs } from '@sapphire/framework';
+import { CommandOptionsRunTypeEnum, PreconditionContainerArray, UserError, Command } from '@sapphire/framework';
 import { Subcommand, type SubcommandOptions } from '@sapphire/plugin-subcommands';
 import { PermissionFlagsBits, PermissionsBitField, type CacheType } from 'discord.js';
+import type { CardinalCommand } from './CardinalCommand';
 
 export abstract class CardinalSubcommand extends Subcommand {
 	/**
@@ -102,7 +103,7 @@ export namespace CardinalSubcommand {
 		 */
 		community?: boolean;
 	};
-	export type Args = SapphireArgs;
+	export type Args = CardinalCommand.Args;
 	export type Message = GuildMessage;
 	export type JSON = Command.JSON;
 	export type Context = Command.Context;

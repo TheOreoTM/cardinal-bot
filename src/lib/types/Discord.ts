@@ -16,6 +16,7 @@ import type {
 
 export interface GuildMessage extends Message {
 	// ! channel: GuildTextBasedChannelTypes; TODO Remove this
+	readonly guildId: string;
 	readonly guild: Guild;
 	readonly member: GuildMember;
 }

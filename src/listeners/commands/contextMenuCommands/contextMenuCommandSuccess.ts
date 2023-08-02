@@ -3,8 +3,15 @@ import type { Logger } from '@sapphire/plugin-logger';
 import { logSuccessCommand } from '#utils/utils';
 
 export class UserListener extends Listener {
-	public run(payload: ContextMenuCommandSuccessPayload) {
+	public async run(payload: ContextMenuCommandSuccessPayload) {
 		logSuccessCommand(payload);
+
+		await this.container.db.command.create({
+			data: {
+				authorId: payload.interaction.user.id,
+				name: payload.command.name
+			}
+		});
 	}
 
 	public onLoad() {

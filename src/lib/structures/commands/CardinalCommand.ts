@@ -19,6 +19,7 @@ import {
 } from 'discord.js';
 import type { GuildMessage } from '#lib/types';
 import { PermissionLevels } from '#lib/types';
+import { seconds } from '#utils/common';
 export abstract class CardinalCommand extends Command {
 	/**
 	 * Whether the command can be disabled.
@@ -47,6 +48,7 @@ export abstract class CardinalCommand extends Command {
 			generateDashLessAliases: true,
 			requiredClientPermissions: perms,
 			runIn: [CommandOptionsRunTypeEnum.GuildAny],
+			cooldownDelay: seconds(5),
 			...options
 		});
 		(this.guarded = options.guarded ?? false),
@@ -128,7 +130,7 @@ export namespace CardinalCommand {
 	export type UserContextMenuCommandInteraction = UserCTXMenuCommandInteraction<'cached'>;
 	export type MessageContextMenuCommandInteraction = MessageCTXCommandInteraction<'cached'>;
 	export type AutoComplete = AutocompleteInteraction;
-	export type Context = MessageCommandContext;
+	export type Context = Command.Context;
 
 	export type Args = SapphireArgs;
 	export type Message = GuildMessage;

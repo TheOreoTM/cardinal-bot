@@ -1,4 +1,18 @@
 import type { PermissionsString } from 'discord.js';
+import { UsernameRegex } from '#constants';
+
+/**
+ * Its takes a string and returns only alphanumeric characters and underscores
+ * @param inputString The input string
+ * @returns A string
+ */
+export function replaceNonAlphanumeric(inputString: string): string {
+	// Use the replace() method to replace non-alphanumeric characters with an empty string
+	const replacedString = inputString.replace(UsernameRegex, '');
+
+	return replacedString;
+}
+
 /**
  * It takes a sentence and return a string of every words first letter capitalized
  * @param {string} sentence The initial sentence

@@ -1,14 +1,45 @@
-import { canReact, canRemoveAllReactions } from '@sapphire/discord.js-utilities';
+import { ButtonLimits, canReact, canRemoveAllReactions } from '@sapphire/discord.js-utilities';
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { RESTJSONErrorCodes } from 'discord-api-types/v9';
-import { Message, type MessageCreateOptions, type UserResolvable } from 'discord.js';
+import {
+	Message,
+	User,
+	type MessageCreateOptions,
+	type UserResolvable,
+	Guild,
+	ButtonBuilder,
+	ButtonStyle,
+	ActionRowBuilder,
+	MessagePayload
+} from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { floatPromise, minutes, resolveOnErrorCodes } from '#utils/common';
 import { CardinalCommand } from '#lib/structures';
 
 export const deletedMessages = new WeakSet<Message>();
 const messageCommands = new WeakMap<Message, CardinalCommand>();
+
+/**
+ * Send a message to a user as from a guild, (no components allowed)
+ * @param message The message you want to send
+ */
+export async function sendMessageAsGuild(user: User, guild: Guild, options: string | Omit<MessagePayload, 'components'> | MessageCreateOptions) {
+	const sentFromButton = new ButtonBuilder()
+		.setStyle(ButtonStyle.Secondary)
+		.setDisabled(true)
+		.setLabel(`Sent from ${guild.name.slice(0, ButtonLimits.MaximumLabelCharacters - 'sent from'.length)}`)
+		.setCustomId(`sentFrom-${guild.id}`);
+
+	const o: string | MessagePayload | MessageCreateOptions =
+		typeof options === 'string'
+			? { content: options }
+			: {
+					...options,
+					components: [new ActionRowBuilder<ButtonBuilder>().addComponents(sentFromButton)]
+			  };
+	await user.send(o).catch((err) => console.error(err));
+}
 
 /**
  * Check if a message is deleted by looking for it in the deletedMessages Set

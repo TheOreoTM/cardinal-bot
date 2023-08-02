@@ -3,7 +3,10 @@ import { Command } from '@sapphire/framework';
 import { ApplicationCommandType, Message } from 'discord.js';
 
 @ApplyOptions<Command.Options>({
-	description: 'ping pong'
+	description: 'Shows the connection latency to discord',
+	detailedDescription: {
+		extendedHelp: 'Pong!'
+	}
 })
 export class UserCommand extends Command {
 	// Register Chat Input and Context Menu command

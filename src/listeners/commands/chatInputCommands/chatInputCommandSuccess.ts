@@ -3,8 +3,15 @@ import { Listener, LogLevel, type ChatInputCommandSuccessPayload } from '@sapphi
 import type { Logger } from '@sapphire/plugin-logger';
 
 export class UserListener extends Listener {
-	public run(payload: ChatInputCommandSuccessPayload) {
+	public async run(payload: ChatInputCommandSuccessPayload) {
 		logSuccessCommand(payload);
+
+		await this.container.db.command.create({
+			data: {
+				authorId: payload.interaction.user.id,
+				name: payload.command.name
+			}
+		});
 	}
 
 	public onLoad() {

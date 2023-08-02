@@ -1,5 +1,6 @@
-import { CardinalColors, CardinalEmojis } from '#constants';
+import { CardinalColors, CardinalEmojis, RandomLoadingMessage } from '#constants';
 import { CardinalEmbedStyles } from '#lib/types';
+import { pickRandom } from '@sapphire/utilities';
 import { EmbedBuilder, type APIEmbed, type EmbedData } from 'discord.js';
 
 export class CardinalEmbedBuilder extends EmbedBuilder {
@@ -12,7 +13,6 @@ export class CardinalEmbedBuilder extends EmbedBuilder {
 	setStyle(style: CardinalEmbedStyle): this {
 		switch (style) {
 			case 'default':
-			case 'loading':
 				super.setColor(CardinalColors.Default);
 				break;
 			case 'success':
@@ -21,9 +21,12 @@ export class CardinalEmbedBuilder extends EmbedBuilder {
 			case 'fail':
 				super.setColor(CardinalColors.Fail);
 				break;
-			default:
-				super.setColor(CardinalColors.Default);
+			case 'loading':
+				super.setColor(CardinalColors.Loading);
+				super.setAuthor({ name: pickRandom(RandomLoadingMessage) });
 				break;
+			case 'info':
+				super.setColor(CardinalColors.Info);
 		}
 		return this;
 	}
@@ -38,10 +41,10 @@ export class CardinalEmbedBuilder extends EmbedBuilder {
 			case CardinalColors.Fail:
 				super.setDescription(`${CardinalEmojis.Fail} ${description}`);
 				break;
-			case CardinalColors.Default:
+			case CardinalColors.Info:
 				super.setDescription(`${CardinalEmojis.Info} ${description}`);
 				break;
-			case CardinalColors.Default:
+			case CardinalColors.Loading:
 				super.setDescription(`${CardinalEmojis.Loading} ${description}`);
 				break;
 			default:

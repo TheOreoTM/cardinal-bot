@@ -14,8 +14,8 @@ export class CardinalIndexBuilder {
 		return new Snowflake(CardinalEpoch).deconstruct(snowflake);
 	}
 
-	public generateTag(length = 8) {
-		return randomatic('Aa0', length);
+	public generateTag(length = 8, tag = true) {
+		return tag ? '#' + randomatic('Aa0', length) : randomatic('Aa0', length);
 	}
 
 	public generateUuid() {

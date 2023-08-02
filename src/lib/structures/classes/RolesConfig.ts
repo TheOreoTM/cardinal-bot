@@ -6,31 +6,31 @@ export class RoleConfig {
 		this.guild = guild;
 	}
 
-	public get admins() {
+	public get admin() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
-			return data?.admin ?? '0';
+			return data?.roleAdmin ?? '0';
 		};
 	}
 
-	public get staffs() {
+	public get staff() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
-			return data?.staff ?? '0';
+			return data?.roleStaff ?? '0';
 		};
 	}
 
-	public get moderators() {
+	public get moderator() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
-			return data?.moderator ?? '0';
+			return data?.roleModerator ?? '0';
 		};
 	}
 
-	public get eventManagers() {
+	public get trainee() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
-			return data?.eventManager ?? '0';
+			return data?.roleTrainee ?? '0';
 		};
 	}
 }

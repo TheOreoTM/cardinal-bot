@@ -18,6 +18,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['hunger-games', 'hg'],
 	description: 'Play Hunger Games with your friends!',
+	enabled: false,
 	detailedDescription: {
 		usages: ['User1 User2 User3...', '--autofill'],
 		extendedHelp: 'Enough discussion, let the games begin!',
@@ -32,7 +33,7 @@ export class UserCommand extends CardinalCommand {
 	public readonly playing: Set<string> = new Set();
 	public readonly kEmojis = ['🇳', '🇾'];
 
-	public async messageRun(message: GuildMessage, args: CardinalCommand.Args, context: CardinalCommand.Context) {
+	public async messageRun(message: GuildMessage, args: CardinalCommand.Args) {
 		const autoFilled = args.getFlags('autofill');
 		const tributes: string[] = args.finished && autoFilled ? [] : (await args.rest('string').catch(() => '')).split(',').slice(0, 50);
 		const autoSkip = args.getFlags('autoskip');
@@ -45,7 +46,7 @@ export class UserCommand extends CardinalCommand {
 			}
 		} else if (tributes.length === 0) {
 			this.error('Please specify some tributes to play the Hunger Games.', {
-				prefix: context.commandPrefix
+				prefix: this.prefix(message)
 			});
 		}
 

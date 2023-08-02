@@ -4,7 +4,6 @@ import { formatRoles } from '#utils/formatters';
 import { sendTemporaryMessage } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener, type MessageCommandErrorPayload, UserError } from '@sapphire/framework';
-import ms from 'enhanced-ms';
 
 @ApplyOptions<Listener.Options>({
 	event: CardinalEvents.MessageCommandError
@@ -15,12 +14,7 @@ export class UserListener extends Listener {
 		if (error instanceof UserError) {
 			if (Reflect.get(Object(error.context), 'silent')) return;
 
-			if (error.identifier === 'preconditionCooldown') {
-				const { remaining } = error.context as { remaining: number };
-				return await sendTemporaryMessage(message, {
-					content: `${message.author}, a little too quick there. Wait ${ms(remaining)}`
-				});
-			} else if (error.identifier === 'NotRegistered') {
+			if (error.identifier === 'NotRegistered') {
 				content = `Please register your account using \`${await this.container.client.fetchPrefix(message)}register\``;
 			} else if (error.identifier === 'argsMissing') {
 				content = `You are missing some arguments`;
