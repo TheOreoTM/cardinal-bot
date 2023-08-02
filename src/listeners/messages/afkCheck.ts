@@ -52,7 +52,7 @@ export class UserEvent extends Listener {
 
 			if (!afkData) return;
 
-			await send(message, `\`${message.member.displayName}\` is AFK: ${afkData.afkMessage}`);
+			await send(message, `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage}`);
 		});
 	}
 }
