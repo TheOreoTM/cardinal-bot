@@ -1,4 +1,5 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
+import { PermissionLevels } from '#lib/types';
 import type { Prisma } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 
@@ -6,6 +7,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 	description: 'Configure the settings for the server.',
 	name: 'config',
 	// aliases: ['conf', 'configuration'],
+	permissionLevel: PermissionLevels.Administrator,
 	detailedDescription: {
 		extendedHelp: '',
 		usages: [],

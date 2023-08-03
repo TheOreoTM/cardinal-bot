@@ -17,7 +17,8 @@ import { fetch } from 'undici';
 	flags: ['hidden', 'haste', 'silent', 's', 'type', 't', 'v', 'value', 'this', 'stack', 'del', 'd', 'async'],
 	options: ['depth'],
 	description: 'Evaluate some code',
-	guarded: true
+	guarded: true,
+	hidden: true
 })
 export class UserCommand extends CardinalCommand {
 	public override async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {

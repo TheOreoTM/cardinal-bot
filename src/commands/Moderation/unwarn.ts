@@ -42,11 +42,13 @@ export class unwarnCommand extends ModerationCommand {
 			});
 		}
 
+		send(message, {
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Removed warn \`${warnData.warnUid}\``)]
+		});
+
 		const modlog = new Modlog({ staff: message.member, type: ModerationType.Unwarn, reason: reason, member });
 		await modlog.createUnwarn();
 
-		return send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Removed warn \`${warnData.warnUid}\``)]
-		});
+		return await this.container.db.warn.delete({ where: { warnUid: warnUid } });
 	}
 }
