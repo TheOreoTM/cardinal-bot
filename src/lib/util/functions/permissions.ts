@@ -50,6 +50,12 @@ async function checkAdministrator(member: GuildMember) {
 }
 
 export async function canManage(member: GuildMember, target: GuildMember) {
+	const me = member.guild.members.me ?? (await member.guild.members.fetchMe());
+
+	if (member.id === me.id) return false;
+
+	if (target.roles.highest.position >= me.roles.highest.position) return false;
+
 	if (member.id === target.id) return false;
 
 	if (member.roles.highest.position <= target.roles.highest.position) return false;

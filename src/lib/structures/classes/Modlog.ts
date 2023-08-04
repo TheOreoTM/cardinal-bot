@@ -30,6 +30,12 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		this.guildId = data.staff.guild.id;
 	}
 
+	public async createKick() {
+		await container.db.modlog.create({
+			data: this
+		});
+	}
+
 	public async createWarn() {
 		const warn = await container.db.warn.create({
 			data: {
