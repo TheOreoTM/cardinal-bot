@@ -7,3 +7,4 @@ export * from './Modlog.js';
 export * from './CardinalPaginatedEmbedFields.js';
 export * from './Timestamp.js';
 export * from './LanguageHelp.js';
+export * from './ChannelsConfig.js';

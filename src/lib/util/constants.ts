@@ -14,6 +14,14 @@ export const BotClientID = '740962735306702858';
 export const CooldownFiltered = [BotOwner, ...BotPrivilegedUsers];
 
 export const MainServerID = '519734247519420438';
+/**
+ * When the first logged timed message was created
+ */
+export const FirstTimedMessageDate = new Date('2023-08-03T14:21:08.952Z');
+/**
+ * When the first logged message was created
+ */
+export const FirstMessageDate = new Date('2023-08-01T20:36:02.055Z');
 
 export const enum CardinalColors {
 	Success = 0x46b485,

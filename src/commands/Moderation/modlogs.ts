@@ -25,7 +25,10 @@ export class modlogCommand extends ModerationCommand {
 		}
 
 		const modlogs = await this.container.db.modlog.findMany({
-			where: { memberId: target.id, guildId: message.guild.id }
+			where: { memberId: target.id, guildId: message.guild.id },
+			orderBy: {
+				id: 'desc'
+			}
 		});
 
 		const totalLogs = modlogs.length;

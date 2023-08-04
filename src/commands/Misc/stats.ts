@@ -16,7 +16,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 	description: 'View message stats',
 	detailedDescription: {
 		extendedHelp: 'View message statistics about a user, channel or role and also view the top members and channels in the server',
-		usages: ['me', 'user User', 'channel Channel', 'role Role', 'top', 'setLookback Lookback'],
+		usages: ['me', 'user User', 'channel Channel', 'role Role', 'top', 'lookback Lookback'],
 		examples: [
 			'',
 			'user @Oreo',
@@ -33,7 +33,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 		explainedUsage: [
 			['User/Channel/Role', 'Can either be a name, id or mention'],
 			['Lookback', 'A number between 0 and 30*'],
-			['--limit', 'Set the maximum number of positions in a leadboard to show (max: 10']
+			['--limit', 'Set the maximum number of positions in a leadboard to show (max: 10)']
 		],
 		reminder: 'If you want to set lookback to something greater than 30 you can check out the premium plan'
 	},
@@ -94,6 +94,8 @@ export class statsCommand extends CardinalSubcommand {
 		const formattedTopChannels = topChannels.map((channel, index) => {
 			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
 		});
+
+		console.log(data);
 
 		const timeTaken = stopWatch.stop().toString();
 		const embed = new CardinalEmbedBuilder()

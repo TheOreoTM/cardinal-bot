@@ -34,6 +34,12 @@ export class modnickCommand extends ModerationCommand {
 			nick = `Moderated Nickname ${new CardinalIndexBuilder().generateTag(8, false)}`;
 		}
 
+		if (!target.moderatable || !target.manageable) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant modnick that user')]
+			});
+		}
+
 		const modlog = new Modlog({
 			member: target,
 			staff: message.member,
@@ -41,8 +47,12 @@ export class modnickCommand extends ModerationCommand {
 		});
 
 		const fullNick = `${nick}${isFrozen ? ' ❄️' : ''}`;
+		await target.setNickname(fullNick.slice(0, 32)).catch(() => {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Something went wrong')]
+			});
+		});
 		await modlog.createModnick({ moderatedNickname: nick, originalNickname: target.displayName, frozen: isFrozen });
-		await target.setNickname(fullNick.slice(0, 32));
 
 		return await send(message, {
 			embeds: [

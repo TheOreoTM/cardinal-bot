@@ -1,7 +1,9 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { PermissionLevels } from '#lib/types';
+import { mention } from '#utils/utils';
 import type { Prisma } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
+import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Configure the settings for the server.',
@@ -45,6 +47,11 @@ export class setupCommand extends ModerationCommand {
 						.setName('mute_role')
 						.setDescription('The role that should be given when muting someone')
 				)
+				.addChannelOption((option) =>
+					option //
+						.setName('modlog_channel')
+						.setDescription('The channel where the modlogs should be sent to')
+				)
 		);
 	}
 
@@ -54,6 +61,7 @@ export class setupCommand extends ModerationCommand {
 		const mod_role = interaction.options.getRole('mod_role');
 		const admin_role = interaction.options.getRole('admin_role');
 		const mute_role = interaction.options.getRole('mute_role');
+		const modlog_channel = interaction.options.getChannel('modlog_channel');
 
 		let data: Prisma.GuildCreateInput = {
 			guildId: interaction.guildId
@@ -63,6 +71,7 @@ export class setupCommand extends ModerationCommand {
 		if (mod_role) data.roleModerator = mod_role.id;
 		if (admin_role) data.roleAdmin = admin_role.id;
 		if (mute_role) data.roleMuted = mute_role.id;
+		if (modlog_channel) data.channelModlog = modlog_channel.id;
 
 		const embed = new CardinalEmbedBuilder().setStyle('success').setDescription('Updated server configuration');
 
@@ -75,5 +84,9 @@ export class setupCommand extends ModerationCommand {
 		});
 
 		interaction.reply({ embeds: [embed] });
+	}
+
+	public override async messageRun(message: ModerationCommand.Message) {
+		return send(message, `Use ${await mention('config', message.client)}`);
 	}
 }

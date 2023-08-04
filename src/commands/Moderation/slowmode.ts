@@ -7,16 +7,37 @@ import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Change slowmode for a channel',
 	name: 'slowmode',
+	flags: ['off', 'remove', 'clear'],
 	detailedDescription: {
 		extendedHelp: 'Change the current slowmode for a channel',
-		usages: ['Channel Slowmode', 'Slowmode', 'Channel', ''],
-		examples: ['#general 2 seconds', '#memes 10 minutes and 30 seconds', '', '1 minute and 1 second']
+		usages: ['Channel Slowmode', 'Slowmode', 'Channel', '--off'],
+		examples: ['#general 2 seconds', '#memes 10 minutes and 30 seconds', '', '1 minute and 1 second', '#general --off'],
+		explainedUsage: [
+			['Slowmode', 'Just tell me what the slowmode should be in normal language (ie: 1 hour 1 minute and 30 seconds)'],
+			['--off/--remove/--clear', 'Use this flag to clear the slowmode of a channel']
+		]
 	}
 })
 export class slowmodeCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const channel = await args.pick('guildTextChannel').catch(() => message.channel);
 		const slowmode = await args.rest('duration').catch(() => null);
+		const off = args.getFlags('off', 'remove', 'clear');
+
+		if (off) {
+			try {
+				channel.setRateLimitPerUser(0);
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Removed slowmode for ${channel}`)]
+				});
+			} catch (error) {
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Something went wrong')]
+				});
+			} finally {
+				return;
+			}
+		}
 
 		if (!slowmode) {
 			const currentSlowmode = new DurationFormatter().format(seconds(channel.rateLimitPerUser ?? 0));
