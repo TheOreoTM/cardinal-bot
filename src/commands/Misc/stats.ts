@@ -89,7 +89,7 @@ export class statsCommand extends CardinalSubcommand {
 			lookback
 		);
 
-		const topChannels = await this.findTopChannelsForMember(user.id, user.guild.id);
+		const topChannels = await this.findTopChannelsForMember(user.id, user.guild.id, lookback);
 
 		const formattedTopChannels = topChannels.map((channel, index) => {
 			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
@@ -493,12 +493,21 @@ export class statsCommand extends CardinalSubcommand {
 		}));
 	}
 
-	private async findTopChannelsForMember(userId: string, guildId: string): Promise<{ channelId: string; messageCount: string }[]> {
+	private async findTopChannelsForMember(
+		userId: string,
+		guildId: string,
+		lookback: number
+	): Promise<{ channelId: string; messageCount: string }[]> {
+		const now = new Date();
+		const lastLookback = new Date(now.getTime() - days(lookback));
 		const topChannels = await this.container.db.message.groupBy({
 			by: ['channelId'],
 			where: {
 				memberId: userId,
-				guildId: guildId
+				guildId: guildId,
+				createdAt: {
+					gte: lastLookback
+				}
 			},
 			_count: {
 				channelId: true
