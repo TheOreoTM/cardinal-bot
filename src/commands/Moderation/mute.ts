@@ -43,7 +43,7 @@ export class muteCommand extends ModerationCommand {
 		let length: string | null = null;
 
 		if (duration) {
-			const timeDifference = duration.getTime() - new Date().getTime();
+			const timeDifference = duration.offset;
 			length = new DurationFormatter().format(timeDifference);
 
 			modlog = new Modlog({
@@ -69,7 +69,7 @@ export class muteCommand extends ModerationCommand {
 			});
 		});
 
-		await modlog.createMute({ expiresAt: duration });
+		await modlog.createMute({ expiresAt: duration?.fromNow });
 
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${target.user.username} ${reason ? `| ${reason}` : ''}`)]

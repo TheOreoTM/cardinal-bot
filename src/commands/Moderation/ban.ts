@@ -37,7 +37,7 @@ export class banCommand extends ModerationCommand {
 		let length: string | null = null;
 
 		if (duration) {
-			const timeDifference = duration.getTime() - new Date().getTime();
+			const timeDifference = duration.offset;
 			length = new DurationFormatter().format(timeDifference);
 
 			modlog = new Modlog({
@@ -77,7 +77,7 @@ export class banCommand extends ModerationCommand {
 			});
 		});
 
-		await modlog.createBan({ expiresAt: duration });
+		await modlog.createBan({ expiresAt: duration?.fromNow });
 
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Banned ${target.user.username} ${reason ? `| ${reason}` : ''}`)]

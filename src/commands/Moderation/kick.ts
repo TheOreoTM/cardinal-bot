@@ -5,12 +5,12 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<ModerationCommand.Options>({
-	description: '',
+	description: 'Kick a member',
 	name: 'kick',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'Kick a member from the server',
+		usages: ['User Reason', 'User'],
+		examples: ['@dodz inactive', '@foo']
 	}
 })
 export class kickCommand extends ModerationCommand {

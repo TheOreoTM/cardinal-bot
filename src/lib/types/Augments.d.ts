@@ -4,6 +4,7 @@ import type { ArrayString, NumberString } from '@skyra/env-utilities';
 import type { CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User, Snowflake } from 'discord.js';
+import type { Duration } from '@sapphire/time-utilities';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -50,7 +51,7 @@ declare module '@sapphire/framework' {
 	interface ArgType {
 		snowflake: Snowflake;
 		commandCategory: string;
-		duration: Date;
+		duration: Duration;
 		userName: User;
 		commandName: CardinalCommand;
 	}
