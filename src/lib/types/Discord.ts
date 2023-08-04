@@ -10,12 +10,17 @@ import type {
 	GuildBasedChannel,
 	GuildMember,
 	Message,
+	NewsChannel,
 	Role,
-	TextChannel
+	StageChannel,
+	TextChannel,
+	VoiceChannel
 } from 'discord.js';
 
+type GuildChannel = TextChannel | NewsChannel | StageChannel | VoiceChannel;
+
 export interface GuildMessage extends Message {
-	// ! channel: GuildTextBasedChannelTypes; TODO Remove this
+	channel: GuildChannel;
 	readonly guildId: string;
 	readonly guild: Guild;
 	readonly member: GuildMember;

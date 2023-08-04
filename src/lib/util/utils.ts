@@ -204,3 +204,9 @@ export const sendLoadingMessage = <T extends GuildMessage | Message>(message: T)
 	const embed = new CardinalEmbedBuilder().setStyle('loading').setDescription('Loading...');
 	return send(message, { embeds: [embed] }) as Promise<T>;
 };
+
+export async function isGuildPremium(guildId: string) {
+	const guildData = await container.db.guild.findUnique({ where: { guildId } });
+	if (!guildData) return false;
+	return guildData.premium;
+}

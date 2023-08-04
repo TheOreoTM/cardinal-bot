@@ -46,5 +46,6 @@ export const enum CardinalEmojis {
 	Online = '<:online:1131233305782669403>',
 	Invisible = '<:invisible:1131233401731567666>',
 	Dnd = '<:dnd:1131233360925163652>',
-	Idle = '<:idle:1131233326523490424> '
+	Idle = '<:idle:1131233326523490424> ',
+	Reply = '<:reply:1136774317993107536>'
 }

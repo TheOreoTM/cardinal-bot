@@ -3,7 +3,8 @@ import { SubcommandPluginEvents } from '@sapphire/plugin-subcommands';
 
 export const enum PermissionLevels {
 	Everyone = 0,
-	EventManager = 4,
+	Trainee = 3,
+	Staff = 4,
 	Moderator = 5,
 	Administrator = 6,
 	ServerOwner = 7,

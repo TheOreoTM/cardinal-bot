@@ -16,10 +16,16 @@ import { send } from '@sapphire/plugin-editable-commands';
 })
 export class modlogCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
-		const target = await args.pick('member').catch(() => message.member);
+		const target = await args.pick('user').catch(() => null);
+
+		if (!target) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Provide a valid user`)]
+			});
+		}
 
 		const modlogs = await this.container.db.modlog.findMany({
-			where: { memberId: target.id, guildId: target.guild.id }
+			where: { memberId: target.id, guildId: message.guild.id }
 		});
 
 		const totalLogs = modlogs.length;
@@ -39,7 +45,7 @@ export class modlogCommand extends ModerationCommand {
 			const embed = new CardinalEmbedBuilder().setColor(CardinalColors.Default);
 
 			embed.setAuthor({
-				name: `${totalLogs} Modlogs for ${target.user.username} (${target.id})`,
+				name: `${totalLogs} Modlogs for ${target.username} (${target.id})`,
 				iconURL: target.displayAvatarURL({ forceStatic: true })
 			});
 

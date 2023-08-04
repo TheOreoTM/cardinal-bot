@@ -20,7 +20,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 	cooldownScope: BucketScope.User
 })
 export class afkCommand extends CardinalCommand {
-	public override async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
+	public async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
 		await args.repeat('url', { times: 50 }).catch(() => null); // remove urls from the message
 		const afkMessage = await args.rest('string').catch(() => 'AFK');
 		const afkNick = message.member.displayName;
@@ -49,6 +49,6 @@ export class afkCommand extends CardinalCommand {
 			message.member.setNickname(`[AFK] ${message.member.displayName.slice(0, GuildMemberLimits.MaximumDisplayNameLength - '[afk] '.length)}`);
 		}
 
-		send(message, `${message.member} I set your AFK: ${afkMessage}`);
+		return send(message, `${message.member} I set your AFK: ${afkMessage}`);
 	}
 }

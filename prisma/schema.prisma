@@ -22,6 +22,8 @@ model Modlog {
   modnick    Modnick[]
   mute       Mute[]
   ban        Ban[]
+
+  @@index([staffId, memberId, guildId])
 }
 
 model Ban {
@@ -31,6 +33,8 @@ model Ban {
   createdAt DateTime  @default(now())
   expiresAt DateTime?
   modlogId  Int
+
+  @@index([memberId])
 }
 
 model Mute {
@@ -40,6 +44,8 @@ model Mute {
   createdAt DateTime  @default(now())
   expiresAt DateTime?
   modlogId  Int
+
+  @@index([memberId])
 }
 
 model Warn {
@@ -49,6 +55,8 @@ model Warn {
   modlog    Modlog   @relation(fields: [modlogId], references: [id])
   modlogId  Int
   createdAt DateTime @default(now())
+
+  @@index([memberId, warnUid])
 }
 
 model Modnick {
@@ -63,6 +71,7 @@ model Modnick {
   createdAt         DateTime @default(now())
 
   @@unique([memberId, guildId])
+  @@index([memberId, guildId])
 }
 
 model Afk {
@@ -71,11 +80,13 @@ model Afk {
   guildId  String
   afkNick  String
 
-  afkMessage String
+  afkPingMessages AfkPingMessage[]
+  afkMessage      String
 
   createdAt DateTime @default(now())
 
   @@unique([memberId, guildId])
+  @@index([memberId, guildId])
 }
 
 model Guild {
@@ -88,18 +99,25 @@ model Guild {
 
   channelModlog String @default("0")
 
-  prefix String @default(">")
+  lookback Int     @default(7)
+  prefix   String  @default(">")
+  premium  Boolean @default(false)
+
+  @@index([guildId])
 }
 
 model Message {
-  id        Int    @id @default(autoincrement())
-  messageId String
-  memberId  String
-  channelId String
-  guildId   String
-  length    Int
+  id            Int     @id @default(autoincrement())
+  messageId     String
+  memberId      String
+  channelId     String
+  guildId       String
+  length        Int
+  minuteMessage Boolean @default(false)
 
   createdAt DateTime @default(now())
+
+  @@index([memberId, guildId, channelId])
 }
 
 model Command {
@@ -107,4 +125,14 @@ model Command {
   name     String
   authorId String
   usedAt   DateTime @default(now())
+}
+
+model AfkPingMessage {
+  id         Int    @id @default(autoincrement())
+  memberId   String
+  memberName String
+  content    String
+  messageUrl String
+  afk        Afk?   @relation(fields: [afkId], references: [id])
+  afkId      Int?
 }
