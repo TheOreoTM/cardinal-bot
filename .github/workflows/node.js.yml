@@ -30,10 +30,10 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USERNAME }}
           script: |
-            pm2 stop cardinal-bot
+            pm2 delete all
             cd /root/cardinal-bot
             git pull
             yarn install
             yarn build
             yarn prisma:push-prod
-            pm2 start NODE_ENV=production dist/index.js --name cardinal-bot
+            pm2 start yarn --interpreter bash --name cardinal-bot -- start
