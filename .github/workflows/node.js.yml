@@ -21,7 +21,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: 'yarn'
-      - run: yarn install --frozen-lockfile
+      - run: yarn install
       - run: yarn build --if-present
       - name: SSH Remote Commands
         uses: appleboy/ssh-action@v0.1.5
@@ -33,7 +33,7 @@ jobs:
             pm2 stop cardinal-bot
             cd /root/cardinal-bot
             git pull
-            yarn install --frozen-lockfile
+            yarn install
             yarn build
             yarn prisma:push-prod
             pm2 start NODE_ENV=production dist/index.js --name cardinal-bot
