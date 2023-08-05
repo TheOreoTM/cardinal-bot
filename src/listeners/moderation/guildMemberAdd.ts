@@ -9,12 +9,9 @@ import type { Nullish } from '@sapphire/utilities';
 })
 export class UserEvent extends Listener<typeof CardinalEvents.GuildMemberAdd> {
 	public override async run(member: GuildMember) {
-		const result = await this.container.db.mute.findFirst({
+		const result = await this.container.db.mute.findMany({
 			where: {
-				memberId: member.id,
-				expiresAt: {
-					not: null
-				}
+				modlog: { guildId: member.guild.id, memberId: member.id }
 			}
 		});
 
@@ -24,12 +21,12 @@ export class UserEvent extends Listener<typeof CardinalEvents.GuildMemberAdd> {
 			if (muteRoleId) {
 				muteRole = member.roles.cache.get(muteRoleId) ?? (await member.guild.roles.fetch(muteRoleId));
 			} else {
-				muteRole = await member.guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted');
+				muteRole = member.guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted');
 			}
 
 			if (!muteRole) return;
 
-			await member.roles.add(muteRole);
+			await member.roles.add(muteRole, 'Mute bypass');
 		}
 	}
 }
