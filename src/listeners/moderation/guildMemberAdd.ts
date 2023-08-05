@@ -15,7 +15,7 @@ export class UserEvent extends Listener<typeof CardinalEvents.GuildMemberAdd> {
 			}
 		});
 
-		if (result) {
+		if (result.length) {
 			let muteRole: Role | Nullish;
 			const muteRoleId = await member.guild.settings.roles.mute();
 			if (muteRoleId) {
