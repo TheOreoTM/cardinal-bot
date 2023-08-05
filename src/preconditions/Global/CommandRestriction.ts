@@ -4,7 +4,8 @@ import { Precondition, type MessageCommand, type ChatInputCommand, type ContextM
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
 
 @ApplyOptions<Precondition.Options>({
-	position: 2
+	position: 2,
+	enabled: false
 })
 export class UserPrecondition extends Precondition {
 	public override messageRun(message: Message, command: MessageCommand) {
@@ -35,6 +36,8 @@ export class UserPrecondition extends Precondition {
 		const memberIsAllowed = await guild.settings.restrictions.checkMemberAllowed(commandName, member.id);
 		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(commandName, channel.id);
 		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(commandName, member.roles.cache);
+
+		console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
 		if (memberIsAllowed && channelIsAllowed && roleIsAllowed)
 			return this.error({
