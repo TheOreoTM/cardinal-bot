@@ -101,7 +101,7 @@ export class statsCommand extends CardinalSubcommand {
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setDescription(
-				`${user} (${user.user.username})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats setLookback\` command)`
+				`${user} (${user.user.username})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields(
 				{
@@ -167,7 +167,7 @@ export class statsCommand extends CardinalSubcommand {
 		const embed = new CardinalEmbedBuilder()
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
 			.setStyle('default')
-			.setDescription(`Stats for channel ${channel} in the past ${formattedLookback} (Change with the \`${prefix}stats setLookback\` command)`)
+			.setDescription(`Stats for channel ${channel} in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`)
 			.addFields(
 				{
 					name: `Top ${this.take} - Users in ${channel.name}`,
@@ -222,7 +222,7 @@ export class statsCommand extends CardinalSubcommand {
 			.setStyle('default')
 			.setDescription(
 				`
-		Message stats for ${role} in the past ${formattedLookback} (Change with the \`${prefix}stats setLookback\` command)`
+		Message stats for ${role} in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields({
 				name: `Top ${this.take} Members in ${role.name}`,
@@ -268,7 +268,7 @@ export class statsCommand extends CardinalSubcommand {
 		const topMemberEmbed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
-			.setDescription(`Top member stats in the past ${formattedLookback} (Change with the \`${prefix}stats setLookback\` command)`)
+			.setDescription(`Top member stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`)
 			.addFields(
 				{
 					name: 'Member Messages',
@@ -284,7 +284,7 @@ export class statsCommand extends CardinalSubcommand {
 		const topChannelEmbed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
-			.setDescription(`Top channels stats in the past ${formattedLookback} (Change with the \`${prefix}stats setLookback\` command)`)
+			.setDescription(`Top channels stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`)
 			.addFields(
 				{
 					name: 'Channel Messages',
