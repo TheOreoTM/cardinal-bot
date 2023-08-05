@@ -38,7 +38,6 @@ export class botinfoCommand extends CardinalCommand {
 
 	private async sendBotinfo(interactionOrMessage: InteractionOrMessage) {
 		const stopclock = new Stopwatch();
-		1 + 1;
 		const botLatency = stopclock.stop().toString();
 
 		const initialEmbed = new CardinalEmbedBuilder().setStyle('loading').setDescription('Fetching info...');
@@ -47,8 +46,8 @@ export class botinfoCommand extends CardinalCommand {
 				? await send(interactionOrMessage, { embeds: [initialEmbed] })
 				: await interactionOrMessage.reply({ embeds: [initialEmbed] });
 
-		const ping = `${Math.round(this.container.client.ws.ping)}ms`;
 		const apiLatency = `${initialMessage.createdTimestamp - interactionOrMessage.createdTimestamp}ms`;
+		const ping = `${Math.round(this.container.client.ws.ping)}ms`;
 
 		const stopwatch = new Stopwatch();
 		await this.container.db.$queryRaw(new Sql(['SELECT 1'], []));

@@ -90,14 +90,12 @@ export class statsCommand extends CardinalSubcommand {
 		);
 
 		const topChannels = await this.findTopChannelsForMember(user.id, user.guild.id, lookback);
+		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopChannels = topChannels.map((channel, index) => {
 			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
 		});
 
-		console.log(data);
-
-		const timeTaken = stopWatch.stop().toString();
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setDescription(
@@ -157,12 +155,11 @@ export class statsCommand extends CardinalSubcommand {
 		);
 
 		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id);
+		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopMembers = topMembers.map((member, index) => {
 			return `\`${index + 1}.\` <@${member.memberId}>: \`${member.messageCount} Messages\``;
 		});
-
-		const timeTaken = stopWatch.stop().toString();
 
 		const embed = new CardinalEmbedBuilder()
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
@@ -210,12 +207,11 @@ export class statsCommand extends CardinalSubcommand {
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
 		const topMembers = await this.findTopMembersForRole(role, lookback);
+		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopMembers = topMembers.map((member, index) => {
 			return `\`${index + 1}.\` <@${member.memberId}>: \`${member.messageCount} Messages\``;
 		});
-
-		const timeTaken = stopWatch.stop().toString();
 
 		const embed = new CardinalEmbedBuilder()
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
@@ -235,7 +231,6 @@ export class statsCommand extends CardinalSubcommand {
 	public async top(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
 
-		const stopWatch = new Stopwatch();
 		const lookback = await this.getLookback(message.guildId);
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
@@ -244,7 +239,9 @@ export class statsCommand extends CardinalSubcommand {
 			['Top Channels', 'View the top channels in terms of message and time spent']
 		];
 
+		const stopWatch = new Stopwatch();
 		const data = await this.getTopData(message.guildId, lookback);
+		const timeTaken = stopWatch.stop().toString();
 
 		const formatter = new DurationFormatter();
 
@@ -264,7 +261,6 @@ export class statsCommand extends CardinalSubcommand {
 			return `\`${index + 1}.\` <#${channel.channelId}>: \`${formatter.format(minutes(channel._count.channelId))}\``;
 		});
 
-		const timeTaken = stopWatch.stop().toString();
 		const topMemberEmbed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
