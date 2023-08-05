@@ -29,6 +29,6 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 			}
 		});
 		if (!data) return BotPrefix;
-		return BotPrefix;
+		return data.prefix;
 	};
 }
