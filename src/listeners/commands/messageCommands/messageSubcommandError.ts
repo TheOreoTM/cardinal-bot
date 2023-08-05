@@ -15,8 +15,6 @@ export class UserListener extends Listener {
 		if (error instanceof UserError) {
 			if (Reflect.get(Object(error.context), 'silent')) return;
 
-			console.log(error);
-
 			if (error.identifier === 'NotRegistered') {
 				content = `Please register your account using \`${await this.container.client.fetchPrefix(message)}register\``;
 			} else if (error.identifier === 'argsMissing') {
@@ -44,13 +42,13 @@ export class UserListener extends Listener {
 						new CardinalEmbedBuilder()
 							.setStyle('fail')
 							.setDescription(content === '' ? error.message : content)
-							.setTitle(error.identifier)
+							.setTitle(error.identifier ?? 'Error')
 					]
 				});
 			}
 
 			return await sendTemporaryMessage(message, {
-				embeds: [new CardinalEmbedBuilder().setDescription(content === '' ? error.message : content).setTitle(error.identifier)]
+				embeds: [new CardinalEmbedBuilder().setDescription(content === '' ? error.message : content).setTitle(error.identifier ?? 'Error')]
 			});
 		}
 		return undefined;

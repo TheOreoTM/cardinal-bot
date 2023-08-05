@@ -8,6 +8,7 @@ import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 	description: 'Change slowmode for a channel',
 	name: 'slowmode',
 	flags: ['off', 'remove', 'clear'],
+	aliases: ['sm'],
 	detailedDescription: {
 		extendedHelp: 'Change the current slowmode for a channel',
 		usages: ['Channel Slowmode', 'Slowmode', 'Channel', '--off'],

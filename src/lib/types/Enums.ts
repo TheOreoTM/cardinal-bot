@@ -25,3 +25,8 @@ export const enum CardinalEmbedStyles {
 	Fail = 'fail',
 	Loading = 'loading'
 }
+
+export const enum RestrictionAction {
+	Allow = 'allow',
+	Deny = 'deny'
+}

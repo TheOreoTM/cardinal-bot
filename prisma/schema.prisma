@@ -127,6 +127,17 @@ model Command {
   usedAt   DateTime @default(now())
 }
 
+model CommandRestriction {
+  id                  String   @unique // guildId-commandName
+  disabled            Boolean  @default(false)
+  whiteListedMembers  String[] @default([])
+  whiteListedRoles    String[] @default([])
+  whiteListedChannels String[] @default([])
+  blackListedMembers  String[] @default([])
+  blackListedRoles    String[] @default([])
+  blackListedChannels String[] @default([])
+}
+
 model AfkPingMessage {
   id         Int    @id @default(autoincrement())
   memberId   String

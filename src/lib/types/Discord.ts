@@ -1,5 +1,6 @@
 import { CardinalClient } from '#lib/CardinalClient';
 import type { CardinalCommand } from '#lib/structures';
+import type { ChatInputCommandContext, ContextMenuCommandContext, MessageCommandContext } from '@sapphire/framework';
 import type {
 	ButtonInteraction,
 	CommandInteraction,
@@ -62,3 +63,4 @@ export interface CardinalButtonInteraction extends ButtonInteraction {
 }
 
 export type InteractionOrMessage = Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction;
+export type InteractionOrMessageCommandContext = MessageCommandContext | ChatInputCommandContext | ContextMenuCommandContext;

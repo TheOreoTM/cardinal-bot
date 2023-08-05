@@ -33,13 +33,13 @@ export class UserListener extends Listener {
 						new CardinalEmbedBuilder()
 							.setStyle('fail')
 							.setDescription(content === '' ? error.message : content)
-							.setTitle(error.identifier)
+							.setTitle(error.identifier ?? 'Error')
 					]
 				});
 			}
 
 			return await sendTemporaryMessage(message, {
-				embeds: [new CardinalEmbedBuilder().setDescription(content === '' ? error.message : content).setTitle(error.identifier)]
+				embeds: [new CardinalEmbedBuilder().setDescription(content === '' ? error.message : content).setTitle(error.identifier ?? 'Error')]
 			});
 		}
 		return undefined;

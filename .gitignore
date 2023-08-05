@@ -18,7 +18,7 @@ migrations
 .DS_Store
 
 
-
+.git
 dist/
 database.sqlite
 

@@ -28,6 +28,7 @@ declare module '@sapphire/pieces' {
 
 declare module '@sapphire/framework' {
 	interface Preconditions {
+		CommandRestriction: never;
 		GuildOnly: never;
 		OwnerMode: never;
 		Blacklisted: never;
