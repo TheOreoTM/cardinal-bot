@@ -1,4 +1,4 @@
-import { CardinalCommand } from '#lib/structures';
+import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { GuildMemberLimits } from '@sapphire/discord.js-utilities';
@@ -22,6 +22,19 @@ import { send } from '@sapphire/plugin-editable-commands';
 export class afkCommand extends CardinalCommand {
 	public async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
 		await args.repeat('url', { times: 50 }).catch(() => null); // remove urls from the message
+		const isAfk = await this.container.db.afk.count({
+			where: {
+				memberId: message.member.id,
+				guildId: message.guildId
+			}
+		});
+
+		if (isAfk !== 0) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')]
+			});
+		}
+
 		const afkMessage = await args.rest('string').catch(() => 'AFK');
 		const afkNick = message.member.displayName;
 		setTimeout(async () => {
