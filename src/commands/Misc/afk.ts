@@ -1,5 +1,6 @@
 import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
 import { seconds } from '#utils/common';
+import { sendTemporaryMessage } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { GuildMemberLimits } from '@sapphire/discord.js-utilities';
 import { BucketScope } from '@sapphire/framework';
@@ -30,7 +31,7 @@ export class afkCommand extends CardinalCommand {
 		});
 
 		if (isAfk !== 0) {
-			return send(message, {
+			return sendTemporaryMessage(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')]
 			});
 		}
