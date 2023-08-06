@@ -121,3 +121,24 @@ const order: Record<PermissionsString, number> = {
 	MentionEveryone: 32,
 	Administrator: 40
 };
+
+/**
+ * Returns an array formated like "item1, iteme2 and item3"
+ * @param items An array of strings
+ * @returns a string formated like "item1, iteme2 and item3"
+ */
+export function andList(items: string[]): string {
+	const length = items.length;
+
+	if (length === 0) {
+		return '';
+	} else if (length === 1) {
+		return items[0];
+	} else if (length === 2) {
+		return `${items[0]} and ${items[1]}`;
+	} else {
+		const lastItem = items[length - 1];
+		const otherItems = items.slice(0, length - 1).join(', ');
+		return `${otherItems} and ${lastItem}`;
+	}
+}

@@ -73,14 +73,14 @@ export class UserEvent extends Listener {
 					const disabledButton = viewPingsButton.setDisabled(true);
 					await send(message, {
 						content: afkReturnGreet.content,
-						components: [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)]
+						components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
 					});
 				}
 			} catch (e) {
 				const disabledButton = viewPingsButton.setDisabled(true);
 				await send(message, {
 					content: afkReturnGreet.content,
-					components: [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)]
+					components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
 				});
 			}
 		}

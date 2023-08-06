@@ -18,7 +18,7 @@ import type {
 	VoiceChannel
 } from 'discord.js';
 
-type GuildChannel = TextChannel | NewsChannel | StageChannel | VoiceChannel;
+export type GuildChannel = TextChannel | NewsChannel | StageChannel | VoiceChannel;
 
 export interface GuildMessage extends Message {
 	channel: GuildChannel;

@@ -5,7 +5,7 @@ import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Messag
 
 @ApplyOptions<Precondition.Options>({
 	position: 2,
-	enabled: false
+	enabled: true
 })
 export class UserPrecondition extends Precondition {
 	public override messageRun(message: Message, command: MessageCommand) {
@@ -37,9 +37,7 @@ export class UserPrecondition extends Precondition {
 		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(commandName, channel.id);
 		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(commandName, member.roles.cache);
 
-		console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
-
-		if (memberIsAllowed && channelIsAllowed && roleIsAllowed)
+		if (!(memberIsAllowed && channelIsAllowed && roleIsAllowed))
 			return this.error({
 				context: { silent: true }
 			});

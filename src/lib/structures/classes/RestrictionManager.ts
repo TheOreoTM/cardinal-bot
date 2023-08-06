@@ -52,9 +52,10 @@ export class RestrictionManager {
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restrictionData.blackListedRoles);
 
 		if (hasBlacklistedRole) return false; // One or more roles are in blacklist, deny
+		if (restrictionData.whiteListedRoles.length === 0) return true; // No whitelisted roles, allow
 		if (hasWhitelistedRole) return true; // One or more roles are in whitelist, allow
 
-		return false; // None of the roles in whtelist, deny
+		return false; // fall through condition
 	}
 
 	public async checkChannelAllowed(commandName: string, channelId: string) {
@@ -163,18 +164,21 @@ export class RestrictionManager {
 		}
 	}
 
-	public async delete(commandName: string) {
+	public async reset(commandName: string) {
 		try {
 			await container.db.commandRestriction.delete({
 				where: {
 					id: `${this.guild.id}-${commandName}`
 				}
 			});
-		} catch (ignored) {}
+			return true;
+		} catch (ignored) {
+			return false;
+		}
 	}
 }
 
-interface CommandRestrictionCreateInput {
+type CommandRestrictionCreateInput = {
 	id: string;
 	disabled?: boolean | undefined;
 	whiteListedMembers?: string[] | undefined;
@@ -183,4 +187,4 @@ interface CommandRestrictionCreateInput {
 	blackListedMembers?: string[] | undefined;
 	blackListedRoles?: string[] | undefined;
 	blackListedChannels?: string[] | undefined;
-}
+};

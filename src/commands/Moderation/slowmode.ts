@@ -53,7 +53,6 @@ export class slowmodeCommand extends ModerationCommand {
 			});
 		}
 		try {
-			console.log(slowmode.offset);
 			await channel.setRateLimitPerUser(Math.floor(slowmode.offset / 1000)).then(() => {
 				const formattedSlowmode = new DurationFormatter().format(slowmode.offset);
 				if (channel.id !== message.channel.id) {
