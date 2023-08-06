@@ -5,7 +5,7 @@ import type { CommandRestriction } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { Role, GuildMember } from 'discord.js';
+import { Role, GuildMember, TextChannel, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<CardinalSubcommand.Options>({
 	permissionLevel: PermissionLevels.Moderator,
@@ -38,7 +38,7 @@ import { Role, GuildMember } from 'discord.js';
 })
 export class restrictionCommand extends CardinalSubcommand {
 	public async add(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
-		const target = await args.pick('role').catch(() => args.pick('member').catch(() => null));
+		const target = await args.pick('role').catch(() => args.pick('member').catch(() => args.pick('guildTextChannel').catch(() => null)));
 		const action = await args.pick(restrictionCommand.type);
 
 		if (!target) {
@@ -58,17 +58,22 @@ export class restrictionCommand extends CardinalSubcommand {
 			});
 		}
 
-		if (!this.checkPermissions(message, target)) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`You cannot modify nor preview the restrictions for this target`)]
-			});
-		}
-
 		const command = await args.pick('commandName').catch(() => null);
 
 		if (!command) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Provide a valid command name to update the restrictions for`)]
+			});
+		}
+
+		if (command.name.toLowerCase() === 'restriction') {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You cannot add a restriction to this command')]
+			});
+		}
+		if (!this.checkPermissions(message, target)) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`You cannot modify nor preview the restrictions for this target`)]
 			});
 		}
 
@@ -263,7 +268,13 @@ export class restrictionCommand extends CardinalSubcommand {
 		return embed;
 	}
 
-	private checkPermissions(message: GuildMessage, target: Role | GuildMember) {
+	private checkPermissions(message: GuildMessage, target: Role | GuildMember | TextChannel) {
+		if (target instanceof TextChannel) {
+			if (message.author.id === message.guild.ownerId) return true;
+
+			return message.member.permissionsIn(target).has(PermissionFlagsBits.ManageChannels);
+		}
+
 		// If it's to itself, always block
 		if (message.member!.id === target.id) return false;
 
@@ -283,6 +294,6 @@ export class restrictionCommand extends CardinalSubcommand {
 		const lowerCasedParameter = parameter.toLowerCase();
 		if (lowerCasedParameter === 'allow') return Args.ok(RestrictionAction.Allow);
 		if (lowerCasedParameter === 'deny') return Args.ok(RestrictionAction.Deny);
-		return Args.error({ argument, parameter, identifier: `Valid action types are \`allow\` and \`deny\`` });
+		return Args.error({ argument, parameter, message: `Valid action types are \`allow\` and \`deny\`` });
 	});
 }

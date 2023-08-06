@@ -1,7 +1,8 @@
 import { RestrictionAction } from '#lib/types';
+import type { GuildBasedChannelTypes } from '@sapphire/discord.js-utilities';
 import { container } from '@sapphire/pieces';
 import { hasAtLeastOneKeyInMap } from '@sapphire/utilities';
-import { GuildMember, type Collection, type Guild, Role, User } from 'discord.js';
+import { GuildMember, type Collection, type Guild, Role, User, GuildChannel, TextChannel } from 'discord.js';
 
 export class RestrictionManager {
 	public constructor(public readonly guild: Guild) {
@@ -80,7 +81,7 @@ export class RestrictionManager {
 		return false; // Channel not in whitelist, deny
 	}
 
-	public async add(target: GuildMember | User | Role, commandName: string, action: RestrictionAction) {
+	public async add(target: GuildMember | User | Role | TextChannel, commandName: string, action: RestrictionAction) {
 		const data: CommandRestrictionCreateInput = { id: `${this.guild.id}-${commandName}` };
 		const previous = (await this.findRestriction(commandName)) ?? data;
 
@@ -88,6 +89,8 @@ export class RestrictionManager {
 		const whitelistedRolesSet = new Set(previous.whiteListedRoles);
 		const blacklistedMembersSet = new Set(previous.blackListedMembers);
 		const blacklistedRolesSet = new Set(previous.blackListedRoles);
+
+		if (target instanceof TextChannel) return this.addChannel(target, commandName, action);
 
 		if (action === RestrictionAction.Allow) {
 			// Add whitelist and remove blacklist
@@ -123,7 +126,45 @@ export class RestrictionManager {
 		}
 	}
 
-	public async remove(target: GuildMember | User | Role, commandName: string, action: RestrictionAction) {
+	private async addChannel(target: TextChannel, commandName: string, action: RestrictionAction) {
+		const data: CommandRestrictionCreateInput = { id: `${this.guild.id}-${commandName}` };
+		const previous = (await this.findRestriction(commandName)) ?? data;
+
+		const whitelistedChannelsSet = new Set(previous.whiteListedChannels);
+		const blacklistedChannelsSet = new Set(previous.blackListedChannels);
+
+		if (action === RestrictionAction.Allow) {
+			// Add whitelist and remove blacklist
+
+			whitelistedChannelsSet.add(target.id);
+			blacklistedChannelsSet.delete(target.id);
+		}
+
+		if (action === RestrictionAction.Deny) {
+			// Add blacklist and remove whitelist
+			whitelistedChannelsSet.delete(target.id);
+			blacklistedChannelsSet.add(target.id);
+		}
+
+		data.blackListedChannels = Array.from(blacklistedChannelsSet);
+		data.whiteListedChannels = Array.from(whitelistedChannelsSet);
+
+		try {
+			await container.db.commandRestriction.upsert({
+				where: {
+					id: `${this.guild.id}-${commandName}`
+				},
+				create: data,
+				update: data
+			});
+
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	public async remove(target: GuildMember | User | Role | TextChannel, commandName: string, action: RestrictionAction) {
 		const data: CommandRestrictionCreateInput = { id: `${this.guild.id}-${commandName}` };
 		const previous = (await this.findRestriction(commandName)) ?? data;
 
@@ -131,6 +172,8 @@ export class RestrictionManager {
 		const whitelistedRolesSet = new Set(previous.whiteListedRoles);
 		const blacklistedMembersSet = new Set(previous.blackListedMembers);
 		const blacklistedRolesSet = new Set(previous.blackListedRoles);
+
+		if (target instanceof TextChannel) return this.removeChannel(target, commandName, action);
 
 		if (action === RestrictionAction.Allow) {
 			// Add whitelist and remove blacklist
@@ -148,6 +191,41 @@ export class RestrictionManager {
 		data.blackListedRoles = Array.from(blacklistedRolesSet);
 		data.whiteListedMembers = Array.from(whitelistedMembersSet);
 		data.whiteListedMembers = Array.from(whitelistedMembersSet);
+
+		try {
+			await container.db.commandRestriction.upsert({
+				where: {
+					id: `${this.guild.id}-${commandName}`
+				},
+				create: data,
+				update: data
+			});
+
+			return true;
+		} catch (error) {
+			return false;
+		}
+	}
+
+	private async removeChannel(target: GuildChannel, commandName: string, action: RestrictionAction) {
+		const data: CommandRestrictionCreateInput = { id: `${this.guild.id}-${commandName}` };
+		const previous = (await this.findRestriction(commandName)) ?? data;
+
+		const whitelistedChannelsSet = new Set(previous.whiteListedChannels);
+		const blacklistedChannelsSet = new Set(previous.blackListedChannels);
+
+		if (action === RestrictionAction.Allow) {
+			// Add whitelist and remove blacklist
+			whitelistedChannelsSet.delete(target.id);
+		}
+
+		if (action === RestrictionAction.Deny) {
+			// Add blacklist and remove whitelist
+			blacklistedChannelsSet.delete(target.id);
+		}
+
+		data.blackListedChannels = Array.from(blacklistedChannelsSet);
+		data.whiteListedChannels = Array.from(whitelistedChannelsSet);
 
 		try {
 			await container.db.commandRestriction.upsert({
