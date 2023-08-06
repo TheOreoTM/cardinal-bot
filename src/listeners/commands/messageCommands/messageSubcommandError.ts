@@ -42,7 +42,7 @@ export class UserListener extends Listener {
 						new CardinalEmbedBuilder()
 							.setStyle('fail')
 							.setDescription(content === '' ? error.message : content)
-							.setTitle(error.identifier ?? 'Error')
+							.setTitle(error.identifier === '' ? 'Error' : error.identifier)
 					]
 				});
 			}

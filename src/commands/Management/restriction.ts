@@ -139,7 +139,9 @@ export class restrictionCommand extends CardinalSubcommand {
 				]
 			});
 		} else {
-			return send(message, { embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Something went wrong')] });
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Something went wrong`)]
+			});
 		}
 	}
 
@@ -160,7 +162,7 @@ export class restrictionCommand extends CardinalSubcommand {
 			});
 		} else {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Something went wrong`)]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`There is no restriction for \`${command.name}\``)]
 			});
 		}
 	}
