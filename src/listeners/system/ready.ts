@@ -5,7 +5,6 @@ import { GuildSettings } from '#lib/structures';
 import { CardinalClient } from '#lib/CardinalClient';
 import { CardinalEvents } from '#lib/types';
 const dev = process.env.NODE_ENV !== 'production';
-console.log(process.env.NODE_ENV);
 
 @ApplyOptions<Listener.Options>({ event: CardinalEvents.ClientReady, once: true, enabled: true })
 export class UserEvent extends Listener {

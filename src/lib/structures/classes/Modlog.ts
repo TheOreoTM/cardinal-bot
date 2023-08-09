@@ -195,6 +195,8 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		if (!guild) return;
 
 		const modlogChannelId = await guild.settings.channels.modlog();
+		if (!modlogChannelId) return;
+
 		const modlogChannel: TextChannel =
 			(guild.channels.cache.get(modlogChannelId) as TextChannel) ?? (await guild.channels.fetch(modlogChannelId));
 		if (!modlogChannel) return;
@@ -229,9 +231,11 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			inline: true
 		});
 
-		return await modlogChannel.send({
-			embeds: [modlogEmbed]
-		});
+		try {
+			await modlogChannel.send({
+				embeds: [modlogEmbed]
+			});
+		} catch (ignored) {}
 	}
 }
 

@@ -9,7 +9,7 @@ export class ChannelConfig {
 	public get modlog() {
 		return async () => {
 			const data = await container.db.guild.findUnique({ where: { guildId: this.guild.id } });
-			return data?.channelModlog ?? '0';
+			return data?.channelModlog ?? null;
 		};
 	}
 }

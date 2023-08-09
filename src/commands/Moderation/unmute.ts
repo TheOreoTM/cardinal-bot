@@ -1,6 +1,6 @@
 import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
-import { mention } from '#utils/utils';
+import { getTag, mention } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Nullish } from '@sapphire/utilities';
@@ -75,7 +75,7 @@ export class unmuteCommand extends ModerationCommand {
 		}
 
 		await send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Unmuted ${target.user.username}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Unmuted ${getTag(target.user)}`)]
 		});
 
 		if (muteDatas.length > 0) {

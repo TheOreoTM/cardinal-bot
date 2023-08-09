@@ -1,6 +1,7 @@
 import { CardinalColors } from '#constants';
 import { CardinalCommand, LanguageHelp, type LanguageHelpDisplayOptions } from '#lib/structures';
 import { isPrivateMessage, isGuildMessage } from '#utils/common';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage, UserOrMemberMentionRegex } from '@sapphire/discord.js-utilities';
 import { Args, Result, container } from '@sapphire/framework';
@@ -176,7 +177,7 @@ export class HelpCommand extends CardinalCommand {
 		return new EmbedBuilder()
 			.setColor(CardinalColors.Default)
 			.setAuthor({
-				name: user.username,
+				name: getTag(user),
 				iconURL: user.displayAvatarURL({ size: 128, extension: 'png' })
 			})
 			.setTimestamp()

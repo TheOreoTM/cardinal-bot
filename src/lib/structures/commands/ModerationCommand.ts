@@ -1,5 +1,5 @@
 import { CardinalCommand } from '#lib/structures/commands/CardinalCommand';
-import type { GuildMessage } from '#lib/types';
+import { type GuildMessage } from '#lib/types';
 import { ApplicationCommandRegistry, CommandOptionsRunTypeEnum, type MessageCommandContext, Args as SapphireArgs } from '@sapphire/framework';
 import {
 	AutocompleteInteraction,

@@ -6,5 +6,7 @@ export enum ModerationType {
 	Kick = 'kick',
 	Unmute = 'unmute',
 	Unban = 'unban',
-	Unwarn = 'unwarn'
+	Unwarn = 'unwarn',
+	AfkReset = 'afkreset',
+	AfkClear = 'afkclear'
 }

@@ -11,10 +11,18 @@ import { Role, GuildMember, TextChannel, PermissionFlagsBits } from 'discord.js'
 	permissionLevel: PermissionLevels.Moderator,
 	name: 'restriction',
 	aliases: ['restrict'],
+	description: 'Configure the restrictions for this server',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp:
+			"Permission nodes are per-user, per-role and per-channel overrides which are used when the built-in permissions system is insufficient. These nodes allow you to manage either a user or a group's ability to use commands. (ie. giving a staff member the ability to warn)",
+		usages: ['add Target allow/deny Command', 'remove Target allow/deny Command', 'reset Command', 'show Command'],
+		examples: ['add @Staff allow warn', 'remove @Staff allow warn', 'add @Jr.Staff deny ban', 'reset warn', 'show ban'],
+		explainedUsage: [
+			['Target', 'Either a role, member or channel. Can be a mention, name or id'],
+			['Command', 'The name of the command'],
+			['Action', 'Eithr `add`, `remove`, `reset` or `show`'],
+			['Type', 'Either `allow` or `deny`']
+		]
 	},
 	subcommands: [
 		{
@@ -97,7 +105,7 @@ export class restrictionCommand extends CardinalSubcommand {
 	}
 
 	public async remove(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
-		const target = await args.pick('role').catch(() => args.pick('member').catch(() => null));
+		const target = await args.pick('role').catch(() => args.pick('member').catch(() => args.pick('guildTextChannel').catch(() => null)));
 		const action = await args.pick(restrictionCommand.type);
 
 		if (!target) {

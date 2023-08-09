@@ -1,6 +1,7 @@
 import { CardinalEmbedBuilder, CardinalPaginatedMessageEmbedFields, ModerationCommand, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
 import { capitalizeWords } from '#utils/formatters';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -48,7 +49,7 @@ export class modlogCommand extends ModerationCommand {
 			const embed = new CardinalEmbedBuilder().setColor(CardinalColors.Default);
 
 			embed.setAuthor({
-				name: `${totalLogs} Modlogs for ${target.username} (${target.id})`,
+				name: `${totalLogs} Modlogs fo r${getTag(target)} (${target.id})`,
 				iconURL: target.displayAvatarURL({ forceStatic: true })
 			});
 

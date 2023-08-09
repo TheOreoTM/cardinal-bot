@@ -1,6 +1,7 @@
 import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -51,7 +52,7 @@ export class kickCommand extends ModerationCommand {
 		await modlog.createKick();
 
 		return send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Kick ${target.user.username} ${reason ? `| ${reason}` : ''}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Kick ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
 	}
 }

@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, CardinalPaginatedMessageEmbedFields, ModerationCommand, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -47,7 +48,7 @@ export class warningsCommand extends ModerationCommand {
 			const embed = new CardinalEmbedBuilder().setColor(CardinalColors.Default);
 
 			embed.setAuthor({
-				name: `${totalWarns} Warnings for ${target.user.username} (${target.id})`,
+				name: `${totalWarns} Warnings for ${getTag(target.user)} (${target.id})`,
 				iconURL: target.displayAvatarURL({ forceStatic: true })
 			});
 

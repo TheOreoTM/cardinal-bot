@@ -40,7 +40,7 @@ export abstract class CardinalSubcommand extends Subcommand {
 			(this.community = options.community ?? false);
 	}
 
-	protected error(identifier: string | UserError, context?: unknown): never {
+	protected error(identifier: string | UserError.Options, context?: unknown): never {
 		throw typeof identifier === 'string' ? new UserError({ identifier, context }) : identifier;
 	}
 

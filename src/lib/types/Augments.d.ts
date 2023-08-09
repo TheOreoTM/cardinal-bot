@@ -36,6 +36,8 @@ declare module '@sapphire/framework' {
 		Everyone: never;
 		Moderator: never;
 		Administrator: never;
+		Staff: never;
+		Trainee: never;
 		ModeratorCommand: never;
 		ServerOwner: never;
 		Community: never;

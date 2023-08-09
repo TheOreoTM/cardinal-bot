@@ -90,14 +90,14 @@ model Afk {
 }
 
 model Guild {
-  guildId       String @id @unique
-  roleTrainee   String @default("0")
-  roleStaff     String @default("0")
-  roleModerator String @default("0")
-  roleAdmin     String @default("0")
-  roleMuted     String @default("0")
+  guildId       String  @id @unique
+  roleTrainee   String? @default("0")
+  roleStaff     String? @default("0")
+  roleModerator String? @default("0")
+  roleAdmin     String? @default("0")
+  roleMuted     String? @default("0")
 
-  channelModlog String @default("0")
+  channelModlog String? @default("0")
 
   lookback Int     @default(7)
   prefix   String  @default(">")

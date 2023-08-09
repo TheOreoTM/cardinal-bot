@@ -1,4 +1,5 @@
 import type { InteractionOrMessage } from '#lib/types';
+import { isTrainee } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
@@ -31,13 +32,19 @@ export class UserPrecondition extends Precondition {
 			});
 		}
 
+		const checkTrainee = await isTrainee(member);
+
+		if (checkTrainee) return this.ok();
+
 		if (!channel) return this.ok();
 
 		const memberIsAllowed = await guild.settings.restrictions.checkMemberAllowed(commandName, member.id);
 		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(commandName, channel.id);
 		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(commandName, member.roles.cache);
 
-		if (!(memberIsAllowed && channelIsAllowed && roleIsAllowed))
+		console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
+
+		if (!(memberIsAllowed || channelIsAllowed || roleIsAllowed))
 			return this.error({
 				context: { silent: true }
 			});

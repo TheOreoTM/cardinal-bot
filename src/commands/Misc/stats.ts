@@ -2,7 +2,7 @@ import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { days, minutes, seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
-import { isGuildPremium } from '#utils/utils';
+import { getTag, isGuildPremium } from '#utils/utils';
 import type { Prisma } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
@@ -99,7 +99,7 @@ export class statsCommand extends CardinalSubcommand {
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setDescription(
-				`${user} (${user.user.username})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
+				`${user} (${getTag(user.user)})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields(
 				{

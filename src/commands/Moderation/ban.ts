@@ -2,6 +2,7 @@ import { ModerationCommand, CardinalEmbedBuilder, Modlog } from '#lib/structures
 import { days } from '#utils/common';
 import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import { DurationFormatter } from '@sapphire/time-utilities';
@@ -80,7 +81,7 @@ export class banCommand extends ModerationCommand {
 		await modlog.createBan({ expiresAt: duration?.fromNow });
 
 		send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Banned ${target.user.username} ${reason ? `| ${reason}` : ''}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Banned ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
 
 		return;

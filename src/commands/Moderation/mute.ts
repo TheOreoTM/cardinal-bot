@@ -1,6 +1,7 @@
 import { ModerationCommand, CardinalEmbedBuilder, Modlog } from '#lib/structures';
 import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import { DurationFormatter } from '@sapphire/time-utilities';
@@ -72,7 +73,7 @@ export class muteCommand extends ModerationCommand {
 		await modlog.createMute({ expiresAt: duration?.fromNow });
 
 		send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${target.user.username} ${reason ? `| ${reason}` : ''}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [

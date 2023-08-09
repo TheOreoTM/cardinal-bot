@@ -1,28 +1,34 @@
-import type { CardinalCommand } from '#lib/structures';
-import type { InteractionOrMessage } from '#lib/types';
+import { type CardinalCommand } from '#lib/structures';
+import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
 import { isTrainee } from '#utils/functions';
-import { Precondition } from '@sapphire/framework';
+import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
 
 export class UserPrecondition extends Precondition {
-	public override async messageRun(message: CardinalCommand.Message) {
-		return await this.check(message);
+	public override async messageRun(message: CardinalCommand.Message, command: MessageCommand) {
+		return await this.check(message, command);
 	}
 
-	public override async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		return await this.check(interaction);
+	public override async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction, command: ChatInputCommand) {
+		return await this.check(interaction, command);
 	}
 
-	public override async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
-		return await this.check(interaction);
+	public override async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction, command: ContextMenuCommand) {
+		return await this.check(interaction, command);
 	}
 
-	async check(interactionOrMessage: InteractionOrMessage) {
+	async check(interactionOrMessage: InteractionOrMessage, command: InteractionOrMessageCommand) {
 		const member = interactionOrMessage.member;
-		if (!member)
+		if (!member || !interactionOrMessage.guild)
 			return this.error({
 				identifier: 'ModCommand',
 				message: 'You are not allowed to use this command'
 			});
+
+		const allowed =
+			(await interactionOrMessage.guild.settings.restrictions.checkMemberAllowed(command.name, interactionOrMessage.member.id)) ||
+			(await interactionOrMessage.guild.settings.restrictions.checkRoleAllowed(command.name, interactionOrMessage.member.roles.cache));
+
+		if (allowed) return this.ok();
 
 		const valid = await isTrainee(member);
 		return valid

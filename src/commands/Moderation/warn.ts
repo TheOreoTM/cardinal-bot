@@ -1,6 +1,7 @@
 import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { canManage } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -41,7 +42,7 @@ export class warnCommand extends ModerationCommand {
 		await modlog.createWarn();
 
 		return send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Warned ${target.user.username} | ${reason}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Warned ${getTag(target.user)} | ${reason}`)]
 		});
 	}
 }

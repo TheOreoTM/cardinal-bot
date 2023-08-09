@@ -1,11 +1,16 @@
 import { PermissionsPrecondition } from '#lib/structures';
-import type { GuildMessage } from '#lib/types';
-import { isAdmin, isModerator } from '#utils/functions';
+import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
+import { isModerator } from '#utils/functions';
 
 export class UserPermissionsPrecondition extends PermissionsPrecondition {
-	public override async handle(message: GuildMessage): PermissionsPrecondition.AsyncResult {
+	public override async handle(iom: InteractionOrMessage, command: InteractionOrMessageCommand): PermissionsPrecondition.AsyncResult {
 		// TODO: Change this to non-async after changing the function
-		const allowed = (await isAdmin(message.member)) || (await isModerator(message.member));
+		if (!iom.guild || !iom.member) return this.error();
+
+		const allowed =
+			(await isModerator(iom.member)) ||
+			(await iom.guild.settings.restrictions.checkMemberAllowed(command.name, iom.member.id)) ||
+			(await iom.guild.settings.restrictions.checkRoleAllowed(command.name, iom.member.roles.cache));
 
 		return allowed
 			? this.ok()

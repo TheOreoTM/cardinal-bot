@@ -1,8 +1,8 @@
 import { RestrictionAction } from '#lib/types';
-import type { GuildBasedChannelTypes } from '@sapphire/discord.js-utilities';
 import { container } from '@sapphire/pieces';
 import { hasAtLeastOneKeyInMap } from '@sapphire/utilities';
 import { GuildMember, type Collection, type Guild, Role, User, GuildChannel, TextChannel } from 'discord.js';
+import { CardinalCommand, ModerationCommand } from '#lib/structures';
 
 export class RestrictionManager {
 	public constructor(public readonly guild: Guild) {
@@ -25,6 +25,13 @@ export class RestrictionManager {
 
 	public async checkMemberAllowed(commandName: string, memberId: string) {
 		const restriction = await this.findRestriction(commandName);
+		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
+
+		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+
+		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
+
 		if (!restriction) return true; // No restriction, allow by default
 
 		const blackListedMembersSet = new Set(restriction.blackListedMembers);
@@ -34,7 +41,7 @@ export class RestrictionManager {
 			return false; // Member is in the blacklist, deny
 		}
 
-		if (whiteListedMembersSet.size === 0) {
+		if (whiteListedMembersSet.size === 0 && !(command instanceof ModerationCommand)) {
 			return true; // No whitelist restriction, allow by default
 		}
 
@@ -46,14 +53,21 @@ export class RestrictionManager {
 	}
 
 	public async checkRoleAllowed(commandName: string, roleMap: Collection<string, Role>) {
-		const restrictionData = await this.findRestriction(commandName);
-		if (!restrictionData) return true; // No restrcion, allow
+		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
+		const restriction = await this.findRestriction(commandName);
 
-		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restrictionData.whiteListedRoles);
-		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restrictionData.blackListedRoles);
+		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+
+		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
+
+		if (!restriction) return true; // No restrcion, allow
+
+		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.whiteListedRoles);
+		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
 
 		if (hasBlacklistedRole) return false; // One or more roles are in blacklist, deny
-		if (restrictionData.whiteListedRoles.length === 0) return true; // No whitelisted roles, allow
+		if (restriction.whiteListedRoles.length === 0 && !(command instanceof ModerationCommand)) return true; // No whitelisted roles, allow
 		if (hasWhitelistedRole) return true; // One or more roles are in whitelist, allow
 
 		return false; // fall through condition
@@ -61,6 +75,13 @@ export class RestrictionManager {
 
 	public async checkChannelAllowed(commandName: string, channelId: string) {
 		const restriction = await this.findRestriction(commandName);
+		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
+
+		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+
+		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
+
 		if (!restriction) return true; // No restriction, allow by default
 
 		const blackListedChannelsSet = new Set(restriction.blackListedChannels);
@@ -70,7 +91,7 @@ export class RestrictionManager {
 			return false; // Channel is in the blacklist, deny
 		}
 
-		if (whiteListedChannelsSet.size === 0) {
+		if (whiteListedChannelsSet.size === 0 && !(command instanceof ModerationCommand)) {
 			return true; // No whitelist restriction, allow by default
 		}
 
@@ -109,7 +130,7 @@ export class RestrictionManager {
 		data.blackListedMembers = Array.from(blacklistedMembersSet);
 		data.blackListedRoles = Array.from(blacklistedRolesSet);
 		data.whiteListedMembers = Array.from(whitelistedMembersSet);
-		data.whiteListedMembers = Array.from(whitelistedMembersSet);
+		data.whiteListedRoles = Array.from(whitelistedRolesSet);
 
 		try {
 			await container.db.commandRestriction.upsert({
@@ -190,7 +211,7 @@ export class RestrictionManager {
 		data.blackListedMembers = Array.from(blacklistedMembersSet);
 		data.blackListedRoles = Array.from(blacklistedRolesSet);
 		data.whiteListedMembers = Array.from(whitelistedMembersSet);
-		data.whiteListedMembers = Array.from(whitelistedMembersSet);
+		data.whiteListedRoles = Array.from(whitelistedRolesSet);
 
 		try {
 			await container.db.commandRestriction.upsert({

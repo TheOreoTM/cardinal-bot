@@ -6,10 +6,15 @@ import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<CardinalSubcommand.Options>({
 	name: 'modafk',
+	description: 'Moderate the AFK status of a member',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'Reset or Clear the AFK status of a member in case that the member is abusing the AFK message',
+		usages: ['reset User Reason', 'reset User', 'clear User Reason', 'clear User'],
+		examples: ['reset @clink Text wall', 'clear @sed Advertising', 'reset @alex', 'reset @rainho'],
+		explainedUsage: [
+			['clear', 'Remove the AFK status of a member'],
+			['reset', 'Reset the AFK status message to default for a member']
+		]
 	},
 	subcommands: [
 		{
@@ -28,6 +33,7 @@ export class modafkCommand extends CardinalSubcommand {
 		const target = await args.pick('member').catch(() => {
 			return this.error({ identifier: 'NoTarget', message: 'Provide a valid member' });
 		});
+		const reason = await args.pick('string').catch(() => 'No reason');
 
 		const afkData = await this.container.db.afk.delete({
 			where: {
@@ -44,6 +50,15 @@ export class modafkCommand extends CardinalSubcommand {
 				identifier: 'NotAFK'
 			});
 		}
+
+		const modlog = new Modlog({
+			member: target,
+			staff: message.member,
+			type: ModerationType.AfkClear,
+			reason: reason
+		});
+
+		await modlog.createAfkClear();
 
 		return send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Cleared the afk status of ${getTag(target.user)}`)]

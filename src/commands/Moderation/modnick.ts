@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, CardinalIndexBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -58,7 +59,7 @@ export class modnickCommand extends ModerationCommand {
 			embeds: [
 				new CardinalEmbedBuilder()
 					.setStyle('success')
-					.setDescription(`Moderated \`${target.user.username}\` with the nickname \`${fullNick}\``)
+					.setDescription(`Moderated \`${getTag(target.user)}\` with the nickname \`${fullNick}\``)
 			]
 		});
 	}

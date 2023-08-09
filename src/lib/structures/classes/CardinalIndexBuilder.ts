@@ -1,7 +1,7 @@
 import { CardinalEpoch } from '#utils/constants';
 import { Snowflake } from '@sapphire/snowflake';
 import randomatic from 'randomatic';
-import { uuid } from 'uuidv4';
+import { v4 } from 'uuid';
 
 export class CardinalIndexBuilder {
 	constructor() {}
@@ -19,6 +19,6 @@ export class CardinalIndexBuilder {
 	}
 
 	public generateUuid() {
-		return uuid();
+		return v4();
 	}
 }

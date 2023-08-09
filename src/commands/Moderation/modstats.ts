@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
+import { getTag } from '#utils/utils';
 import type { Modlog } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -73,7 +74,7 @@ export class modstatsCommand extends ModerationCommand {
 
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
-			.setAuthor({ name: target.user.username, iconURL: target.displayAvatarURL({ forceStatic: true }) })
+			.setAuthor({ name: getTag(target.user), iconURL: target.displayAvatarURL({ forceStatic: true }) })
 			.setTitle('Moderation Statistics');
 
 		embed.addFields(

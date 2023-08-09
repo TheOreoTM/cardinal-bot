@@ -51,10 +51,11 @@ export abstract class CardinalCommand extends Command {
 			cooldownDelay: seconds(5),
 			...options
 		});
-		(this.guarded = options.guarded ?? false),
-			(this.hidden = options.hidden ?? false),
-			(this.permissionLevel = options.permissionLevel ?? PermissionLevels.Everyone),
-			(this.community = options.community ?? false);
+
+		this.guarded = options.guarded ?? false;
+		this.hidden = options.hidden ?? false;
+		this.permissionLevel = options.permissionLevel ?? PermissionLevels.Everyone;
+		this.community = options.community ?? false;
 	}
 
 	public async prefix(message: Message) {
