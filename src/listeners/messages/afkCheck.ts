@@ -2,6 +2,7 @@ import { CardinalEmbedBuilder } from '#lib/structures';
 import { CardinalEvents, type GuildMessage } from '#lib/types';
 import { seconds } from '#utils/common';
 import { CardinalEmojis } from '#utils/constants';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
 import { reply, send } from '@sapphire/plugin-editable-commands';
@@ -115,7 +116,7 @@ export class UserEvent extends Listener {
 							create: {
 								content: message.content,
 								memberId: message.member.id,
-								memberName: message.member.user.username,
+								memberName: getTag(message.member.user),
 								messageUrl: message.url
 							}
 						}

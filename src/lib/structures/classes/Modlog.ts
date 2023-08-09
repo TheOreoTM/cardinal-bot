@@ -6,6 +6,7 @@ import { ModerationType } from '#utils/moderationConstants';
 import type { Nullish } from '@sapphire/utilities';
 import { CardinalColors } from '#utils/constants';
 import { capitalizeWords } from '#utils/formatters';
+import { getTag } from '#utils/utils';
 
 export class Modlog implements Prisma.ModlogCreateInput {
 	staffId: string;
@@ -23,9 +24,9 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public constructor(data: ModlogCreateInput) {
 		this.memberId = data.member.id;
-		this.memberName = data.member instanceof GuildMember ? data.member.user.username : data.member.username;
+		this.memberName = data.member instanceof GuildMember ? getTag(data.member.user) : getTag(data.member);
 		this.staffId = data.staff.id;
-		this.staffName = data.staff.user.username;
+		this.staffName = getTag(data.staff.user);
 		this.type = data.type;
 		this.reason = data.reason ? data.reason : 'No reason';
 		this.length = data.length;
@@ -178,6 +179,15 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	public async createUnban() {
 		const unban = await container.db.modlog.create({ data: this });
 		await this.sendModlog(unban.id);
+	}
+
+	public async createAfkClear() {
+		const afkclear = await container.db.modlog.create({ data: this });
+		await this.sendModlog(afkclear.id);
+	}
+	public async createAfkReset() {
+		const afkreset = await container.db.modlog.create({ data: this });
+		await this.sendModlog(afkreset.id);
 	}
 
 	private async sendModlog(modlogId: number) {
