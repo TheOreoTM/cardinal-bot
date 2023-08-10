@@ -75,6 +75,7 @@ export class muteCommand extends ModerationCommand {
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
+
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [
 				new CardinalEmbedBuilder()

@@ -1,5 +1,5 @@
 import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
-import { canManage } from '#utils/functions';
+import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -40,6 +40,12 @@ export class warnCommand extends ModerationCommand {
 
 		const modlog = new Modlog({ member: target, staff: message.member, reason, type: ModerationType.Warn });
 		await modlog.createWarn();
+
+		try {
+			await sendMessageAsGuild(target.user, target.guild, {
+				embeds: [new CardinalEmbedBuilder().setStyle('info').setDescription(`You have been warned for the reason: ${reason ?? 'No reason'}`)]
+			});
+		} catch (ignored) {}
 
 		return send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Warned ${getTag(target.user)} | ${reason}`)]
