@@ -32,7 +32,11 @@ export class afkCommand extends CardinalCommand {
 
 		if (isAfk !== 0) {
 			return sendTemporaryMessage(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')],
+				allowedMentions: {
+					parse: ['users'],
+					users: [message.author.id]
+				}
 			});
 		}
 
