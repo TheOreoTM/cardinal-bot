@@ -46,7 +46,7 @@ async function checkModerator(member: GuildMember) {
 
 async function checkAdministrator(member: GuildMember) {
 	const role = await member.guild.settings.roles.admin();
-	return role === '0' ? member.permissions.has(PermissionFlagsBits.BanMembers) : hasAtLeastOneKeyInMap(member.roles.cache, [role]);
+	return role === '0' ? member.permissions.has(PermissionFlagsBits.Administrator) : hasAtLeastOneKeyInMap(member.roles.cache, [role]);
 }
 
 export async function canManage(member: GuildMember, target: GuildMember) {
