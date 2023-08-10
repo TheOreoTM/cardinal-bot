@@ -6,7 +6,7 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 
 @ApplyOptions<ScheduledTask.Options>({
 	interval: seconds(5),
-	enabled: false
+	enabled: true
 })
 export class ExpireBanTask extends ScheduledTask {
 	public override async run() {
