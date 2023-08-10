@@ -8,12 +8,12 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: '',
+	description: 'Send a suggestion',
 	name: 'suggest',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'Send a suggestion to a channel specified by the server administrators and wait for a response from the staff',
+		usages: ['Suggestion'],
+		examples: ['Add a channel to send memes']
 	}
 })
 export class suggestCommand extends CardinalCommand {
