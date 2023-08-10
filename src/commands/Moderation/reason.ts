@@ -17,7 +17,7 @@ export class reasonCommand extends ModerationCommand {
 
 		if (!caseNum) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid case number')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid case id')]
 			});
 		}
 
