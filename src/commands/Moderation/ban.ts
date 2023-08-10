@@ -24,7 +24,7 @@ export class banCommand extends ModerationCommand {
 
 		if (!target) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to mute')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to ban')]
 			});
 		}
 
