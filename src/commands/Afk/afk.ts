@@ -32,11 +32,7 @@ export class afkCommand extends CardinalCommand {
 
 		if (isAfk !== 0) {
 			return sendTemporaryMessage(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')],
-				allowedMentions: {
-					parse: ['users'],
-					users: [message.author.id]
-				}
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('You are already AFK')]
 			});
 		}
 
@@ -67,6 +63,12 @@ export class afkCommand extends CardinalCommand {
 			message.member.setNickname(`[AFK] ${message.member.displayName.slice(0, GuildMemberLimits.MaximumDisplayNameLength - '[afk] '.length)}`);
 		}
 
-		return send(message, `${message.member} I set your AFK: ${afkMessage}`);
+		return send(message, {
+			content: `${message.member} I set your AFK: ${afkMessage}`,
+			allowedMentions: {
+				parse: ['users'],
+				users: [message.author.id]
+			}
+		});
 	}
 }
