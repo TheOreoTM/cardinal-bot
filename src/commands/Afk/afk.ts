@@ -66,7 +66,6 @@ export class afkCommand extends CardinalCommand {
 		return send(message, {
 			content: `${message.member} I set your AFK: ${afkMessage}`,
 			allowedMentions: {
-				parse: ['users'],
 				users: [message.author.id]
 			}
 		});

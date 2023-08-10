@@ -106,7 +106,6 @@ export class UserEvent extends Listener {
 			await send(message, {
 				content: `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage}`,
 				allowedMentions: {
-					parse: ['users'],
 					users: [message.author.id]
 				}
 			});
