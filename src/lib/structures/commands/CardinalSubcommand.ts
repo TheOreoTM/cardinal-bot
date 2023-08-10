@@ -63,6 +63,12 @@ export abstract class CardinalSubcommand extends Subcommand {
 			case PermissionLevels.Everyone:
 				container.append('Everyone');
 				break;
+			case PermissionLevels.Trainee:
+				container.append('Trainee');
+				break;
+			case PermissionLevels.Staff:
+				container.append('Staff');
+				break;
 			case PermissionLevels.Moderator:
 				container.append('Moderator');
 				break;

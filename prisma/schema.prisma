@@ -91,13 +91,16 @@ model Afk {
 
 model Guild {
   guildId       String  @id @unique
-  roleTrainee   String? @default("0")
-  roleStaff     String? @default("0")
-  roleModerator String? @default("0")
-  roleAdmin     String? @default("0")
-  roleMuted     String? @default("0")
+  roleTrainee   String?
+  roleStaff     String?
+  roleModerator String?
+  roleAdmin     String?
+  roleMuted     String?
 
-  channelModlog String? @default("0")
+  channelModlog     String?
+  channelSuggestion String?
+
+  suggestionCreateThread Boolean?
 
   lookback Int     @default(7)
   prefix   String  @default(">")
@@ -146,4 +149,22 @@ model AfkPingMessage {
   messageUrl String
   afk        Afk?   @relation(fields: [afkId], references: [id])
   afkId      Int?
+
+  @@index([memberId])
+}
+
+model Suggestion {
+  id                     Int     @id @default(autoincrement())
+  suggestionId           Int
+  guildId                String
+  text                   String
+  memberName             String
+  memberId               String
+  memberDisplayAvatarURL String
+  status                 String // pending | accepted | declined | considered | implemented
+  responderName          String?
+  responderId            String?
+
+  @@unique([guildId, suggestionId])
+  @@index([suggestionId, guildId])
 }

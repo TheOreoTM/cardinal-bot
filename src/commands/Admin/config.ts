@@ -22,35 +22,63 @@ export class setupCommand extends ModerationCommand {
 			builder //
 				.setName(this.name)
 				.setDescription(this.description)
-				.addRoleOption((option) =>
-					option //
-						.setName('trainee_role')
-						.setDescription('The role that should be considered as trainee')
+				.addSubcommand((subcommand) =>
+					subcommand
+						.setName('moderation')
+						.setDescription('Config the moderation sub-system of the bot')
+						.addRoleOption((option) =>
+							option //
+								.setName('trainee_role')
+								.setDescription('The role that should be considered as trainee')
+						)
+						.addRoleOption((option) =>
+							option //
+								.setName('staff_role')
+								.setDescription('The role that should be considered as staff')
+						)
+						.addRoleOption((option) =>
+							option //
+								.setName('mod_role')
+								.setDescription('The role that should be considered as moderator')
+						)
+						.addRoleOption((option) =>
+							option //
+								.setName('admin_role')
+								.setDescription('The role that should be considered as admin')
+						)
+						.addRoleOption((option) =>
+							option //
+								.setName('mute_role')
+								.setDescription('The role that should be given when muting someone')
+						)
+						.addChannelOption((option) =>
+							option //
+								.setName('modlog_channel')
+								.setDescription('The channel where the modlogs should be sent to')
+						)
 				)
-				.addRoleOption((option) =>
-					option //
-						.setName('staff_role')
-						.setDescription('The role that should be considered as staff')
-				)
-				.addRoleOption((option) =>
-					option //
-						.setName('mod_role')
-						.setDescription('The role that should be considered as moderator')
-				)
-				.addRoleOption((option) =>
-					option //
-						.setName('admin_role')
-						.setDescription('The role that should be considered as admin')
-				)
-				.addRoleOption((option) =>
-					option //
-						.setName('mute_role')
-						.setDescription('The role that should be given when muting someone')
-				)
-				.addChannelOption((option) =>
-					option //
-						.setName('modlog_channel')
-						.setDescription('The channel where the modlogs should be sent to')
+				.addSubcommand((subcommand) =>
+					subcommand
+						.setName('suggestion')
+						.setDescription('Setup the suggestion sub-system of the bot')
+						.addChannelOption((option) =>
+							option.setName('suggestion_channel').setDescription('The channel where the suggestions whould be sent to')
+						)
+						.addStringOption((option) =>
+							option
+								.setName('create_thread')
+								.setDescription('Whether the bot should create a new discussion thread of each new suggestion')
+								.addChoices(
+									{
+										name: 'Yes',
+										value: 'true'
+									},
+									{
+										name: 'No',
+										value: 'false'
+									}
+								)
+						)
 				)
 		);
 	}
@@ -62,6 +90,8 @@ export class setupCommand extends ModerationCommand {
 		const admin_role = interaction.options.getRole('admin_role');
 		const mute_role = interaction.options.getRole('mute_role');
 		const modlog_channel = interaction.options.getChannel('modlog_channel');
+		const suggestion_channel = interaction.options.getChannel('suggestion_channel');
+		const suggestion_create_thread = interaction.options.getString('create_thread');
 
 		let data: Prisma.GuildCreateInput = {
 			guildId: interaction.guildId
@@ -72,6 +102,8 @@ export class setupCommand extends ModerationCommand {
 		if (admin_role) data.roleAdmin = admin_role.id;
 		if (mute_role) data.roleMuted = mute_role.id;
 		if (modlog_channel) data.channelModlog = modlog_channel.id;
+		if (suggestion_channel) data.channelSuggestion = suggestion_channel.id;
+		if (suggestion_create_thread) data.suggestionCreateThread = suggestion_create_thread === 'true' ? true : false;
 
 		const embed = new CardinalEmbedBuilder().setStyle('success').setDescription('Updated server configuration');
 

@@ -30,3 +30,11 @@ export const enum RestrictionAction {
 	Allow = 'allow',
 	Deny = 'deny'
 }
+
+export const enum SuggestionStatus {
+	Pending = 'pending',
+	Approved = 'approved',
+	Rejected = 'rejected',
+	Considered = 'considered',
+	Implemented = 'implemented'
+}

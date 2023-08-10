@@ -8,7 +8,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { Role, GuildMember, TextChannel, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<CardinalSubcommand.Options>({
-	permissionLevel: PermissionLevels.Moderator,
+	permissionLevel: PermissionLevels.Administrator,
 	name: 'restriction',
 	aliases: ['restrict'],
 	description: 'Configure the restrictions for this server',
@@ -45,6 +45,7 @@ import { Role, GuildMember, TextChannel, PermissionFlagsBits } from 'discord.js'
 	]
 })
 export class restrictionCommand extends CardinalSubcommand {
+	@PermissionLevel('Administrator')
 	public async add(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const target = await args.pick('role').catch(() => args.pick('member').catch(() => args.pick('guildTextChannel').catch(() => null)));
 		const action = await args.pick(restrictionCommand.type);
@@ -104,6 +105,7 @@ export class restrictionCommand extends CardinalSubcommand {
 		}
 	}
 
+	@PermissionLevel('Administrator')
 	public async remove(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const target = await args.pick('role').catch(() => args.pick('member').catch(() => args.pick('guildTextChannel').catch(() => null)));
 		const action = await args.pick(restrictionCommand.type);
@@ -153,7 +155,7 @@ export class restrictionCommand extends CardinalSubcommand {
 		}
 	}
 
-	@PermissionLevel('Moderator')
+	@PermissionLevel('Administrator')
 	public async reset(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const command = await args.pick('commandName').catch(() => null);
 
@@ -175,7 +177,7 @@ export class restrictionCommand extends CardinalSubcommand {
 		}
 	}
 
-	@PermissionLevel('Trainee')
+	@PermissionLevel('Administrator')
 	public async show(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const command = await args.pick('commandName').catch(() => null);
 

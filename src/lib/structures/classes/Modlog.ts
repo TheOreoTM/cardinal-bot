@@ -1,6 +1,6 @@
 import type { Prisma } from '@prisma/client';
 import { container } from '@sapphire/pieces';
-import { GuildMember, TextChannel, type User } from 'discord.js';
+import { GuildMember, type User } from 'discord.js';
 import { CardinalIndexBuilder, CardinalEmbedBuilder } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
 import type { Nullish } from '@sapphire/utilities';
@@ -194,11 +194,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		const guild = container.client.guilds.cache.get(this.guildId) ?? (await container.client.guilds.fetch(this.guildId));
 		if (!guild) return;
 
-		const modlogChannelId = await guild.settings.channels.modlog();
-		if (!modlogChannelId) return;
-
-		const modlogChannel: TextChannel =
-			(guild.channels.cache.get(modlogChannelId) as TextChannel) ?? (await guild.channels.fetch(modlogChannelId));
+		const modlogChannel = await guild.settings.channels.modlog();
 		if (!modlogChannel) return;
 
 		const modlogEmbed = new CardinalEmbedBuilder()

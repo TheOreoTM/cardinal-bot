@@ -35,7 +35,7 @@ export const enum CardinalColors {
 export const enum CardinalEmojis {
 	Fail = '<:fail:1093480740571852810>',
 	Success = '<:success:1093480744040534046>',
-	Prompt = '<:edit:1057359923421380608>',
+	Prompt = '<:edit:1138939490166112366>',
 	Loading = '<a:loading:1096158078900129943>',
 	Info = '<:info:1096158656942330006>',
 	Coin = '🪙',
@@ -55,5 +55,6 @@ export const enum CardinalEmojis {
 	Invisible = '<:invisible:1131233401731567666>',
 	Dnd = '<:dnd:1131233360925163652>',
 	Idle = '<:idle:1131233326523490424> ',
-	Reply = '<:reply:1136774317993107536>'
+	Reply = '<:reply:1136774317993107536>',
+	Gear = '⚙️'
 }

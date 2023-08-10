@@ -78,7 +78,7 @@
 		"deploy": "yarn prisma:push-prod && yarn build && NODE_ENV=production yarn start",
 		"dev": "yarn prisma:push-dev && yarn build && yarn start",
 		"format": "prettier --write \"src/\"",
-		"prisma:push-dev": "dotenv -e .env.development.local -- npx prisma db push",
+		"prisma:push-dev": "dotenv -e .env.development -- npx prisma db push",
 		"prisma:push-prod": "dotenv -e .env -- npx prisma db push",
 		"prisma:generate": "npx prisma generate"
 	},

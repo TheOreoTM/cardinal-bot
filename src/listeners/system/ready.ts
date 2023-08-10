@@ -20,6 +20,7 @@ export class UserEvent extends Listener {
 		const guilds = client.guilds.cache;
 		for (const guild of guilds.values()) {
 			guild.settings = new GuildSettings(guild);
+			// await guild.settings.init();
 		}
 	}
 

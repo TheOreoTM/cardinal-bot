@@ -27,8 +27,8 @@ export class RestrictionManager {
 		const restriction = await this.findRestriction(commandName);
 		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 
-		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
 
 		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
 
@@ -56,8 +56,8 @@ export class RestrictionManager {
 		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 		const restriction = await this.findRestriction(commandName);
 
-		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
 
 		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
 
@@ -77,8 +77,8 @@ export class RestrictionManager {
 		const restriction = await this.findRestriction(commandName);
 		const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 
-		console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
+		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
+		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
 
 		if (command instanceof ModerationCommand && !restriction) return false; // Command is a moderator command with no restriction setup
 

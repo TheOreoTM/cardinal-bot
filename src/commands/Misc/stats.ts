@@ -25,7 +25,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 			'channel #general',
 			'channel',
 			'channel 856722573576765450',
-			'role @Staff',
+			'role @Staff --limit=10',
 			'role 904263866270228502',
 			'role',
 			'lookback 7'
@@ -39,7 +39,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 	},
 	options: ['limit'],
 	aliases: ['stat', 's'],
-	cooldownDelay: seconds(10),
+	cooldownDelay: seconds(6),
 	subcommands: [
 		{
 			name: 'lookback',
@@ -551,6 +551,7 @@ export class statsCommand extends CardinalSubcommand {
 	private initOptions(args: CardinalSubcommand.Args) {
 		const take = parseInt(args.getOption('limit') ?? '');
 		this.take = isNaN(take) ? this.take : take;
+
 		if (this.take > 10) this.take = 5;
 	}
 

@@ -6,10 +6,10 @@ import { UserError } from '@sapphire/framework';
 export const PermissionLevel = (level: PermissionLevel): MethodDecorator => {
 	return createFunctionPrecondition(async (message: CardinalCommand.Message) => {
 		const serverowner = isGuildOwner(message.member);
-		const admin = serverowner || (await isAdmin(message.member));
-		const mod = admin || (await isModerator(message.member));
-		const staff = mod || (await isStaff(message.member));
-		const trainee = staff || (await isTrainee(message.member));
+		const admin = await isAdmin(message.member);
+		const mod = await isModerator(message.member);
+		const staff = await isStaff(message.member);
+		const trainee = await isTrainee(message.member);
 
 		if (isOwner(message.member)) return true;
 

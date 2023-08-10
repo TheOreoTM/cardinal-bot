@@ -1,9 +1,12 @@
-import { PermissionsPrecondition } from '#lib/structures';
+import { CardinalSubcommand, PermissionsPrecondition } from '#lib/structures';
 import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
 import { isTrainee } from '#utils/functions';
 
 export class UserPermissionsPrecondition extends PermissionsPrecondition {
-	public override async handle(iom: InteractionOrMessage, command: InteractionOrMessageCommand): PermissionsPrecondition.AsyncResult {
+	public override async handle(
+		iom: InteractionOrMessage,
+		command: InteractionOrMessageCommand | CardinalSubcommand
+	): PermissionsPrecondition.AsyncResult {
 		// TODO: Change this to non-async after changing the function
 		if (!iom.guild || !iom.member) return this.error();
 

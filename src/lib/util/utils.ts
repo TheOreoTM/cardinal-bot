@@ -7,12 +7,22 @@ import {
 	type MessageCommandSuccessPayload
 } from '@sapphire/framework';
 import { cyan } from 'colorette';
-import type { APIUser, EmbedAuthorData, Guild, ImageURLOptions, Message, User } from 'discord.js';
+import {
+	ButtonBuilder,
+	ButtonStyle,
+	type APIUser,
+	type EmbedAuthorData,
+	type Guild,
+	type ImageURLOptions,
+	type Message,
+	type User
+} from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { isNullishOrEmpty } from '@sapphire/utilities';
 import { CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
+import { ButtonLimits } from '@sapphire/discord.js-utilities';
 
 /**
  *
@@ -209,4 +219,12 @@ export async function isGuildPremium(guildId: string) {
 	const guildData = await container.db.guild.findUnique({ where: { guildId } });
 	if (!guildData) return false;
 	return guildData.premium;
+}
+
+export function generateSendMessageAsGuildButton(guild: Guild) {
+	return new ButtonBuilder()
+		.setStyle(ButtonStyle.Secondary)
+		.setDisabled(true)
+		.setLabel(`Sent from ${guild.name.slice(0, ButtonLimits.MaximumLabelCharacters - 'sent from'.length)}`)
+		.setCustomId(`sentFrom-${guild.id}`);
 }

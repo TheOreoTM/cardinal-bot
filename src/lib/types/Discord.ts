@@ -67,6 +67,8 @@ export interface GuildCommandInteractionOptionResolver extends CommandInteractio
 export interface CardinalButtonInteraction extends ButtonInteraction {
 	readonly message: Message;
 	client: CardinalClient<true>;
+	readonly guild: Guild;
+	readonly guildId: string;
 }
 
 export type InteractionOrMessage = Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction;

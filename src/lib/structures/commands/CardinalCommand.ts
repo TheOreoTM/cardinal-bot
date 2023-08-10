@@ -62,8 +62,8 @@ export abstract class CardinalCommand extends Command {
 		return await this.container.client.fetchPrefix(message);
 	}
 
-	protected error(message: string | UserError, context?: unknown): never {
-		throw typeof message === 'string' ? new UserError({ identifier: 'Error', message, context }) : message;
+	protected error(message: string | UserError.Options, context?: unknown): never {
+		throw typeof message === 'string' ? new UserError({ identifier: 'Error', message, context }) : new UserError(message);
 	}
 
 	protected override parseConstructorPreConditions(options: CardinalCommand.Options): void {
@@ -84,6 +84,12 @@ export abstract class CardinalCommand extends Command {
 		switch (options.permissionLevel ?? PermissionLevels.Everyone) {
 			case PermissionLevels.Everyone:
 				container.append('Everyone');
+				break;
+			case PermissionLevels.Trainee:
+				container.append('Trainee');
+				break;
+			case PermissionLevels.Staff:
+				container.append('Staff');
 				break;
 			case PermissionLevels.Moderator:
 				container.append('Moderator');
