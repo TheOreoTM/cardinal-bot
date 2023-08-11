@@ -1,4 +1,4 @@
-import { ModerationCommand, type CardinalCommand } from '#lib/structures';
+import { ModerationCommand } from '#lib/structures';
 import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
 import { isAdmin, isTrainee } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -22,7 +22,7 @@ export class UserPrecondition extends Precondition {
 		return this.check(interaction, command);
 	}
 
-	private async check(interactionOrMessage: InteractionOrMessage, command: InteractionOrMessageCommand) {
+	private async check(interactionOrMessage: InteractionOrMessage, command: InteractionOrMessageCommand | ModerationCommand) {
 		const member = interactionOrMessage.member;
 		const guild = interactionOrMessage.guild;
 		const channel = interactionOrMessage.channel;
@@ -45,6 +45,7 @@ export class UserPrecondition extends Precondition {
 
 		// console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
+		console.log(!memberIsAllowed, await isTrainee(member), !(command instanceof ModerationCommand));
 		if (!memberIsAllowed && (await isTrainee(member)) && !(command instanceof ModerationCommand))
 			return this.error({
 				context: { silent: true }
