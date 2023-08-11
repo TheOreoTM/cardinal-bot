@@ -1,4 +1,5 @@
-import type { InteractionOrMessage } from '#lib/types';
+import { ModerationCommand, type CardinalCommand } from '#lib/structures';
+import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
 import { isAdmin, isTrainee } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
@@ -10,18 +11,18 @@ import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Messag
 })
 export class UserPrecondition extends Precondition {
 	public override messageRun(message: Message, command: MessageCommand) {
-		return this.check(message, command.name);
+		return this.check(message, command);
 	}
 
 	public override chatInputRun(interaction: ChatInputCommandInteraction<'cached'>, command: ChatInputCommand) {
-		return this.check(interaction, command.name);
+		return this.check(interaction, command);
 	}
 
 	public override contextMenuRun(interaction: ContextMenuCommandInteraction<'cached'>, command: ContextMenuCommand) {
-		return this.check(interaction, command.name);
+		return this.check(interaction, command);
 	}
 
-	private async check(interactionOrMessage: InteractionOrMessage, commandName: string) {
+	private async check(interactionOrMessage: InteractionOrMessage, command: InteractionOrMessageCommand) {
 		const member = interactionOrMessage.member;
 		const guild = interactionOrMessage.guild;
 		const channel = interactionOrMessage.channel;
@@ -38,13 +39,18 @@ export class UserPrecondition extends Precondition {
 
 		if (!channel) return this.ok();
 
-		const memberIsAllowed = await guild.settings.restrictions.checkMemberAllowed(commandName, member.id);
-		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(commandName, channel.id);
-		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(commandName, member.roles.cache);
+		const memberIsAllowed = await guild.settings.restrictions.checkMemberAllowed(command.name, member.id);
+		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(command.name, channel.id);
+		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache);
 
 		// console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
-		if (!memberIsAllowed && (await isTrainee(member))) return this.ok(); // Member is a staff member and isnt blacklisted
+		if (!memberIsAllowed && (await isTrainee(member)) && !(command instanceof ModerationCommand))
+			return this.error({
+				context: { silent: true }
+			}); // Member is a staff member and is blacklisted and the command is not a moderation command
+
+		if (!memberIsAllowed && (await isTrainee(member))) return this.ok(); // Member is a staff member and is blacklisted
 
 		if (!(memberIsAllowed || channelIsAllowed || roleIsAllowed))
 			return this.error({
