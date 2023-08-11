@@ -1,5 +1,5 @@
 import type { InteractionOrMessage } from '#lib/types';
-import { isTrainee } from '#utils/functions';
+import { isAdmin, isTrainee } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
@@ -32,9 +32,9 @@ export class UserPrecondition extends Precondition {
 			});
 		}
 
-		const checkTrainee = await isTrainee(member);
+		const checkAdmin = await isAdmin(member);
 
-		if (checkTrainee) return this.ok();
+		if (checkAdmin) return this.ok();
 
 		if (!channel) return this.ok();
 
