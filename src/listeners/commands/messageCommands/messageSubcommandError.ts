@@ -12,6 +12,7 @@ import ms from 'enhanced-ms';
 export class UserListener extends Listener {
 	public override async run(error: UserError, { message }: MessageCommandErrorPayload) {
 		let content: string = '';
+
 		if (error instanceof UserError) {
 			if (Reflect.get(Object(error.context), 'silent')) return;
 
