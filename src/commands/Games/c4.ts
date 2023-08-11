@@ -11,7 +11,7 @@ import type { User } from 'discord.js';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['connect-four'],
 	description: 'Play Connect-Four with somebody.',
-	enabled: false,
+	enabled: true,
 	detailedDescription: {
 		usages: ['User'],
 		extendedHelp:
