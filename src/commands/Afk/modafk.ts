@@ -58,6 +58,10 @@ export class modafkCommand extends CardinalSubcommand {
 			reason: reason
 		});
 
+		if (target.manageable) {
+			target.setNickname(afkData.afkNick);
+		}
+
 		await modlog.createAfkClear();
 
 		return send(message, {
