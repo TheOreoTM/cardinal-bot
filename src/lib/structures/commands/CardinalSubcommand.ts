@@ -40,8 +40,8 @@ export abstract class CardinalSubcommand extends Subcommand {
 			(this.community = options.community ?? false);
 	}
 
-	protected error(identifier: string | UserError.Options, context?: unknown): never {
-		throw typeof identifier === 'string' ? new UserError({ identifier, context }) : identifier;
+	protected error(message: string | UserError.Options, context?: unknown): never {
+		throw typeof message === 'string' ? new UserError({ identifier: 'Error', message, context }) : new UserError(message);
 	}
 
 	protected parseConstructorPreConditions(options: CardinalSubcommand.Options): void {
