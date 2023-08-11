@@ -24,9 +24,15 @@ export class modnickCommand extends ModerationCommand {
 		const isFrozen = args.getFlags('frozen', 'freeze', 'f');
 
 		if (!target) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to warn')]
-			});
+			if (message.member.id === '717578903312531476') {
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to warn')]
+				});
+			} else {
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to modnick')]
+				});
+			}
 		}
 
 		let nick = await args.rest('string').catch(() => '');
