@@ -44,6 +44,8 @@ export class UserPrecondition extends Precondition {
 
 		// console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
+		if (!memberIsAllowed && (await isTrainee(member))) return this.ok(); // Member is a staff member and isnt blacklisted
+
 		if (!(memberIsAllowed || channelIsAllowed || roleIsAllowed))
 			return this.error({
 				context: { silent: true }
