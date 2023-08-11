@@ -1,5 +1,6 @@
 import { ModerationCommand, CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
+import { seconds } from '#utils/common';
 import { BotClientID, CardinalEmojis } from '#utils/constants';
 import { sendTemporaryMessage } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -33,6 +34,6 @@ export class cleanCommand extends ModerationCommand {
 			return send(message, { embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Something went wrong')] });
 		});
 
-		return sendTemporaryMessage(message, `${CardinalEmojis.Success} Successfully cleaned \`${messagesToDelete.length} messages\``);
+		return sendTemporaryMessage(message, `${CardinalEmojis.Success} Successfully cleaned \`${messagesToDelete.length} messages\``, seconds(4));
 	}
 }
