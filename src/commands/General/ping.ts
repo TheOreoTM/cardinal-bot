@@ -52,7 +52,7 @@ export class UserCommand extends Command {
 				? await send(interactionOrMessage, { content: 'Ping?' })
 				: await interactionOrMessage.reply({ content: 'Ping?', fetchReply: true });
 
-		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
+		const content = `Pong! WS Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
 			pingMessage.createdTimestamp - interactionOrMessage.createdTimestamp
 		}ms.`;
 

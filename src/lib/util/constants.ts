@@ -12,6 +12,7 @@ export const BotPrivilegedUsers = envParseArray('BOT_PRIVILEGED_USERS');
 export const BotPrefix = envParseString('BOT_PREFIX');
 export const BotClientID = '740962735306702858';
 export const CooldownFiltered = [BotOwner, ...BotPrivilegedUsers];
+export const BotVersion = '1.2.1';
 
 export const MainServerID = '519734247519420438';
 /**
