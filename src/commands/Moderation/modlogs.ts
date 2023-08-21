@@ -49,7 +49,7 @@ export class modlogCommand extends ModerationCommand {
 			const embed = new CardinalEmbedBuilder().setColor(CardinalColors.Default);
 
 			embed.setAuthor({
-				name: `${totalLogs} Modlogs fo r${getTag(target)} (${target.id})`,
+				name: `${totalLogs} Modlogs for ${getTag(target)} (${target.id})`,
 				iconURL: target.displayAvatarURL({ forceStatic: true })
 			});
 
