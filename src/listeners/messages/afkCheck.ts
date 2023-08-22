@@ -64,7 +64,7 @@ export class UserEvent extends Listener {
 					afkPings.forEach((afkPing) => {
 						embed.addFields({
 							name: `${afkPing.memberName}`,
-							value: `${CardinalEmojis.Reply} ${afkPing.content} [(Go there)](${afkPing.messageUrl})`
+							value: `${CardinalEmojis.Reply} ${afkPing.content} [(Jump)](${afkPing.messageUrl})`
 						});
 					});
 
