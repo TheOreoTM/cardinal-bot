@@ -35,6 +35,9 @@ export class modstatsCommand extends ModerationCommand {
 				guildId: guild.id,
 				createdAt: {
 					gte: oneWeek
+				},
+				type: {
+					in: [ModerationType.Kick, ModerationType.Ban, ModerationType.Warn, ModerationType.Mute]
 				}
 			}
 		});
@@ -45,6 +48,9 @@ export class modstatsCommand extends ModerationCommand {
 				guildId: guild.id,
 				createdAt: {
 					gte: oneMonth
+				},
+				type: {
+					in: [ModerationType.Kick, ModerationType.Ban, ModerationType.Warn, ModerationType.Mute]
 				}
 			}
 		});
@@ -52,7 +58,10 @@ export class modstatsCommand extends ModerationCommand {
 		const modlogsAll = await this.container.db.modlog.findMany({
 			where: {
 				staffId: target.id,
-				guildId: guild.id
+				guildId: guild.id,
+				type: {
+					in: [ModerationType.Kick, ModerationType.Ban, ModerationType.Warn, ModerationType.Mute]
+				}
 			}
 		});
 
