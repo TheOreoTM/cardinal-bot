@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { ButtonBuilder, version as discordjsVersion } from 'discord.js';
+import { ButtonBuilder, ButtonStyle, version as discordjsVersion } from 'discord.js';
 import { CardinalCommand, CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { Sql } from '@prisma/client/runtime/library.js';
 import { Stopwatch } from '@sapphire/stopwatch';
@@ -99,7 +99,11 @@ export class botinfoCommand extends CardinalCommand {
 
 	private get supportButton() {
 		return new ActionRowBuilder<ButtonBuilder>().addComponents(
-			new ButtonBuilder().setURL('https://discord.gg/54ZR2b8AYV').setLabel('Support Server').setEmoji(CardinalEmojis.Cardinal)
+			new ButtonBuilder()
+				.setURL('https://discord.gg/54ZR2b8AYV')
+				.setStyle(ButtonStyle.Link)
+				.setLabel('Support Server')
+				.setEmoji(CardinalEmojis.Cardinal)
 		);
 	}
 
