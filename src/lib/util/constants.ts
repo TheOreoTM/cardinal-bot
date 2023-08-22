@@ -34,6 +34,7 @@ export const enum CardinalColors {
 }
 
 export const enum CardinalEmojis {
+	Cardinal = '<:cardinal:1143546907801682001>',
 	Fail = '<:fail:1093480740571852810>',
 	Success = '<:success:1093480744040534046>',
 	Prompt = '<:edit:1138939490166112366>',

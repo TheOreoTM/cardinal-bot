@@ -1,14 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { version as discordjsVersion } from 'discord.js';
+import { ButtonBuilder, version as discordjsVersion } from 'discord.js';
 import { CardinalCommand, CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { Sql } from '@prisma/client/runtime/library.js';
 import { Stopwatch } from '@sapphire/stopwatch';
 import { send } from '@sapphire/plugin-editable-commands';
 import { version as sapphireVersion } from '@sapphire/framework';
-import { BotVersion, CardinalColors, ZeroWidthSpace } from '#utils/constants';
+import { BotVersion, CardinalColors, CardinalEmojis, ZeroWidthSpace } from '#utils/constants';
 import { countlines } from '#utils/utils';
 import { uptime, type CpuInfo, cpus } from 'os';
 import { roundNumber } from '@sapphire/utilities';
+import { ActionRowBuilder } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View basic information about the bot',
@@ -32,12 +33,12 @@ export class botinfoCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: CardinalCommand.Message) {
-		return send(message, { embeds: [await this.statsEmbed()] });
+		return send(message, { embeds: [await this.statsEmbed()], components: [this.supportButton] });
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		return interaction.reply({ embeds: [await this.statsEmbed()] });
+		return interaction.reply({ embeds: [await this.statsEmbed()], components: [this.supportButton] });
 	}
 
 	public async statsEmbed() {
@@ -93,6 +94,12 @@ export class botinfoCommand extends CardinalCommand {
 				value: fields.serverUsage,
 				inline: true
 			}
+		);
+	}
+
+	private get supportButton() {
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+			new ButtonBuilder().setURL('https://discord.gg/54ZR2b8AYV').setLabel('Support Server').setEmoji(CardinalEmojis.Cardinal)
 		);
 	}
 
