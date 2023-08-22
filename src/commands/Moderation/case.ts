@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, ModerationCommand, } from '#lib/structures';
+import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
@@ -13,22 +13,12 @@ import { send } from '@sapphire/plugin-editable-commands';
 })
 export class caseCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
-		const target = await args.pick('member').catch(() => null);
+		const caseNum = await args.pick('member').catch(() => null);
 
-		if (!target) {
+		if (!caseNum) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to warn')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid case ID')]
 			});
 		}
-
-		const reason = await args.rest('string').catch(() => null);
-
-		if (!reason) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid reason')]
-			});
-		}
-
-		return;
 	}
 }
