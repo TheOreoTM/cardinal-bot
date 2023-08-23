@@ -34,12 +34,12 @@ export class caseCommand extends ModerationCommand {
 		const embed = new CardinalEmbedBuilder().setColor(CardinalColors.Warn).addFields(
 			{
 				name: 'User',
-				value: `${modlog.memberName} (<${modlog.memberId}>)`,
+				value: `${modlog.memberName} (<@${modlog.memberId}>)`,
 				inline: true
 			},
 			{
 				name: 'Moderator',
-				value: `${modlog.staffName} (<${modlog.staffId}>)`,
+				value: `${modlog.staffName} (<@${modlog.staffId}>)`,
 				inline: true
 			},
 			{

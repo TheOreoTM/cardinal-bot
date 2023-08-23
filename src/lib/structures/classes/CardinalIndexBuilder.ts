@@ -34,15 +34,12 @@ export class CardinalIndexBuilder {
 	}
 
 	public async modlogId(guildId: string) {
-		const modlog = await container.db.modlog.findFirst({
+		const modlog = await container.db.modlog.count({
 			where: {
 				guildId
-			},
-			orderBy: {
-				id: 'desc'
 			}
 		});
 
-		return modlog ? modlog.id + 1 : 1;
+		return modlog + 1;
 	}
 }
