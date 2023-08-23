@@ -9,6 +9,7 @@ datasource db {
 
 model Modlog {
   id         Int       @id @default(autoincrement())
+  caseId     Int
   staffId    String
   staffName  String
   memberId   String
@@ -23,6 +24,7 @@ model Modlog {
   mute       Mute[]
   ban        Ban[]
 
+  @@unique([guildId, caseId])
   @@index([staffId, memberId, guildId])
 }
 

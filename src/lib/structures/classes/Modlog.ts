@@ -9,28 +9,45 @@ import { capitalizeWords } from '#utils/formatters';
 import { getTag } from '#utils/utils';
 
 export class Modlog implements Prisma.ModlogCreateInput {
-	staffId: string;
-	staffName: string;
-	memberId: string;
-	guildId: string;
-	memberName: string;
+	caseId: number = 0;
+	staffId: string = '';
+	staffName: string = '';
+	memberId: string = '';
+	guildId: string = '';
+	memberName: string = '';
 	reason?: string | null | undefined;
-	type: string;
+	type: string = '';
 	length?: string | null | undefined;
 	createdAt?: string | Date | undefined;
 	warn?: Prisma.WarnCreateNestedManyWithoutModlogInput | undefined;
 	modnick?: Prisma.ModnickCreateNestedManyWithoutModlogInput | undefined;
 	mute?: Prisma.MuteCreateNestedManyWithoutModlogInput | undefined;
 
-	public constructor(data: ModlogCreateInput) {
-		this.memberId = data.member.id;
-		this.memberName = data.member instanceof GuildMember ? getTag(data.member.user) : getTag(data.member);
-		this.staffId = data.staff.id;
-		this.staffName = getTag(data.staff.user);
-		this.type = data.type;
-		this.reason = data.reason ? data.reason : 'No reason';
-		this.length = data.length;
-		this.guildId = data.staff.guild.id;
+	public constructor(data?: ModlogCreateInput) {
+		if (data) {
+			this.memberId = data.member.id;
+			this.memberName = data.member instanceof GuildMember ? getTag(data.member.user) : getTag(data.member);
+			this.staffId = data.staff.id;
+			this.staffName = getTag(data.staff.user);
+			this.type = data.type;
+			this.reason = data.reason ? data.reason : 'No reason';
+			this.length = data.length;
+			this.guildId = data.staff.guild.id;
+		}
+	}
+
+	public async createModlog() {
+		return {
+			caseId: await new CardinalIndexBuilder().modlogId(this.guildId),
+			guildId: this.guildId,
+			memberId: this.memberId,
+			memberName: this.memberName,
+			staffId: this.staffId,
+			staffName: this.staffName,
+			type: this.type,
+			reason: this.reason,
+			length: this.length
+		};
 	}
 
 	public async createKick() {
@@ -47,16 +64,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 				memberId: this.memberId,
 				warnUid: new CardinalIndexBuilder().generateUuid(),
 				modlog: {
-					create: {
-						guildId: this.guildId,
-						memberId: this.memberId,
-						memberName: this.memberName,
-						staffId: this.staffId,
-						staffName: this.staffName,
-						type: this.type,
-						length: this.length,
-						reason: this.reason
-					}
+					create: await this.createModlog()
 				}
 			}
 		});
@@ -79,16 +87,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 				frozen: data.frozen,
 
 				modlog: {
-					create: {
-						memberId: this.memberId,
-						guildId: this.guildId,
-						memberName: this.memberName,
-						staffId: this.staffId,
-						staffName: this.staffName,
-						type: this.type,
-						length: this.length,
-						reason: this.reason
-					}
+					create: await this.createModlog()
 				}
 			},
 			create: {
@@ -99,16 +98,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 				frozen: data.frozen,
 
 				modlog: {
-					create: {
-						memberId: this.memberId,
-						guildId: this.guildId,
-						memberName: this.memberName,
-						staffId: this.staffId,
-						staffName: this.staffName,
-						type: this.type,
-						length: this.length,
-						reason: this.reason
-					}
+					create: await this.createModlog()
 				}
 			}
 		});
@@ -124,16 +114,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 				expiresAt: data.expiresAt,
 				memberId: this.memberId,
 				modlog: {
-					create: {
-						guildId: this.guildId,
-						memberId: this.memberId,
-						memberName: this.memberName,
-						staffId: this.staffId,
-						staffName: this.staffName,
-						type: this.type,
-						reason: this.reason,
-						length: this.length
-					}
+					create: await this.createModlog()
 				}
 			}
 		});
@@ -147,17 +128,9 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			data: {
 				expiresAt: data.expiresAt,
 				memberId: this.memberId,
+
 				modlog: {
-					create: {
-						guildId: this.guildId,
-						memberId: this.memberId,
-						memberName: this.memberName,
-						staffId: this.staffId,
-						staffName: this.staffName,
-						type: this.type,
-						reason: this.reason,
-						length: this.length
-					}
+					create: await this.createModlog()
 				}
 			}
 		});
@@ -185,6 +158,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		const afkclear = await container.db.modlog.create({ data: this });
 		await this.sendModlog(afkclear.id);
 	}
+
 	public async createAfkReset() {
 		const afkreset = await container.db.modlog.create({ data: this });
 		await this.sendModlog(afkreset.id);
@@ -233,6 +207,17 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			});
 		} catch (ignored) {}
 	}
+
+	public async getModlog(caseId: number, guildId: string) {
+		return await container.db.modlog.findUnique({
+			where: {
+				guildId_caseId: {
+					guildId: guildId,
+					caseId: caseId
+				}
+			}
+		});
+	}
 }
 
 type BanCreateInput = MuteCreateInput;
@@ -242,6 +227,7 @@ type MuteCreateInput = {
 };
 
 type ModlogCreateInput = {
+	caseId: number | Nullish;
 	member: GuildMember | User;
 	staff: GuildMember;
 	type: ModerationType;

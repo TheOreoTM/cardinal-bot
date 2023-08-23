@@ -32,4 +32,17 @@ export class CardinalIndexBuilder {
 
 		return suggestionAmount + 1;
 	}
+
+	public async modlogId(guildId: string) {
+		const modlog = await container.db.modlog.findFirst({
+			where: {
+				guildId
+			},
+			orderBy: {
+				id: 'desc'
+			}
+		});
+
+		return modlog ? modlog.id + 1 : 1;
+	}
 }
