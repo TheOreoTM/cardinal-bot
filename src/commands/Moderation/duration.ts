@@ -8,9 +8,10 @@ import { DurationFormatter } from '@sapphire/time-utilities';
 	description: 'Change the duration of a moderation',
 	name: 'duration',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp:
+			'Change the duration of a mute or ban. If the moderation is taking place then the bot will update the duration and also increase/decrease the current mute/ban of the user. If the mute/ban is expired then the bot will only update the duration amount in the modlog case.',
+		usages: ['Case Duration'],
+		examples: ['12 20m']
 	}
 })
 export class durationCommand extends ModerationCommand {
