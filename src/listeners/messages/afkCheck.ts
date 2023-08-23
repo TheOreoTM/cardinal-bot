@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder } from '#lib/structures';
+import { CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { CardinalEvents, type GuildMessage } from '#lib/types';
 import { seconds } from '#utils/common';
 import { CardinalEmojis } from '#utils/constants';
@@ -104,7 +104,7 @@ export class UserEvent extends Listener {
 			if (!afkData) return;
 
 			await send(message, {
-				content: `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage}`,
+				content: `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage} - ${new Timestamp(afkData.createdAt.getTime()).getRelativeTime()}`,
 				allowedMentions: {
 					users: [message.author.id]
 				}
