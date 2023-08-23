@@ -211,8 +211,10 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	public async getModlog(caseId: number, guildId: string) {
 		return await container.db.modlog.findUnique({
 			where: {
-				guildId: guildId,
-				id: caseId
+				guildId_caseId: {
+					guildId: guildId,
+					caseId: caseId
+				}
 			}
 		});
 	}
