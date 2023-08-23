@@ -15,7 +15,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	memberId: string = '';
 	guildId: string = '';
 	memberName: string = '';
-	reason?: string;
+	reason?: string | null | undefined;
 	type: string = '';
 	length?: string | null | undefined;
 	createdAt?: string | Date | undefined;
@@ -38,6 +38,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public async createModlog() {
 		return {
+			caseId: await new CardinalIndexBuilder().modlogId(this.guildId),
 			guildId: this.guildId,
 			memberId: this.memberId,
 			memberName: this.memberName,

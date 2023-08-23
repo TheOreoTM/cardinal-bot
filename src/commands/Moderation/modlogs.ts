@@ -71,7 +71,7 @@ export class modlogCommand extends ModerationCommand {
 					: field.push(`**Reason:** ${log.reason} - ${new Timestamp(log.createdAt.getTime()).getLongDateTime()}`);
 
 				embed.addFields({
-					name: `Case ${log.id}`,
+					name: `Case ${log.caseId ? log.caseId : log.id}`,
 					value: field.join('\n')
 				});
 			}
