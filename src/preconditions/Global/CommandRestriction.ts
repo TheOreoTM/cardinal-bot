@@ -45,7 +45,7 @@ export class UserPrecondition extends Precondition {
 
 		// console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
-		console.log(!memberIsAllowed, await isTrainee(member), !(command instanceof ModerationCommand));
+		// console.log(!memberIsAllowed, await isTrainee(member), !(command instanceof ModerationCommand));
 		if (!memberIsAllowed && (await isTrainee(member)) && !(command instanceof ModerationCommand))
 			return this.error({
 				context: { silent: true }
