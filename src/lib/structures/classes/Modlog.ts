@@ -227,7 +227,6 @@ type MuteCreateInput = {
 };
 
 type ModlogCreateInput = {
-	caseId: number | Nullish;
 	member: GuildMember | User;
 	staff: GuildMember;
 	type: ModerationType;
