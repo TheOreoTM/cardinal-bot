@@ -1,6 +1,6 @@
 import { ModerationCommand } from '#lib/structures';
 import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
-import { isAdmin, isTrainee } from '#utils/functions';
+import { isAdmin } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
@@ -43,20 +43,16 @@ export class UserPrecondition extends Precondition {
 		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(command.name, channel.id);
 		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache);
 
-		// console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
+		console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
 		// console.log(!memberIsAllowed, await isTrainee(member), !(command instanceof ModerationCommand));
-		if (!memberIsAllowed && (await isTrainee(member)) && !(command instanceof ModerationCommand))
-			return this.error({
-				context: { silent: true }
-			}); // Member is a staff member and is blacklisted and the command is not a moderation command
 
-		if (!memberIsAllowed && (await isTrainee(member))) return this.ok(); // Member is a staff member and is blacklisted
-
-		if (!(memberIsAllowed || channelIsAllowed || roleIsAllowed))
+		if (memberIsAllowed === false || channelIsAllowed === false || roleIsAllowed === false)
 			return this.error({
 				context: { silent: true }
 			});
+
+		if (memberIsAllowed === null) return this.ok();
 		return this.ok();
 
 		// const restrictionData = await this.container.db.commandRestriction.findUnique({
