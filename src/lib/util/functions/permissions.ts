@@ -45,6 +45,7 @@ async function checkModerator(member: GuildMember) {
 }
 
 async function checkAdministrator(member: GuildMember) {
+	if (member.permissions.has(PermissionFlagsBits.Administrator)) return true;
 	const role = await member.guild.settings.roles.admin();
 	return role === '0' ? member.permissions.has(PermissionFlagsBits.Administrator) : hasAtLeastOneKeyInMap(member.roles.cache, [role]);
 }
