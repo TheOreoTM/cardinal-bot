@@ -77,7 +77,7 @@ export class modafkCommand extends CardinalSubcommand {
 
 		const reason = await args.pick('string').catch(() => 'No reason');
 
-		const afkData = await this.container.db.afk
+		await this.container.db.afk
 			.update({
 				where: {
 					memberId_guildId: {
