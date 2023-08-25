@@ -74,17 +74,21 @@ export class UserEvent extends Listener {
 					});
 
 					const disabledButton = viewPingsButton.setDisabled(true);
-					await send(message, {
-						content: afkReturnGreet.content,
-						components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
-					});
+					await afkReturnGreet
+						.edit({
+							content: afkReturnGreet.content,
+							components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
+						})
+						.catch(() => null);
 				}
 			} catch (e) {
 				const disabledButton = viewPingsButton.setDisabled(true);
-				await send(message, {
-					content: afkReturnGreet.content,
-					components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
-				});
+				await afkReturnGreet
+					.edit({
+						content: afkReturnGreet.content,
+						components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
+					})
+					.catch(() => null);
 			}
 		}
 

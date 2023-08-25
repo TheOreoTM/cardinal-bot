@@ -63,11 +63,6 @@ export class stafflistCommand extends CardinalCommand {
 		const cleanedStaffs = staffs.filter((userId) => !adminSet.has(userId) && !modSet.has(userId));
 		const cleanedTrainees = trainees.filter((userId) => !adminSet.has(userId) && !modSet.has(userId) && !staffSet.has(userId));
 
-		console.log(`Admins: ${admins}`);
-		console.log(`Mods: ${cleanedMods}`);
-		console.log(`Staffs: ${cleanedStaffs}`);
-		console.log(`Trainees: ${cleanedTrainees}`);
-
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setAuthor({ iconURL: guild.iconURL({ forceStatic: true }) ?? undefined, name: `${guild.name} - Staff Roles ` });
