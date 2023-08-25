@@ -77,23 +77,24 @@ export class modafkCommand extends CardinalSubcommand {
 
 		const reason = await args.pick('string').catch(() => 'No reason');
 
-		const afkData = await this.container.db.afk.update({
-			where: {
-				memberId_guildId: {
-					memberId: target.id,
-					guildId: target.guild.id
+		const afkData = await this.container.db.afk
+			.update({
+				where: {
+					memberId_guildId: {
+						memberId: target.id,
+						guildId: target.guild.id
+					}
+				},
+				data: {
+					afkMessage: 'AFK'
 				}
-			},
-			data: {
-				afkMessage: 'AFK'
-			}
-		});
-
-		if (!afkData) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is not AFK')]
+			})
+			.catch(() => {
+				this.error({
+					message: 'That member is not afk',
+					identifier: 'NotAFK'
+				});
 			});
-		}
 
 		const modlog = new Modlog({
 			member: target,
