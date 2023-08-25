@@ -90,9 +90,8 @@ export class modafkCommand extends CardinalSubcommand {
 		});
 
 		if (!afkData) {
-			return this.error({
-				message: 'That member is not afk',
-				identifier: 'NotAFK'
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is not AFK')]
 			});
 		}
 
