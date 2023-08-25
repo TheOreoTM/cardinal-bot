@@ -1,10 +1,19 @@
-import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
+import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
+import { PermissionLevels } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 
-@ApplyOptions<ModerationCommand.Options>({
+@ApplyOptions<CardinalSubcommand.Options>({
+	permissionLevel: PermissionLevels.Moderator,
 	description: 'Bulk delete messages',
 	name: 'purge',
+	subcommands: [
+		{
+			name: 'default',
+			messageRun: 'default'
+		}
+	],
+
 	detailedDescription: {
 		extendedHelp: 'Delete a number of messages from a channel. (limit: 1000)',
 		usages: ['Count'],
@@ -12,8 +21,8 @@ import { send } from '@sapphire/plugin-editable-commands';
 		explainedUsage: [['Count', 'The number of messages to delete between 1 and 1000']]
 	}
 })
-export class purgeCommand extends ModerationCommand {
-	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
+export class purgeCommand extends CardinalSubcommand {
+	public async default(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const amountToDelete = await args
 			.pick('number', {
 				minimum: 1,

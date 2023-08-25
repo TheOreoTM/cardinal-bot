@@ -5,7 +5,6 @@ import { CardinalEmojis } from '#utils/constants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
-import { reply, send } from '@sapphire/plugin-editable-commands';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type Interaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: CardinalEvents.MessageCreate })
@@ -44,7 +43,7 @@ export class UserEvent extends Listener {
 
 			const viewPingsButton = new ButtonBuilder().setCustomId(`viewAfkPings`).setLabel(`View Pings`).setStyle(ButtonStyle.Secondary);
 
-			const afkReturnGreet = await reply(message, {
+			const afkReturnGreet = await message.reply({
 				content: `Welcome back ${message.member}, I removed your AFK. ${
 					afkPings.length
 						? `You got **${afkPings.length === 1 ? `${afkPings.length} ping` : `${afkPings.length} pings`} ** while you were away`
@@ -107,7 +106,7 @@ export class UserEvent extends Listener {
 
 			if (!afkData) return;
 
-			await send(message, {
+			await message.channel.send({
 				content: `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage} - ${new Timestamp(afkData.createdAt.getTime()).getRelativeTime()}`,
 				allowedMentions: {
 					users: [message.author.id]
