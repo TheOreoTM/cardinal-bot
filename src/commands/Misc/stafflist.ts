@@ -1,14 +1,15 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { EmbedBuilder, GuildMember, Message } from 'discord.js';
-import { CardinalCommand } from '#lib/structures';
+import { Message } from 'discord.js';
+import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
+import { send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: '',
+	description: 'Show the staff list',
 	name: 'stafflist',
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'View all the admins, mods, staff and trainees in the server',
+		usages: [''],
+		examples: ['']
 	}
 })
 export class stafflistCommand extends CardinalCommand {
@@ -32,56 +33,89 @@ export class stafflistCommand extends CardinalCommand {
 	}
 
 	private async sendStaffList(
-		interactionOrMessage: Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction
+		interactionOrMessage: CardinalCommand.Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction
 	) {
+		const { guild } = interactionOrMessage;
+
+		await guild.members.fetch();
+
 		const adminRoleId = await interactionOrMessage.guild?.settings.roles.admin();
 		const modRoleId = await interactionOrMessage.guild?.settings.roles.moderator();
 		const staffRoleId = await interactionOrMessage.guild?.settings.roles.staff();
 		const traineeRoleId = await interactionOrMessage.guild?.settings.roles.trainee();
 
-		const roleIds = [adminRoleId, modRoleId, staffRoleId, traineeRoleId];
+		const adminRole = guild?.roles.cache.get(adminRoleId ?? '0');
+		const modRole = guild?.roles.cache.get(modRoleId ?? '0');
+		const staffRole = guild?.roles.cache.get(staffRoleId ?? '0');
+		const traineeRole = guild?.roles.cache.get(traineeRoleId ?? '0');
 
-		const membersByRole = new Map<string, GuildMember[]>();
+		const admins = adminRole?.members.map((m) => m.id) ?? [];
+		const mods = modRole?.members.map((m) => m.id) ?? [];
+		const staffs = staffRole?.members.map((m) => m.id) ?? [];
+		const trainees = traineeRole?.members.map((m) => m.id) ?? [];
 
-		for (const roleId of roleIds) {
-			const role = interactionOrMessage.guild?.roles.cache.get(roleId ?? '0');
-			if (role) {
-				membersByRole.set(
-					role.id,
-					role.members.map((m) => m)
-				);
-			}
-		}
+		const adminSet = new Set(admins);
+		const modSet = new Set(mods);
+		const staffSet = new Set(staffs);
+		// const traineeSet = new Set(trainees);
 
-		const embed = new EmbedBuilder().setTitle('Staff Members').setColor('#3498db');
+		const cleanedMods = mods.filter((userId) => !adminSet.has(userId));
+		const cleanedStaffs = staffs.filter((userId) => !adminSet.has(userId) && !modSet.has(userId));
+		const cleanedTrainees = trainees.filter((userId) => !adminSet.has(userId) && !modSet.has(userId) && !staffSet.has(userId));
 
-		const roleNames = ['Admins', 'Moderators', 'Staff', 'Trainees'];
+		console.log(`Admins: ${admins}`);
+		console.log(`Mods: ${cleanedMods}`);
+		console.log(`Staffs: ${cleanedStaffs}`);
+		console.log(`Trainees: ${cleanedTrainees}`);
 
-		for (let i = 0; i < roleIds.length; i++) {
-			const roleId = roleIds[i];
-			const roleName = roleNames[i];
+		const embed = new CardinalEmbedBuilder()
+			.setStyle('default')
+			.setAuthor({ iconURL: guild.iconURL({ forceStatic: true }) ?? undefined, name: `${guild.name} - Staff Roles ` });
+		if (admins.length && adminRole)
+			embed.addFields({
+				name: adminRole.name.slice(0, 256),
+				value: `<@${admins.join('> <@')}>`
+			});
+		if (cleanedMods.length && modRole)
+			embed.addFields({
+				name: modRole.name.slice(0, 256),
+				value: `<@${cleanedMods.join('> <@')}>`
+			});
+		if (cleanedStaffs.length && staffRole)
+			embed.addFields({
+				name: staffRole.name.slice(0, 256),
+				value: `<@${cleanedStaffs.join('> <@')}>`
+			});
+		if (cleanedTrainees.length && traineeRole)
+			embed.addFields({
+				name: traineeRole.name.slice(0, 256),
+				value: `<@${cleanedTrainees.join('> <@')}>`
+			});
 
-			const members = membersByRole.get(roleId ?? '0');
+		return interactionOrMessage instanceof Message
+			? send(interactionOrMessage, {
+					embeds: [embed]
+			  })
+			: interactionOrMessage.reply({ embeds: [embed] });
 
-			if (members) {
-				const filteredMembers = members.filter((member) => {
-					// Check if the member has ONLY this role and no higher roles in the hierarchy
-					const higherRoles = roleIds.slice(0, i);
-					const lowerRoles = roleIds.slice(i + 1);
-					return (
-						membersByRole.get(roleId ?? '0')?.includes(member) &&
-						!higherRoles.some((higherRoleId) => membersByRole.get(higherRoleId ?? '0')?.includes(member)) &&
-						!lowerRoles.some((lowerRoleId) => membersByRole.get(lowerRoleId ?? '0')?.includes(member))
-					);
-				});
+		// // Check for overlapping userIDs
+		// const overlapAdminMod = new Set([...adminSet].filter((userId) => modSet.has(userId)));
+		// const overlapAdminStaff = new Set([...adminSet].filter((userId) => staffSet.has(userId)));
+		// const overlapAdminTrainee = new Set([...adminSet].filter((userId) => traineeSet.has(userId)));
+		// const overlapModStaff = new Set([...modSet].filter((userId) => staffSet.has(userId)));
+		// const overlapModTrainee = new Set([...modSet].filter((userId) => traineeSet.has(userId)));
+		// const overlapStaffTrainee = new Set([...staffSet].filter((userId) => traineeSet.has(userId)));
 
-				if (filteredMembers.length > 0) {
-					const memberNames = filteredMembers.map((member) => member.displayName).join(', ');
-					embed.addFields({ name: roleName, value: memberNames });
-				}
-			}
-		}
-
-		await interactionOrMessage.reply({ embeds: [embed] });
+		// if (overlapAdminMod.size > 0 || overlapAdminStaff.size > 0 || overlapAdminTrainee.size > 0) {
+		// 	console.log('There are overlapping userIDs between admin and other tiers.');
+		// }
+		// if (overlapModStaff.size > 0 || overlapModTrainee.size > 0) {
+		// 	console.log('There are overlapping userIDs between mod and other tiers.');
+		// }
+		// if (overlapStaffTrainee.size > 0) {
+		// 	console.log('There are overlapping userIDs between staff and trainee.');
+		// } else {
+		// 	console.log('No overlapping userIDs between tiers.');
+		// }
 	}
 }
