@@ -1,30 +1,32 @@
-# TypeScript Sapphire Bot example
+<div align="center">
 
-This is a basic setup of a Discord bot using the [sapphire framework][sapphire] written in TypeScript
+# Cardinal Bot
 
-## How to use it?
+[![GitHub stars]][stars]
+[![GitHub issues]][issues]
+[![Continuous Integration](https://github.com/TheOreoTM/cardinal-bot/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/TheOreoTM/cardinal-bot/actions/workflows/continuous-integration.yml)
 
-### Prerequisite
+</div>
 
-```sh
-npm install
-```
+## Developing on Cardinal
 
-### Development
+### Requirements
 
-This example can be run with `tsc-watch` to watch the files and automatically restart your bot.
+**You should have a good understanding of the following:**
 
-```sh
-npm run watch:start
-```
+-   [`Node.js`]: To run the project.
+-   [`PostgreSQL`]: To store persistent data.
+-   [`Redis`]: To store scheduled tasks.
+-   [`Discord.js`][discord.js]: To interact with the Discord API
+-   [`Sapphire`]: Framework used in Radon
 
-### Production
+## Contributing
 
-You can also run the bot with `npm dev`, this will first build your code and then run `node ./dist/index.js`. But this is not the recommended way to run a bot in production.
+To contribute to this repository, feel free to fork the repository and make your own changes. Once you have made your changes, you can submit a pull request.
 
-## License
-
-Dedicated to the public domain via the [Unlicense], courtesy of the Sapphire Community and its contributors.
-
-[sapphire]: https://github.com/sapphiredev/framework
-[unlicense]: https://github.com/sapphiredev/examples/blob/main/LICENSE.md
+1. Fork the repository and select the **main** branch.
+2. Create a new branch and make your changes.
+3. Make sure you use a proper linter and a code formatter. [^lint]
+4. Make sure you have a good commit message.[^commit]
+5. Push your changes.
+6. Submit a pull request [here][pr].
