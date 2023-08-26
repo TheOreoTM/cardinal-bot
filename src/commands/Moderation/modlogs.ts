@@ -32,10 +32,10 @@ export class modlogCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		let includeBans = args.getFlags('bans');
 		let includeWarns = args.getFlags('warns');
-		let includeModnicks = args.getFlags('modnicks');
-		let includeAfk = args.getFlags('afk');
 		let includeMutes = args.getFlags('mutes');
 		let includeKicks = args.getFlags('kicks');
+		const includeAfk = args.getFlags('afk');
+		const includeModnicks = args.getFlags('modnicks');
 		const includeSerious = args.getFlags('serious');
 
 		if (includeSerious) {

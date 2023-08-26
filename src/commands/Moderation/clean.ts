@@ -21,7 +21,7 @@ export class cleanCommand extends ModerationCommand {
 		const channelMessages = await message.channel.messages.fetch({
 			limit: 100
 		});
-		let messagesToDelete: GuildMessage[] = [];
+		const messagesToDelete: GuildMessage[] = [];
 
 		channelMessages.forEach((message: Message) => {
 			if (message.author.id === BotClientID || message.content.startsWith('>')) {

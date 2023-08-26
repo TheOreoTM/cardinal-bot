@@ -140,7 +140,7 @@ export class statsCommand extends CardinalSubcommand {
 		this.initOptions(args);
 
 		const stopWatch = new Stopwatch();
-		let channel: GuildBasedChannel = await args.pick('guildTextChannel').catch(() => message.channel);
+		const channel: GuildBasedChannel = await args.pick('guildTextChannel').catch(() => message.channel);
 
 		const lookback = await this.getLookback(channel.guild.id);
 		const prefix = args.commandContext.commandPrefix;

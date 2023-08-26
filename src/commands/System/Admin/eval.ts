@@ -30,7 +30,7 @@ export class UserCommand extends CardinalCommand {
 		if (!code.length) return;
 
 		if (args.getFlags('d', 'del')) await message.delete().catch(() => null);
-		let { success, result, time, type } = await this.eval(
+		const { success, result: result0, time, type } = await this.eval(
 			message,
 			code,
 			{
@@ -48,6 +48,8 @@ export class UserCommand extends CardinalCommand {
 				type: new Type(e)
 			};
 		});
+
+		let result = result0
 		const footer = codeBlock('ts', type.is);
 
 		if (typeof result !== 'string') return;

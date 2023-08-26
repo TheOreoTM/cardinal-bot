@@ -93,7 +93,7 @@ export class setupCommand extends ModerationCommand {
 		const suggestion_channel = interaction.options.getChannel('suggestion_channel');
 		const suggestion_create_thread = interaction.options.getString('create_thread');
 
-		let data: Prisma.GuildCreateInput = {
+		const data: Prisma.GuildCreateInput = {
 			guildId: interaction.guildId
 		};
 		if (trainee_role) data.roleTrainee = trainee_role.id;

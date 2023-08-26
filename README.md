@@ -41,11 +41,18 @@ To contribute to this repository, feel free to fork the repository and make your
 [`mongodb`]: https://www.mongodb.com/
 [typescript]: https://www.typescriptlang.org/
 [pr]: https://github.com/EvolutionX-10/Radon/pulls
-[stars]: https://github.com/EvolutionX-10/Radon/stargazers
-[issues]: https://github.com/EvolutionX-10/Radon/issues
-[changelog]: https://github.com/EvolutionX-10/Radon/blob/main/CHANGELOG.md
+[stars]: https://github.com/TheOreoTM/cardinal-bot/stargazers
+[issues]: https://github.com/TheOreoTM/cardinal-bot/issues
+[changelog]: https://github.com/TheOreoTM/cardinal-bot/blob/main/CHANGELOG.md
 [`eslint`]: https://eslint.org/
 [`prettier`]: https://prettier.io/
 [`commit message conventions`]: https://conventionalcommits.org/en/v1.0.0/
 [`sapphire`]: https://www.sapphirejs.dev
 [invite]: https://discord.com/api/oauth2/authorize?client_id=944833303226236989&scope=applications.commands+bot&permissions=543276137727
+
+<!-- BADGES -->
+
+[codefactor]: https://www.codefactor.io/repository/github/theoreotm/cardinal-bot/badge/main
+[license]: https://img.shields.io/github/license/TheOreoTM/cardinal-bot
+[github stars]: https://img.shields.io/github/stars/TheOreoTM/cardinal-bot
+[github issues]: https://img.shields.io/github/issues/TheOreoTM/cardinal-bot
