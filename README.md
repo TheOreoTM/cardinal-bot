@@ -17,7 +17,7 @@
 -   [`Node.js`]: To run the project.
 -   [`PostgreSQL`]: To store persistent data.
 -   [`Redis`]: To store scheduled tasks.
--   [`Discord.js`][discord.js]: To interact with the Discord API
+-   [`Discord.js`]: To interact with the Discord API
 -   [`Sapphire`]: Framework used in Radon
 
 ## Contributing
@@ -30,3 +30,22 @@ To contribute to this repository, feel free to fork the repository and make your
 4. Make sure you have a good commit message.[^commit]
 5. Push your changes.
 6. Submit a pull request [here][pr].
+
+<!-- LINKS -->
+
+[`node.js`]: https://nodejs.org/en/download/current/
+[`postgresql`]: https://www.postgresql.org/download/
+[`redis`]: https://redis.io
+[`discord.js`]: https://discord.js.org/
+[`node.js`]: https://nodejs.org/en/
+[`mongodb`]: https://www.mongodb.com/
+[typescript]: https://www.typescriptlang.org/
+[pr]: https://github.com/EvolutionX-10/Radon/pulls
+[stars]: https://github.com/EvolutionX-10/Radon/stargazers
+[issues]: https://github.com/EvolutionX-10/Radon/issues
+[changelog]: https://github.com/EvolutionX-10/Radon/blob/main/CHANGELOG.md
+[`eslint`]: https://eslint.org/
+[`prettier`]: https://prettier.io/
+[`commit message conventions`]: https://conventionalcommits.org/en/v1.0.0/
+[`sapphire`]: https://www.sapphirejs.dev
+[invite]: https://discord.com/api/oauth2/authorize?client_id=944833303226236989&scope=applications.commands+bot&permissions=543276137727
