@@ -7,6 +7,7 @@ node_modules/
 .sapphirerc.json
 .templates/
 migrations
+git-filter-repo
 
 # Yarn files
 .yarn/install-state.gz
@@ -14,8 +15,6 @@ migrations
 .yarn
 .yarnrc.yml
 
-# Environment variables
-.DS_Store
 
 
 .git
