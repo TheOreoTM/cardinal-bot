@@ -2,6 +2,7 @@
 
 # Cardinal Bot
 
+[![Code Factor][codefactor]](https://www.codefactor.io/repository/github/theoreotm/cardinal-bot)
 [![GitHub stars]][stars]
 [![GitHub issues]][issues]
 [![Continuous Integration](https://github.com/TheOreoTM/cardinal-bot/actions/workflows/continuous-integration.yml/badge.svg)](https://github.com/TheOreoTM/cardinal-bot/actions/workflows/continuous-integration.yml)
