@@ -9,6 +9,20 @@
 
 </div>
 
+## Table of Contents
+
+-   [Invite](#invite-cardinal-to-your-server-click-here)
+-   [Beta Testing](#beta-testing-for-cardinal)
+-   [Developing on Cardinal](#developing-on-cardinal)
+-   [Contributing](#contributing)
+-   [Project Stats](#project-stats)
+
+## Invite Cardinal to your server [`Click here`][invite]
+
+## Beta Testing for Cardinal
+
+If you want to be a beta tester you can join the [support server][support] and create a ticket to become a beta tester. Keep in mind that you might not be accepted since we dont usually need that many beta testers.<br>
+
 ## Developing on Cardinal
 
 ### Requirements
@@ -32,6 +46,12 @@ To contribute to this repository, feel free to fork the repository and make your
 5. Push your changes.
 6. Submit a pull request [here][pr].
 
+<!-- REFERENCES -->
+
+[^env]: You will need to create a `.env` file in the root directory of the project.
+[^lint]: We recommend using [`eslint`] and [`prettier`] to lint your code.
+[^commit]: We strongly follow the [`Commit Message Conventions`]. This is important when commiting your code for a PR.
+
 <!-- LINKS -->
 
 [`node.js`]: https://nodejs.org/en/download/current/
@@ -49,7 +69,8 @@ To contribute to this repository, feel free to fork the repository and make your
 [`prettier`]: https://prettier.io/
 [`commit message conventions`]: https://conventionalcommits.org/en/v1.0.0/
 [`sapphire`]: https://www.sapphirejs.dev
-[invite]: https://discord.com/api/oauth2/authorize?client_id=944833303226236989&scope=applications.commands+bot&permissions=543276137727
+[invite]: https://discord.com/api/oauth2/authorize?client_id=740962735306702858&permissions=1633094593750&scope=applications.commands%20bot
+[support]: https://discord.gg/54ZR2b8AYV
 
 <!-- BADGES -->
 
