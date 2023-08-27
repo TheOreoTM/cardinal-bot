@@ -37,9 +37,3 @@ jobs:
             yarn build
             yarn prisma:push-prod
             pm2 start yarn --interpreter bash --name cardinal-bot -- start
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          files: /cardinal-bot/coverage/*.xml # Adjust the path and file pattern as needed
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
