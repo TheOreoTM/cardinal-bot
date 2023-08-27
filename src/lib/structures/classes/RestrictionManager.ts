@@ -34,12 +34,12 @@ export class RestrictionManager {
 		const blackListedMembersSet = new Set(restriction.blackListedMembers);
 		const whiteListedMembersSet = new Set(restriction.whiteListedMembers);
 
-		if (blackListedMembersSet.has(memberId)) {
-			return false; // Member is in the blacklist, deny
-		}
-
 		if (whiteListedMembersSet.size !== 0 && whiteListedMembersSet.has(memberId)) {
 			return true; // No whitelist restriction, allow by default
+		}
+
+		if (blackListedMembersSet.has(memberId)) {
+			return false; // Member is in the blacklist, deny
 		}
 
 		return null;
@@ -57,12 +57,12 @@ export class RestrictionManager {
 		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.whiteListedRoles);
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
 
-		if (hasBlacklistedRole) {
-			return false; // Member is in the blacklist, deny
-		}
-
 		if (hasWhitelistedRole) {
 			return true; // No whitelist restriction, allow by default
+		}
+
+		if (hasBlacklistedRole) {
+			return false; // Member is in the blacklist, deny
 		}
 
 		return null;
@@ -80,12 +80,12 @@ export class RestrictionManager {
 		const blackListedChannelsSet = new Set(restriction.blackListedChannels);
 		const whiteListedChannelsSet = new Set(restriction.whiteListedChannels);
 
-		if (blackListedChannelsSet.has(channelId)) {
-			return false; // channel is in the blacklist, deny
-		}
-
 		if (whiteListedChannelsSet.size !== 0 && whiteListedChannelsSet.has(channelId)) {
 			return true; // No whitelist restriction, allow by default
+		}
+
+		if (blackListedChannelsSet.has(channelId)) {
+			return false; // channel is in the blacklist, deny
 		}
 
 		return null;
