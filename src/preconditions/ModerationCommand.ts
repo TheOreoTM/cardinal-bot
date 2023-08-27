@@ -17,6 +17,7 @@ export class UserPrecondition extends Precondition {
 	}
 
 	async check(interactionOrMessage: InteractionOrMessage, command: InteractionOrMessageCommand) {
+		command; // unused
 		const member = interactionOrMessage.member;
 		if (!member || !interactionOrMessage.guild)
 			return this.error({
@@ -24,11 +25,11 @@ export class UserPrecondition extends Precondition {
 				message: 'You are not allowed to use this command'
 			});
 
-		const allowed =
-			(await interactionOrMessage.guild.settings.restrictions.checkMemberAllowed(command.name, interactionOrMessage.member.id)) ||
-			(await interactionOrMessage.guild.settings.restrictions.checkRoleAllowed(command.name, interactionOrMessage.member.roles.cache));
+		// const allowed =
+		// 	(await interactionOrMessage.guild.settings.restrictions.checkMemberAllowed(command.name, interactionOrMessage.member.id)) ||
+		// 	(await interactionOrMessage.guild.settings.restrictions.checkRoleAllowed(command.name, interactionOrMessage.member.roles.cache));
 
-		if (allowed) return this.ok();
+		// if (allowed) return this.ok();
 
 		const valid = await isTrainee(member);
 		return valid
