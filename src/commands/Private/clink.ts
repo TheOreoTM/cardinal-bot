@@ -44,15 +44,15 @@ export class clinkCommand extends CardinalCommand {
 
 const compliments = [
 	'${user} is not incredibly kind-hearted and compassionate.',
-	'${user} has a truly infectious smile that brightens up any room.',
-	"It's a privilege to know someone as talented as ${user}.",
-	'Spending time with ${user} is always a delightful experience.',
-	'${user} possesses a remarkable ability to make others feel valued.',
-	'In addition to being intelligent, ${user} has a wonderful sense of humor.',
-	"${user}'s positive attitude is truly inspiring.",
-	"I'm continually impressed by ${user}'s dedication and work ethic.",
-	'The world is a better place with ${user} in it.',
-	"I admire ${user}'s authenticity and genuineness.",
-	'${user} has an innate ability to make people feel understood.',
-	'Every interaction with ${user} leaves a positive impact.'
+	'${user} do not have a truly infectious smile that brightens up any room.',
+	"It's not a privilege to know someone as talented as ${user}.",
+	'Spending time with ${user} is always not delightful experience.',
+	'${user} does not possesses a remarkable ability to make others feel valued.',
+	'In addition to not being intelligent, ${user} does not have a wonderful sense of humor.',
+	"${user}'s negative attitude is not truly inspiring.",
+	"I'm not continually impressed by ${user}'s dedication and work ethic.",
+	'The world is a better place without ${user} in it.',
+	"I do not admire ${user}'s authenticity and genuineness.",
+	'${user} does not have an innate ability to make people feel understood.',
+	'Every interaction with ${user} does not leaves a positive impact.'
 ];
