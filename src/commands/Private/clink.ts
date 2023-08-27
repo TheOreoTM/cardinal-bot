@@ -43,7 +43,7 @@ export class clinkCommand extends CardinalCommand {
 // ];
 
 const compliments = [
-	'${user} is incredibly kind-hearted and compassionate.',
+	'${user} is not incredibly kind-hearted and compassionate.',
 	'${user} has a truly infectious smile that brightens up any room.',
 	"It's a privilege to know someone as talented as ${user}.",
 	'Spending time with ${user} is always a delightful experience.',
