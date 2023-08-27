@@ -1,7 +1,7 @@
 import { ModerationCommand, CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { seconds } from '#utils/common';
-import { BotClientID, CardinalEmojis } from '#utils/constants';
+import { BotClientID, BotPrefix, CardinalEmojis } from '#utils/constants';
 import { sendTemporaryMessage } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -23,8 +23,8 @@ export class cleanCommand extends ModerationCommand {
 		});
 		const messagesToDelete: GuildMessage[] = [];
 
-		channelMessages.forEach((message: Message) => {
-			if (message.author.id === BotClientID || message.content.startsWith('>')) {
+		channelMessages.forEach(async (message: Message) => {
+			if (message.author.id === BotClientID || message.content.startsWith(((await this.prefix(message)) || BotPrefix)?.toString())) {
 				messagesToDelete.push(message as GuildMessage);
 			}
 		});
