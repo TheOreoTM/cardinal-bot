@@ -55,6 +55,10 @@ export class RestrictionManager {
 		if (!restriction) return null;
 
 		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.whiteListedRoles);
+		console.log(
+			'🚀 ~ file: RestrictionManager.ts:59 ~ RestrictionManager ~ checkRoleAllowed ~ restriction.whiteListedRoles:',
+			restriction.whiteListedRoles
+		);
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
 
 		if (hasWhitelistedRole) {
