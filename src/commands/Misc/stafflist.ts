@@ -92,25 +92,5 @@ export class stafflistCommand extends CardinalCommand {
 					embeds: [embed]
 			  })
 			: interactionOrMessage.reply({ embeds: [embed] });
-
-		// // Check for overlapping userIDs
-		// const overlapAdminMod = new Set([...adminSet].filter((userId) => modSet.has(userId)));
-		// const overlapAdminStaff = new Set([...adminSet].filter((userId) => staffSet.has(userId)));
-		// const overlapAdminTrainee = new Set([...adminSet].filter((userId) => traineeSet.has(userId)));
-		// const overlapModStaff = new Set([...modSet].filter((userId) => staffSet.has(userId)));
-		// const overlapModTrainee = new Set([...modSet].filter((userId) => traineeSet.has(userId)));
-		// const overlapStaffTrainee = new Set([...staffSet].filter((userId) => traineeSet.has(userId)));
-
-		// if (overlapAdminMod.size > 0 || overlapAdminStaff.size > 0 || overlapAdminTrainee.size > 0) {
-		// 	console.log('There are overlapping userIDs between admin and other tiers.');
-		// }
-		// if (overlapModStaff.size > 0 || overlapModTrainee.size > 0) {
-		// 	console.log('There are overlapping userIDs between mod and other tiers.');
-		// }
-		// if (overlapStaffTrainee.size > 0) {
-		// 	console.log('There are overlapping userIDs between staff and trainee.');
-		// } else {
-		// 	console.log('No overlapping userIDs between tiers.');
-		// }
 	}
 }

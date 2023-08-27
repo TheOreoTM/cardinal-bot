@@ -18,7 +18,7 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 		container.db = new PrismaClient();
 		return super.login(token);
 	}
-	public override destroy(): void {
+	public override destroy() {
 		return super.destroy();
 	}
 	public override fetchPrefix: SapphirePrefixHook = async (message: Message): Promise<SapphirePrefix> => {

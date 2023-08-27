@@ -26,9 +26,6 @@ export class RestrictionManager {
 		const restriction = await this.findRestriction(commandName);
 		// const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 
-		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
-
 		if (!restriction) return null;
 
 		const blackListedMembersSet = new Set(restriction.blackListedMembers);
@@ -49,16 +46,10 @@ export class RestrictionManager {
 		const restriction = await this.findRestriction(commandName);
 		// const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 
-		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
-
 		if (!restriction) return null;
 
 		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.whiteListedRoles);
-		console.log(
-			'🚀 ~ file: RestrictionManager.ts:59 ~ RestrictionManager ~ checkRoleAllowed ~ restriction.whiteListedRoles:',
-			restriction.whiteListedRoles
-		);
+
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
 
 		if (hasWhitelistedRole) {
@@ -75,9 +66,6 @@ export class RestrictionManager {
 	public async checkChannelAllowed(commandName: string, channelId: string) {
 		const restriction = await this.findRestriction(commandName);
 		// const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
-
-		// console.log(command instanceof ModerationCommand, restriction, 'instance restriction');
-		// console.log(command.permissionLevel, command.name, 'permissionLevel commandname');
 
 		if (!restriction) return null;
 
