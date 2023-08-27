@@ -6,7 +6,7 @@ import { Precondition, type MessageCommand, type ChatInputCommand, type ContextM
 import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Message } from 'discord.js';
 
 @ApplyOptions<Precondition.Options>({
-	position: 2,
+	position: 3,
 	enabled: true
 })
 export class UserPrecondition extends Precondition {
