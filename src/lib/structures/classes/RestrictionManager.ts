@@ -58,6 +58,7 @@ export class RestrictionManager {
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
 
 		if (hasWhitelistedRole) {
+			console.log('true');
 			return true; // No whitelist restriction, allow by default
 		}
 
