@@ -45,7 +45,7 @@ export class UserPrecondition extends Precondition {
 		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(command.name, channel.id);
 		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache);
 
-		console.log(memberIsAllowed, channelIsAllowed, roleIsAllowed);
+		console.log('HEY HEY HEY', memberIsAllowed, channelIsAllowed, roleIsAllowed);
 
 		// console.log(!memberIsAllowed, await isTrainee(member), !(command instanceof ModerationCommand));
 
