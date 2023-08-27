@@ -46,7 +46,6 @@ export class RestrictionManager {
 	}
 
 	public async checkRoleAllowed(commandName: string, roleMap: Collection<string, Role>) {
-		console.log('🚀 ~ file: RestrictionManager.ts:49 ~ RestrictionManager ~ checkRoleAllowed ~ roleMap:', roleMap);
 		const restriction = await this.findRestriction(commandName);
 		// const command = container.stores.get('commands').get(commandName) as CardinalCommand | ModerationCommand;
 
@@ -56,11 +55,8 @@ export class RestrictionManager {
 		if (!restriction) return null;
 
 		const hasWhitelistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.whiteListedRoles);
-		console.log('🚀 ~ file: RestrictionManager.ts:58 ~ RestrictionManager ~ checkRoleAllowed ~ hasWhitelistedRole:', hasWhitelistedRole);
 		const hasBlacklistedRole = hasAtLeastOneKeyInMap(roleMap, restriction.blackListedRoles);
-		console.log('🚀 ~ file: RestrictionManager.ts:60 ~ RestrictionManager ~ checkRoleAllowed ~ hasBlacklistedRole:', hasBlacklistedRole);
 
-		console.log('true');
 		if (hasWhitelistedRole) {
 			return true; // No whitelist restriction, allow by default
 		}
