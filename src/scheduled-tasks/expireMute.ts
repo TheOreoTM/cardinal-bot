@@ -1,4 +1,4 @@
-import { Modlog } from '#lib/structures';
+import { CardinalIndexBuilder, Modlog } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -28,14 +28,21 @@ export class ExpireMuteTask extends ScheduledTask {
 			});
 			const guild = this.container.client.guilds.cache.get(mute.modlog.guildId);
 			if (!guild) return;
-			const muteRole = guild.roles.cache.find((role) => role.name.toLowerCase() == 'muted');
+			const muteRole =
+				guild.roles.cache.get(await guild.settings.roles.mute()) ?? guild.roles.cache.find((role) => role.name.toLowerCase() == 'muted');
 			if (!muteRole) return;
 			const member = guild.members.cache.get(mute.modlog.memberId);
 			if (!member) return;
 			const staff = guild.members.me ?? (await guild.members.fetchMe());
 
 			await member.roles.remove(muteRole.id);
-			const modlog = new Modlog({ member, staff, type: ModerationType.Unmute, reason: 'Mute expired' });
+			const modlog = new Modlog({
+				member,
+				staff,
+				type: ModerationType.Unmute,
+				reason: 'Mute expired',
+				caseId: await new CardinalIndexBuilder().modlogId(member.guild.id)
+			});
 			await modlog.createUnmute();
 		});
 	}

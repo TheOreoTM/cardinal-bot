@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
+import { CardinalEmbedBuilder, CardinalIndexBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -46,7 +46,13 @@ export class unwarnCommand extends ModerationCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Removed warn \`${warnData.warnUid}\``)]
 		});
 
-		const modlog = new Modlog({ staff: message.member, type: ModerationType.Unwarn, reason: reason, member });
+		const modlog = new Modlog({
+			staff: message.member,
+			type: ModerationType.Unwarn,
+			reason: reason,
+			member,
+			caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+		});
 		await modlog.createUnwarn();
 
 		return await this.container.db.warn.delete({ where: { warnUid: warnUid } });

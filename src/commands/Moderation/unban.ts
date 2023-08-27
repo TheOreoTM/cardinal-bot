@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
+import { CardinalEmbedBuilder, CardinalIndexBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -37,7 +37,14 @@ export class unbanCommand extends ModerationCommand {
 		let member = this.container.client.users.cache.get(target);
 		if (!member) member = await this.container.client.users.fetch(target);
 		if (member) {
-			const modlog = new Modlog({ staff: message.member, member: member, type: ModerationType.Unban, length: null, reason: reason });
+			const modlog = new Modlog({
+				staff: message.member,
+				member: member,
+				type: ModerationType.Unban,
+				length: null,
+				reason: reason,
+				caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+			});
 			await modlog.createUnban();
 		}
 

@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, ModerationCommand, Modlog } from '#lib/structures';
+import { CardinalEmbedBuilder, CardinalIndexBuilder, ModerationCommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag, mention } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -83,7 +83,8 @@ export class unmuteCommand extends ModerationCommand {
 				member: target,
 				staff: message.member,
 				type: ModerationType.Unmute,
-				reason: reason
+				reason: reason,
+				caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
 			});
 
 			return await modlog.createUnmute();

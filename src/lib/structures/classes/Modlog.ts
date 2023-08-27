@@ -25,6 +25,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public constructor(data?: ModlogCreateInput) {
 		if (data) {
+			this.caseId = data.caseId ? data.caseId : 0;
 			this.memberId = data.member.id;
 			this.memberName = data.member instanceof GuildMember ? getTag(data.member.user) : getTag(data.member);
 			this.staffId = data.staff.id;
@@ -232,6 +233,7 @@ type ModlogCreateInput = {
 	type: ModerationType;
 	reason?: string | Nullish;
 	length?: string | Nullish;
+	caseId?: number | Nullish;
 };
 
 type ModnickCreateInput = {
