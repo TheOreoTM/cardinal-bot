@@ -5,6 +5,7 @@ import { ActivityType, GatewayIntentBits, Partials, type ClientOptions, type Mes
 import { BotPrefix, CooldownFiltered } from '#constants';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
 import { seconds } from '#utils/common';
+import type { ServerOptions } from '@sapphire/plugin-api';
 
 export const Presence = {
 	activities: [{ name: `for ${BotPrefix}help`, type: ActivityType.Watching }],
@@ -50,6 +51,13 @@ export const config: Config = {
 	presence: Presence,
 	tasks: {
 		bull: { connection: parseRedisOption() }
+	},
+	api: {
+		origin: '*',
+		prefix: '',
+		listenOptions: {
+			port: 4000
+		}
 	}
 };
 
@@ -67,7 +75,8 @@ export const ClientConfig: ClientOptions = {
 	disableMentionPrefix: false,
 	preventFailedToFetchLogForGuilds: true,
 	presence: config.presence,
-	tasks: config.tasks
+	tasks: config.tasks,
+	api: config.api
 };
 
 interface Config {
@@ -79,4 +88,5 @@ interface Config {
 	presence: PresenceData;
 	default_prefix: SapphirePrefix;
 	tasks: ScheduledTaskHandlerOptions;
+	api: ServerOptions;
 }

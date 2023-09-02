@@ -393,6 +393,16 @@
     "@sapphire/utilities" "^3.13.0"
     tslib "^2.6.0"
 
+"@sapphire/plugin-api@^5.1.1":
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/@sapphire/plugin-api/-/plugin-api-5.1.1.tgz#42df4956ae581ae130ae2c2ac43818649716092f"
+  integrity sha512-txfOKvCQO1J5ldlwleN1dVhs4ATTwefOngbLHWESCSthNsVf/YPKhf2PytwYWzZdr4hhPmqQBgwJFSsilgFxcw==
+  dependencies:
+    "@types/ws" "^8.5.5"
+    tldts "^6.0.14"
+    tslib "^2.6.2"
+    undici "^5.23.0"
+
 "@sapphire/plugin-editable-commands@^3.0.2":
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/@sapphire/plugin-editable-commands/-/plugin-editable-commands-3.0.3.tgz#bc19ea27ddd498bd420b1f84718ef7ee68fc1bec"
@@ -1881,6 +1891,18 @@ through@2, through@~2.3, through@~2.3.1:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha512-w89qg7PI8wAdvX60bMDP+bFoD5Dvhm9oLheFp5O4a2QF0cSBGsBX4qZmadPMvVqlLJBBci+WqGGOAPvcDeNSVg==
 
+tldts-core@^6.0.14:
+  version "6.0.14"
+  resolved "https://registry.yarnpkg.com/tldts-core/-/tldts-core-6.0.14.tgz#66a325500fc46826b85719b588715f23e167b0e7"
+  integrity sha512-ESYhU/bgs6jiHlnl5h029f+0dB7EKRiTaxM/jHLZ6powScbmsgsrFcFjmyrjDgCvI/BRY79TEBBClmqLNEPyjQ==
+
+tldts@^6.0.14:
+  version "6.0.14"
+  resolved "https://registry.yarnpkg.com/tldts/-/tldts-6.0.14.tgz#bd126027d456b61e833aa4a49b85f4e7074c3f97"
+  integrity sha512-mYU7xwVGfiiC4lkWr4h3Q6U4kfAq3aWP1KsJZyRlVVeDQ3ZSBLmE20543dWSqI0U799PNzhpHObex5n60TeBGw==
+  dependencies:
+    tldts-core "^6.0.14"
+
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/to-regex-range/-/to-regex-range-5.0.1.tgz#1648c44aae7c8d988a326018ed72f5b4dd0392e4"
@@ -1959,6 +1981,13 @@ undici@5.22.1:
   version "5.22.1"
   resolved "https://registry.yarnpkg.com/undici/-/undici-5.22.1.tgz#877d512effef2ac8be65e695f3586922e1a57d7b"
   integrity sha512-Ji2IJhFXZY0x/0tVBXeQwgPlLWw13GVzpsWPQ3rV50IFMMof2I55PZZxtm4P6iNq+L5znYN9nSTAq0ZyE6lSJw==
+  dependencies:
+    busboy "^1.6.0"
+
+undici@^5.23.0:
+  version "5.23.0"
+  resolved "https://registry.yarnpkg.com/undici/-/undici-5.23.0.tgz#e7bdb0ed42cebe7b7aca87ced53e6eaafb8f8ca0"
+  integrity sha512-1D7w+fvRsqlQ9GscLBwcAJinqcZGHUKjbOmXdlE/v8BvEGXjeWAax+341q44EuTcHXXnfyKNbKRq4Lg7OzhMmg==
   dependencies:
     busboy "^1.6.0"
 

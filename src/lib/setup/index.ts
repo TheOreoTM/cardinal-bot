@@ -2,6 +2,7 @@ import '@sapphire/plugin-logger/register';
 import '@sapphire/plugin-subcommands/register';
 import '@sapphire/plugin-scheduled-tasks/register';
 import '@sapphire/plugin-editable-commands/register';
+import '@sapphire/plugin-api/register';
 
 import { ApplicationCommandRegistries, RegisterBehavior } from '@sapphire/framework';
 import { envParseString, setup } from '@skyra/env-utilities';

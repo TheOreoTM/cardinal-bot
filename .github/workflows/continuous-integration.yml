@@ -30,7 +30,7 @@ jobs:
           host: ${{ secrets.HOST_IP }}
           username: ${{ secrets.HOST_USERNAME }}
           script: |
-            pm2 stop cardinal-bot
+            pm2 delete cardinal-bot
             cd /root/cardinal-bot
             git pull
             yarn install
