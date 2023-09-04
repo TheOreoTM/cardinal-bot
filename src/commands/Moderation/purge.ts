@@ -82,10 +82,26 @@ import type { Message, TextChannel } from 'discord.js';
 })
 export class purgeCommand extends CardinalSubcommand {
 	public async default(message: Message, args: CardinalSubcommand.Args) {
-		message;
-		return this.fetchMessageAndPurge(args);
-	}
+		const amountToDelete = await args.pick(purgeCommand.amount);
+		const channel = message.channel as TextChannel;
+		const totalMessagesToDelete = Math.min(amountToDelete, 1000) + 1; // Ensure it doesn't exceed 1000
 
+		args.message.deletable ? await args.message.delete() : null;
+
+		let deletedMessages = 0;
+
+		while (deletedMessages < totalMessagesToDelete) {
+			const messagesToDelete = Math.min(100, totalMessagesToDelete - deletedMessages); // Delete in chunks of 100 or less
+
+			const fetchedMessages = await channel.messages.fetch({ limit: messagesToDelete });
+
+			let messagesToDeleteFiltered = fetchedMessages;
+
+			await channel.bulkDelete(messagesToDeleteFiltered, true);
+
+			deletedMessages += fetchedMessages.size;
+		}
+	}
 	public async user(message: Message, args: CardinalSubcommand.Args) {
 		const member = await args.pick('member').catch(() => null);
 
