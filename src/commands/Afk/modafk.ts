@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, CardinalSubcommand, Modlog } from '#lib/structures';
+import { CardinalEmbedBuilder, CardinalIndexBuilder, CardinalSubcommand, Modlog } from '#lib/structures';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -55,7 +55,8 @@ export class modafkCommand extends CardinalSubcommand {
 			member: target,
 			staff: message.member,
 			type: ModerationType.AfkClear,
-			reason: reason
+			reason: reason,
+			caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
 		});
 
 		if (target.manageable) {
@@ -100,7 +101,8 @@ export class modafkCommand extends CardinalSubcommand {
 			member: target,
 			staff: message.member,
 			type: ModerationType.AfkReset,
-			reason: reason
+			reason: reason,
+			caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
 		});
 
 		await modlog.createAfkReset();
