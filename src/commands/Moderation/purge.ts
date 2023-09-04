@@ -82,9 +82,7 @@ import type { Message, TextChannel } from 'discord.js';
 })
 export class purgeCommand extends CardinalSubcommand {
 	public async default(args: CardinalSubcommand.Args) {
-		return this.fetchMessageAndPurge(args, () => {
-			return true;
-		});
+		return this.fetchMessageAndPurge(args);
 	}
 
 	public async user(message: Message, args: CardinalSubcommand.Args) {
