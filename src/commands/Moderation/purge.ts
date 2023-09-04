@@ -81,7 +81,8 @@ import type { Message, TextChannel } from 'discord.js';
 	}
 })
 export class purgeCommand extends CardinalSubcommand {
-	public async default(args: CardinalSubcommand.Args) {
+	public async default(message: Message, args: CardinalSubcommand.Args) {
+		message;
 		return this.fetchMessageAndPurge(args);
 	}
 

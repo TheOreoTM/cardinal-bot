@@ -34,7 +34,10 @@ export class durationCommand extends ModerationCommand {
 
 		const caseData = await this.container.db.modlog.update({
 			where: {
-				id: caseId,
+				guildId_caseId: {
+					guildId: message.guildId,
+					caseId: caseId
+				},
 				type: {
 					in: [ModerationType.Mute, ModerationType.Ban]
 				}
