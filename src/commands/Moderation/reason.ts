@@ -23,7 +23,10 @@ export class reasonCommand extends ModerationCommand {
 
 		const caseData = await this.container.db.modlog.findUnique({
 			where: {
-				id: caseNum
+				guildId_caseId: {
+					caseId: caseNum,
+					guildId: message.guildId
+				}
 			}
 		});
 
@@ -43,7 +46,10 @@ export class reasonCommand extends ModerationCommand {
 
 		await this.container.db.modlog.update({
 			where: {
-				id: caseNum
+				guildId_caseId: {
+					caseId: caseNum,
+					guildId: message.guildId
+				}
 			},
 			data: {
 				reason

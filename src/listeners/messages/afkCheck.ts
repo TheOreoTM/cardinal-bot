@@ -109,7 +109,7 @@ export class UserEvent extends Listener {
 			await message.channel.send({
 				content: `\`${afkData.afkNick}\` is AFK: ${afkData.afkMessage} - ${new Timestamp(afkData.createdAt.getTime()).getRelativeTime()}`,
 				allowedMentions: {
-					users: [message.author.id]
+					users: []
 				}
 			});
 
