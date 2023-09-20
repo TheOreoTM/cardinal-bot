@@ -31,7 +31,14 @@ export class UserPrecondition extends Precondition {
 
 		// if (allowed) return this.ok();
 
-		const valid = await isTrainee(member);
+		const staffAllowed = await isTrainee(member);
+		const restrictionAllowed =
+			(await interactionOrMessage.guild.settings.restrictions.checkMemberAllowed(command.name, member.id)) ||
+			interactionOrMessage.guild.settings.restrictions.checkChannelAllowed(command.name, interactionOrMessage.channel!.id) ||
+			(await interactionOrMessage.guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache));
+
+		const valid = staffAllowed || restrictionAllowed;
+
 		return valid
 			? this.ok()
 			: this.error({
