@@ -43,7 +43,10 @@ export class UserPrecondition extends Precondition {
 			? this.ok()
 			: this.error({
 					identifier: 'ModCommand',
-					message: 'You are not allowed to use this command'
+					message: 'You are not allowed to use this command',
+					context: {
+						silent: !restrictionAllowed
+					}
 			  });
 	}
 }
