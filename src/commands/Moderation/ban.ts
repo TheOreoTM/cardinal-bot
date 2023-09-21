@@ -68,7 +68,7 @@ export class banCommand extends ModerationCommand {
 			embeds: [
 				new CardinalEmbedBuilder()
 					.setStyle('info')
-					.setDescription(`You have been banned ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+					.setDescription(`You have been banned${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
 			]
 		});
 

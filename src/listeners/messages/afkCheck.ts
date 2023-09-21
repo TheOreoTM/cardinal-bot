@@ -46,7 +46,7 @@ export class UserEvent extends Listener {
 			const afkReturnGreet = await message.reply({
 				content: `Welcome back ${message.member}, I removed your AFK. ${
 					afkPings.length
-						? `You got **${afkPings.length === 1 ? `${afkPings.length} ping` : `${afkPings.length} pings`} ** while you were away`
+						? `You got **${afkPings.length === 1 ? `${afkPings.length} ping` : `${afkPings.length} pings`}** while you were away`
 						: ''
 				}`,
 				components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(viewPingsButton)] : []
