@@ -32,10 +32,12 @@ export class UserPrecondition extends Precondition {
 		// if (allowed) return this.ok();
 
 		const staffAllowed = await isTrainee(member);
+		console.log('🚀 ~ file: ModerationCommand.ts:35 ~ UserPrecondition ~ check ~ staffAllowed:', staffAllowed);
 		const restrictionAllowed =
 			(await interactionOrMessage.guild.settings.restrictions.checkMemberAllowed(command.name, member.id)) === true ||
 			(await interactionOrMessage.guild.settings.restrictions.checkChannelAllowed(command.name, interactionOrMessage.channel!.id)) === true ||
 			(await interactionOrMessage.guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache)) === true;
+		console.log('🚀 ~ file: ModerationCommand.ts:37 ~ UserPrecondition ~ check ~ restrictionAllowed:', restrictionAllowed);
 
 		const valid = staffAllowed || restrictionAllowed;
 
