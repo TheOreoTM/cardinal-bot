@@ -32,7 +32,7 @@ export class cleanCommand extends ModerationCommand {
 		const channel = message.channel as TextChannel;
 		message.delete();
 		channel.bulkDelete(messagesToDelete).catch(() => {
-			if (messagesToDelete.length === 0) return;
+			if (messagesToDelete.length === 1) return;
 			return send(message, { embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Something went wrong')] });
 		});
 

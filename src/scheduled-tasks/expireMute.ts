@@ -19,7 +19,7 @@ export class ExpireMuteTask extends ScheduledTask {
 					not: null
 				}
 			},
-			select: { modlog: true, id: true }
+			select: { modlog: true, id: true, removedRoles: true }
 		});
 
 		mutes.forEach(async (mute) => {
@@ -35,7 +35,7 @@ export class ExpireMuteTask extends ScheduledTask {
 			if (!member) return;
 			const staff = guild.members.me ?? (await guild.members.fetchMe());
 
-			await member.roles.remove(muteRole.id);
+			await member.roles.set(mute.removedRoles);
 			const modlog = new Modlog({
 				member,
 				staff,

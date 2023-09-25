@@ -40,12 +40,13 @@ model Ban {
 }
 
 model Mute {
-  id        Int       @id @default(autoincrement())
-  memberId  String
-  modlog    Modlog    @relation(fields: [modlogId], references: [id])
-  createdAt DateTime  @default(now())
-  expiresAt DateTime?
-  modlogId  Int
+  id           Int       @id @default(autoincrement())
+  memberId     String
+  modlog       Modlog    @relation(fields: [modlogId], references: [id])
+  createdAt    DateTime  @default(now())
+  expiresAt    DateTime?
+  modlogId     Int
+  removedRoles String[]
 
   @@index([memberId])
 }

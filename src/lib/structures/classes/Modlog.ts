@@ -114,6 +114,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			data: {
 				expiresAt: data.expiresAt,
 				memberId: this.memberId,
+				removedRoles: data.removedRoles ? data.removedRoles : [],
 				modlog: {
 					create: await this.createModlog()
 				}
@@ -225,6 +226,7 @@ type BanCreateInput = MuteCreateInput;
 
 type MuteCreateInput = {
 	expiresAt?: Date | Nullish;
+	removedRoles?: string[] | Nullish;
 };
 
 type ModlogCreateInput = {

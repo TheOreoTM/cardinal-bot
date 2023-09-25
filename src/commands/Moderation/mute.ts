@@ -64,13 +64,15 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		await target.roles.add(muteRole).catch((err: Error) => {
+		const removedRoles: string[] = Array.from(target.roles.cache.keys());
+
+		await target.roles.set([muteRole.id]).catch((err: Error) => {
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
 			});
 		});
 
-		await modlog.createMute({ expiresAt: duration?.fromNow });
+		await modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
 
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
