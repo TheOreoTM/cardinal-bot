@@ -78,11 +78,11 @@ export class banCommand extends ModerationCommand {
 			});
 		});
 
-		await modlog.createBan({ expiresAt: duration?.fromNow });
-
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Banned ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
+
+		modlog.createBan({ expiresAt: duration?.fromNow });
 
 		return;
 	}

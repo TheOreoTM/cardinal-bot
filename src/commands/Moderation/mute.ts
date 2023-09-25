@@ -78,11 +78,11 @@ export class muteCommand extends ModerationCommand {
 			});
 		});
 
-		await modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
-
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
+
+		modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
 
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [
