@@ -21,7 +21,6 @@ export class muteCommand extends ModerationCommand {
 		const duration = await args.pick('duration').catch(() => null);
 		const reason = await args.rest('string').catch(() => null);
 		const muteRole = message.guild.roles.cache.find((role) => role.name.toLowerCase() === 'muted');
-
 		if (!target) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to mute')]
@@ -40,6 +39,12 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
+		const isMuted = await this.isMuted(target.id);
+		if (isMuted) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is already muted')]
+			});
+		}
 		let modlog: Modlog;
 		let length: string | null = null;
 
@@ -87,5 +92,15 @@ export class muteCommand extends ModerationCommand {
 		});
 
 		return;
+	}
+
+	private async isMuted(memberId: string) {
+		const muteCount = await this.container.db.mute.count({
+			where: {
+				memberId
+			}
+		});
+
+		return muteCount > 0 ? false : true;
 	}
 }
