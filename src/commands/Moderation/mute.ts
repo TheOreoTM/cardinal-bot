@@ -45,6 +45,7 @@ export class muteCommand extends ModerationCommand {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is already muted')]
 			});
 		}
+
 		let modlog: Modlog;
 		let length: string | null = null;
 
@@ -101,6 +102,6 @@ export class muteCommand extends ModerationCommand {
 			}
 		});
 
-		return muteCount > 0 ? false : true;
+		return muteCount > 1;
 	}
 }
