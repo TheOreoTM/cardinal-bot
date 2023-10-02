@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import { days, minutes } from './common';
+import { days, minutes } from '#utils/common';
 import type { Prisma } from '@prisma/client';
 import { redis } from '#root/index';
 
