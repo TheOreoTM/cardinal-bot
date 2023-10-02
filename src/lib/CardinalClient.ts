@@ -1,36 +1,10 @@
-import { Prisma, PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@prisma/client';
 import { Enumerable } from '@sapphire/decorators';
 import { SapphireClient, container, type SapphirePrefix, type SapphirePrefixHook } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { ClientConfig } from '#config';
 import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import { BotPrefix } from '#constants';
-import Redis from 'ioredis';
-import { createPrismaRedisCache } from 'prisma-redis-middleware';
-import { envParseNumber, envParseString } from '@skyra/env-utilities';
-
-const redis = new Redis({
-	port: envParseNumber('REDIS_PORT'),
-	host: envParseString('REDIS_HOST'),
-	password: envParseString('REDIS_PASSWORD')
-});
-const prisma = new PrismaClient();
-const cacheMiddleware: Prisma.Middleware = createPrismaRedisCache({
-	models: [{ model: 'Modlog', cacheTime: 180 }],
-	storage: { type: 'redis', options: { client: redis, invalidation: { referencesTTL: 300 }, log: console } },
-	cacheTime: 180
-	// onHit: (key) => {
-	// 	console.log('hit', key);
-	// },
-	// onMiss: (key) => {
-	// 	console.log('miss', key);
-	// },
-	// onError: (key) => {
-	// 	console.log('error', key);
-	// }
-});
-
-prisma.$use(cacheMiddleware);
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)
@@ -41,7 +15,7 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 	}
 
 	public override async login(token?: string): Promise<string> {
-		container.db = prisma;
+		container.db = new PrismaClient();
 		return super.login(token);
 	}
 	public override destroy() {
