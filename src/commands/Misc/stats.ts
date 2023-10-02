@@ -1,5 +1,6 @@
 import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
+import { redis } from '#root/index';
 import { days, minutes, seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -241,6 +242,7 @@ export class statsCommand extends CardinalSubcommand {
 
 		const stopWatch = new Stopwatch();
 		const data = await this.getTopData(message.guildId, lookback);
+		console.log(typeof data);
 		const timeTaken = stopWatch.stop().toString();
 
 		const formatter = new DurationFormatter();
@@ -550,7 +552,7 @@ export class statsCommand extends CardinalSubcommand {
 
 	private initOptions(args: CardinalSubcommand.Args) {
 		const take = parseInt(args.getOption('limit') ?? '');
-		this.take = isNaN(take) ? this.take : take;
+		this.take = isNaN(take) ? 5 : take;
 
 		if (this.take > 10) this.take = 5;
 	}
@@ -570,6 +572,10 @@ export class statsCommand extends CardinalSubcommand {
 		// 	orderBy: { _count: { memberId: 'desc' } },
 		// 	take: this.take
 		// });
+
+		const cachedData = await redis.get(`${guildId}-topData`);
+		if (cachedData) {
+		}
 
 		const topMembersTimeLookback = await this.container.db.message.groupBy({
 			by: ['memberId'],
