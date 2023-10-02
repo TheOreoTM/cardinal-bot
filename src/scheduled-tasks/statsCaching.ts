@@ -2,6 +2,7 @@ import { days, minutes } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { redis } from '#root/index';
+import { getUserStats } from '#utils/caching';
 
 const MaxTakeAmount = 10;
 
@@ -23,7 +24,16 @@ export class ExpireBanTask extends ScheduledTask {
 				}
 			});
 			const topStatsData = await this.getTopData(guild.id, data?.lookback ?? 7);
-			redis.set(`${guild.id}-topData`, JSON.stringify(topStatsData));
+			redis.set(`${guild.id}-topData`, JSON.stringify(topStatsData), 'EX', 300);
+
+			// Get message counts for each member in the guild
+			const members = Array.from(guild.members.cache.keys());
+
+			for (const member of members) {
+				const memberId = member;
+
+				getUserStats(guild.id, memberId, data?.lookback ?? 7);
+			}
 		});
 	}
 
