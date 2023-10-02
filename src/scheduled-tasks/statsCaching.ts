@@ -2,8 +2,6 @@ import { days, minutes } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { redis } from '#root/index';
-import type { Prisma } from '@prisma/client';
-import { DurationFormatter } from '@sapphire/time-utilities';
 
 const MaxTakeAmount = 10;
 
