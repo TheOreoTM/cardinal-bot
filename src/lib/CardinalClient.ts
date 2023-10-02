@@ -7,8 +7,13 @@ import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector'
 import { BotPrefix } from '#constants';
 import Redis from 'ioredis';
 import { createPrismaRedisCache } from 'prisma-redis-middleware';
+import { envParseNumber, envParseString } from '@skyra/env-utilities';
 
-const redis = new Redis();
+const redis = new Redis({
+	port: envParseNumber('REDIS_PORT'),
+	host: envParseString('REDIS_HOST'),
+	password: envParseString('REDIS_PASSWORD')
+});
 const prisma = new PrismaClient();
 const cacheMiddleware: Prisma.Middleware = createPrismaRedisCache({
 	models: [{ model: 'Message', cacheTime: 300 }],
