@@ -16,18 +16,18 @@ const redis = new Redis({
 });
 const prisma = new PrismaClient();
 const cacheMiddleware: Prisma.Middleware = createPrismaRedisCache({
-	models: [{ model: 'Message', cacheTime: 300 }],
+	models: [{ model: 'Message', cacheTime: 180 }],
 	storage: { type: 'redis', options: { client: redis, invalidation: { referencesTTL: 300 }, log: console } },
-	cacheTime: 300,
-	onHit: (key) => {
-		console.log('hit', key);
-	},
-	onMiss: (key) => {
-		console.log('miss', key);
-	},
-	onError: (key) => {
-		console.log('error', key);
-	}
+	cacheTime: 180
+	// onHit: (key) => {
+	// 	console.log('hit', key);
+	// },
+	// onMiss: (key) => {
+	// 	console.log('miss', key);
+	// },
+	// onError: (key) => {
+	// 	console.log('error', key);
+	// }
 });
 
 prisma.$use(cacheMiddleware);
