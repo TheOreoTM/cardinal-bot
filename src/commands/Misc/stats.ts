@@ -1,10 +1,10 @@
 import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
+import { getChannelStats, getUserStats } from '#utils/caching';
 import { days, minutes, seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
-import type { Prisma } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -82,13 +82,7 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const data = await this.getData(
-			{
-				guildId: user.guild.id,
-				memberId: user.id
-			},
-			lookback
-		);
+		const data = await getUserStats(user.guild.id, user.id, lookback);
 
 		const topChannels = await this.findTopChannelsForMember(user.id, user.guild.id, lookback);
 		const timeTaken = stopWatch.stop().toString();
@@ -147,13 +141,7 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const data = await this.getData(
-			{
-				guildId: channel.guild.id,
-				channelId: channel.id
-			},
-			lookback
-		);
+		const data = await getChannelStats(channel.guild.id, channel.id, lookback);
 
 		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id);
 		const timeTaken = stopWatch.stop().toString();
@@ -364,107 +352,107 @@ export class statsCommand extends CardinalSubcommand {
 		return data ? data.lookback : 7;
 	}
 
-	private async getData(filter: Prisma.MessageWhereInput, lookback: number) {
-		const now = new Date();
-		const lastDay = new Date(now.getTime() - days(1)); // 1 day in milliseconds
-		const lastWeek = new Date(now.getTime() - days(7)); // 1 week in milliseconds
-		const lastLookback = new Date(now.getTime() - days(lookback));
+	// private async getData(filter: Prisma.MessageWhereInput, lookback: number) {
+	// 	const now = new Date();
+	// 	const lastDay = new Date(now.getTime() - days(1)); // 1 day in milliseconds
+	// 	const lastWeek = new Date(now.getTime() - days(7)); // 1 week in milliseconds
+	// 	const lastLookback = new Date(now.getTime() - days(lookback));
 
-		const whereFilter = filter;
+	// 	const whereFilter = filter;
 
-		// Count messages within the last day
-		const messageCountLastDay = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastDay
-				}
-			}
-		});
+	// 	// Count messages within the last day
+	// 	const messageCountLastDay = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastDay
+	// 			}
+	// 		}
+	// 	});
 
-		// Count messages within the lookback period
-		const messageCountLookback = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastLookback
-				}
-			}
-		});
+	// 	// Count messages within the lookback period
+	// 	const messageCountLookback = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastLookback
+	// 			}
+	// 		}
+	// 	});
 
-		// Count messages within the last week
-		const messageCountLastWeek = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastWeek
-				}
-			}
-		});
+	// 	// Count messages within the last week
+	// 	const messageCountLastWeek = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastWeek
+	// 			}
+	// 		}
+	// 	});
 
-		// Count all-time messages
-		const messageCountAllTime = await this.container.db.message.count({
-			where: {
-				...whereFilter
-			}
-		});
+	// 	// Count all-time messages
+	// 	const messageCountAllTime = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter
+	// 		}
+	// 	});
 
-		// Count messages with minuteMessage set to true within the last day
-		const messageTimeLastDay = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastDay
-				},
-				minuteMessage: true
-			}
-		});
+	// 	// Count messages with minuteMessage set to true within the last day
+	// 	const messageTimeLastDay = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastDay
+	// 			},
+	// 			minuteMessage: true
+	// 		}
+	// 	});
 
-		// Count messages with minuteMessage set to true within the lookback period
-		const messageTimeLookback = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastLookback
-				},
-				minuteMessage: true
-			}
-		});
+	// 	// Count messages with minuteMessage set to true within the lookback period
+	// 	const messageTimeLookback = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastLookback
+	// 			},
+	// 			minuteMessage: true
+	// 		}
+	// 	});
 
-		// Count messages with minuteMessage set to true within the last week
-		const messageTimeLastWeek = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				createdAt: {
-					gte: lastWeek
-				},
-				minuteMessage: true
-			}
-		});
+	// 	// Count messages with minuteMessage set to true within the last week
+	// 	const messageTimeLastWeek = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			createdAt: {
+	// 				gte: lastWeek
+	// 			},
+	// 			minuteMessage: true
+	// 		}
+	// 	});
 
-		// Count all-time messages with minuteMessage set to true
-		const messageTimeAllTime = await this.container.db.message.count({
-			where: {
-				...whereFilter,
-				minuteMessage: true
-			}
-		});
+	// 	// Count all-time messages with minuteMessage set to true
+	// 	const messageTimeAllTime = await this.container.db.message.count({
+	// 		where: {
+	// 			...whereFilter,
+	// 			minuteMessage: true
+	// 		}
+	// 	});
 
-		const durationFormatter = new DurationFormatter();
+	// 	const durationFormatter = new DurationFormatter();
 
-		const data = {
-			messageCountLastDay: messageCountLastDay.toLocaleString(),
-			messageCountLookback: messageCountLookback.toLocaleString(),
-			messageCountLastWeek: messageCountLastWeek.toLocaleString(),
-			messageCountAllTime: messageCountAllTime.toLocaleString(),
-			messageTimeLastDay: durationFormatter.format(minutes(messageTimeLastDay)),
-			messageTimeLookback: durationFormatter.format(minutes(messageTimeLookback)),
-			messageTimeLastWeek: durationFormatter.format(minutes(messageTimeLastWeek)),
-			messageTimeAllTime: durationFormatter.format(minutes(messageTimeAllTime))
-		};
+	// 	const data = {
+	// 		messageCountLastDay: messageCountLastDay.toLocaleString(),
+	// 		messageCountLookback: messageCountLookback.toLocaleString(),
+	// 		messageCountLastWeek: messageCountLastWeek.toLocaleString(),
+	// 		messageCountAllTime: messageCountAllTime.toLocaleString(),
+	// 		messageTimeLastDay: durationFormatter.format(minutes(messageTimeLastDay)),
+	// 		messageTimeLookback: durationFormatter.format(minutes(messageTimeLookback)),
+	// 		messageTimeLastWeek: durationFormatter.format(minutes(messageTimeLastWeek)),
+	// 		messageTimeAllTime: durationFormatter.format(minutes(messageTimeAllTime))
+	// 	};
 
-		return data;
-	}
+	// 	return data;
+	// }
 
 	private async findTopMembersForRole(role: Role, lookback: number): Promise<{ memberId: string; messageCount: string }[]> {
 		const now = new Date();
