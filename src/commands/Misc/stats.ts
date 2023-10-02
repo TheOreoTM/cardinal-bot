@@ -242,7 +242,6 @@ export class statsCommand extends CardinalSubcommand {
 
 		const stopWatch = new Stopwatch();
 		const data = await this.getTopData(message.guildId, lookback);
-		console.log(typeof data, data);
 		const timeTaken = stopWatch.stop().toString();
 
 		const formatter = new DurationFormatter();
@@ -575,6 +574,8 @@ export class statsCommand extends CardinalSubcommand {
 
 		const cachedData = await redis.get(`${guildId}-topData`);
 		if (cachedData) {
+			const data = JSON.parse(cachedData) as TopData;
+			return data;
 		}
 
 		const topMembersTimeLookback = await this.container.db.message.groupBy({
@@ -678,3 +679,22 @@ export class statsCommand extends CardinalSubcommand {
 		return data;
 	}
 }
+
+type TopDataItem = {
+	_count: {
+		memberId: number;
+	};
+	memberId: string;
+} & {
+	_count: {
+		channelId: number;
+	};
+	channelId: string;
+};
+
+type TopData = {
+	topMembersMessagesLookback: TopDataItem[];
+	topMembersTimeLookback: TopDataItem[];
+	topChannelsMessagesLookback: TopDataItem[];
+	topChannelsTimeLookback: TopDataItem[];
+};
