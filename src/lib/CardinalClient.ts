@@ -16,7 +16,7 @@ const redis = new Redis({
 });
 const prisma = new PrismaClient();
 const cacheMiddleware: Prisma.Middleware = createPrismaRedisCache({
-	models: [{ model: 'Message', cacheTime: 180 }],
+	models: [{ model: 'Modlog', cacheTime: 180 }],
 	storage: { type: 'redis', options: { client: redis, invalidation: { referencesTTL: 300 }, log: console } },
 	cacheTime: 180
 	// onHit: (key) => {
