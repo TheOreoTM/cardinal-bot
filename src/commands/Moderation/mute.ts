@@ -72,11 +72,13 @@ export class muteCommand extends ModerationCommand {
 
 		const removedRoles: string[] = Array.from(target.roles.cache.keys());
 
-		await target.roles.set([muteRole.id]).catch((err: Error) => {
-			send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+		await target.roles
+			.set(target.guild.roles.premiumSubscriberRole ? [muteRole.id, target.guild.roles.premiumSubscriberRole.id] : [muteRole.id])
+			.catch((err: Error) => {
+				send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+				});
 			});
-		});
 
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
