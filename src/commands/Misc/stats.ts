@@ -242,7 +242,7 @@ export class statsCommand extends CardinalSubcommand {
 
 		const stopWatch = new Stopwatch();
 		const data = await this.getTopData(message.guildId, lookback);
-		console.log(typeof data);
+		console.log(typeof data, data);
 		const timeTaken = stopWatch.stop().toString();
 
 		const formatter = new DurationFormatter();
