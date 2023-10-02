@@ -1,7 +1,7 @@
 import { days, minutes } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
-import { redis } from '..';
+import { redis } from '#root/index';
 
 const MaxTakeAmount = 10;
 
