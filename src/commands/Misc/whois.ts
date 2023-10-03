@@ -70,7 +70,6 @@ export class WhoisCommand extends CardinalCommand {
 		const highestServerRole = member.roles.highest;
 		const roles = member.roles.cache;
 		roles.delete(member.guild.id);
-		roles.reverse();
 		const formattedRoles = roles
 			.map((role) => {
 				return `<@&${role.id}>`;
