@@ -70,15 +70,20 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		const removedRoles: string[] = Array.from(target.roles.cache.keys());
+		const filteredRoles = target.roles.cache.filter((role) => role.tags);
+		const removedRoles = Array.from(filteredRoles.keys());
+		const boosterRole = target.guild.roles.premiumSubscriberRole;
+		const rolesToAdd = [muteRole.id];
 
-		await target.roles
-			.set(target.guild.roles.premiumSubscriberRole ? [muteRole.id, target.guild.roles.premiumSubscriberRole.id] : [muteRole.id])
-			.catch((err: Error) => {
-				send(message, {
-					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
-				});
+		if (boosterRole) {
+			if (target.roles.cache.has(boosterRole.id)) rolesToAdd.push(boosterRole.id);
+		}
+
+		await target.roles.set(rolesToAdd).catch((err: Error) => {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
 			});
+		});
 
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
