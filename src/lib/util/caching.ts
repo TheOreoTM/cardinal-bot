@@ -3,6 +3,22 @@ import { DurationFormatter } from '@sapphire/time-utilities';
 import { days, minutes } from '#utils/common';
 import type { Prisma } from '@prisma/client';
 import { redis } from '#root/index';
+import type { Guild } from 'discord.js';
+
+export async function updateUsersInGuild(guild: Guild, lookbackAmount?: number) {
+	const data = await container.db.guild.findUnique({
+		where: {
+			guildId: guild.id
+		},
+		select: {
+			lookback: true
+		}
+	});
+
+	const lookback = lookbackAmount ? lookbackAmount : data?.lookback ? data.lookback : 7;
+
+	guild.members.cache.forEach((member) => getUserStats(guild.id, member.id, lookback));
+}
 
 export async function getUserStats(guildId: string, userId: string, lookback: number) {
 	const key = `${guildId}-stats-${userId}`;
