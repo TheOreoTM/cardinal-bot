@@ -89,7 +89,6 @@ export class HelpCommand extends CardinalCommand {
 			if (isPrivateMessage(message))
 				this.error({
 					context: context,
-					name: 'ClosedDM',
 					identifier: 'ClosedDM',
 					message: "You have DMs disabled so I couldn't send you the list of commands."
 				});

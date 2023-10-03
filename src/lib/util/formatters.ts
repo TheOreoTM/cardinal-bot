@@ -20,7 +20,7 @@ export function replaceNonAlphanumeric(inputString: string): string {
  * @example
  * capitalizeWords('hello world!') -> 'Hello World!'
  */
-export function capitalizeWords(sentence: string) {
+export function capitalizeWords(sentence: string): string {
 	return sentence
 		.split(' ')
 		.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
