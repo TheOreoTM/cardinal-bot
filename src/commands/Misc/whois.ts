@@ -11,7 +11,8 @@ import { ApplicationCommandType, EmbedBuilder, GuildMember } from 'discord.js';
 	description: 'View information about a member',
 	detailedDescription: {
 		extendedHelp: 'View information a member'
-	}
+	},
+	aliases: ['w']
 })
 export class WhoisCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
@@ -69,6 +70,7 @@ export class WhoisCommand extends CardinalCommand {
 		const globalName = member.user.globalName;
 		const highestServerRole = member.roles.highest;
 		const roles = member.roles.cache;
+		roles.sort((a, b) => b.position - a.position);
 		roles.delete(member.guild.id);
 		const formattedRoles = roles
 			.map((role) => {
