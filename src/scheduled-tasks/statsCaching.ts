@@ -7,10 +7,10 @@ import { getUserStats } from '#utils/caching';
 const MaxTakeAmount = 10;
 
 @ApplyOptions<ScheduledTask.Options>({
-	interval: minutes(5),
+	interval: minutes(2),
 	enabled: true
 })
-export class ExpireBanTask extends ScheduledTask {
+export class StatsCachingTask extends ScheduledTask {
 	public override async run() {
 		const guilds = this.container.client.guilds.cache;
 
