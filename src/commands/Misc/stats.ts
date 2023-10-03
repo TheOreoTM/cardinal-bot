@@ -82,9 +82,11 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const data = await getUserStats(user.guild.id, user.id, lookback);
+		const allData = await getUserStats(user.guild.id, user.id, lookback);
+		const data = allData.data;
+		const extraData = allData.extra;
 
-		const topChannels = await this.findTopChannelsForMember(user.id, user.guild.id, lookback);
+		const topChannels = extraData;
 		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopChannels = topChannels.map((channel, index) => {
@@ -338,7 +340,7 @@ export class statsCommand extends CardinalSubcommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Set historical lookback to ${lookback} days`)]
 		});
 
-		return await updateUsersInGuild(message.guild)
+		return await updateUsersInGuild(message.guild);
 	}
 
 	private async getLookback(guildId: string) {
@@ -353,108 +355,6 @@ export class statsCommand extends CardinalSubcommand {
 
 		return data ? data.lookback : 7;
 	}
-
-	// private async getData(filter: Prisma.MessageWhereInput, lookback: number) {
-	// 	const now = new Date();
-	// 	const lastDay = new Date(now.getTime() - days(1)); // 1 day in milliseconds
-	// 	const lastWeek = new Date(now.getTime() - days(7)); // 1 week in milliseconds
-	// 	const lastLookback = new Date(now.getTime() - days(lookback));
-
-	// 	const whereFilter = filter;
-
-	// 	// Count messages within the last day
-	// 	const messageCountLastDay = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastDay
-	// 			}
-	// 		}
-	// 	});
-
-	// 	// Count messages within the lookback period
-	// 	const messageCountLookback = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastLookback
-	// 			}
-	// 		}
-	// 	});
-
-	// 	// Count messages within the last week
-	// 	const messageCountLastWeek = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastWeek
-	// 			}
-	// 		}
-	// 	});
-
-	// 	// Count all-time messages
-	// 	const messageCountAllTime = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter
-	// 		}
-	// 	});
-
-	// 	// Count messages with minuteMessage set to true within the last day
-	// 	const messageTimeLastDay = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastDay
-	// 			},
-	// 			minuteMessage: true
-	// 		}
-	// 	});
-
-	// 	// Count messages with minuteMessage set to true within the lookback period
-	// 	const messageTimeLookback = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastLookback
-	// 			},
-	// 			minuteMessage: true
-	// 		}
-	// 	});
-
-	// 	// Count messages with minuteMessage set to true within the last week
-	// 	const messageTimeLastWeek = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			createdAt: {
-	// 				gte: lastWeek
-	// 			},
-	// 			minuteMessage: true
-	// 		}
-	// 	});
-
-	// 	// Count all-time messages with minuteMessage set to true
-	// 	const messageTimeAllTime = await this.container.db.message.count({
-	// 		where: {
-	// 			...whereFilter,
-	// 			minuteMessage: true
-	// 		}
-	// 	});
-
-	// 	const durationFormatter = new DurationFormatter();
-
-	// 	const data = {
-	// 		messageCountLastDay: messageCountLastDay.toLocaleString(),
-	// 		messageCountLookback: messageCountLookback.toLocaleString(),
-	// 		messageCountLastWeek: messageCountLastWeek.toLocaleString(),
-	// 		messageCountAllTime: messageCountAllTime.toLocaleString(),
-	// 		messageTimeLastDay: durationFormatter.format(minutes(messageTimeLastDay)),
-	// 		messageTimeLookback: durationFormatter.format(minutes(messageTimeLookback)),
-	// 		messageTimeLastWeek: durationFormatter.format(minutes(messageTimeLastWeek)),
-	// 		messageTimeAllTime: durationFormatter.format(minutes(messageTimeAllTime))
-	// 	};
-
-	// 	return data;
-	// }
 
 	private async findTopMembersForRole(role: Role, lookback: number): Promise<{ memberId: string; messageCount: string }[]> {
 		const now = new Date();
@@ -479,39 +379,6 @@ export class statsCommand extends CardinalSubcommand {
 		return topMembers.map((member) => ({
 			memberId: member.memberId,
 			messageCount: member._count.memberId.toLocaleString()
-		}));
-	}
-
-	private async findTopChannelsForMember(
-		userId: string,
-		guildId: string,
-		lookback: number
-	): Promise<{ channelId: string; messageCount: string }[]> {
-		const now = new Date();
-		const lastLookback = new Date(now.getTime() - days(lookback));
-		const topChannels = await this.container.db.message.groupBy({
-			by: ['channelId'],
-			where: {
-				memberId: userId,
-				guildId: guildId,
-				createdAt: {
-					gte: lastLookback
-				}
-			},
-			_count: {
-				channelId: true
-			},
-			orderBy: {
-				_count: {
-					channelId: 'desc'
-				}
-			},
-			take: this.take
-		});
-
-		return topChannels.map((channel) => ({
-			channelId: channel.channelId,
-			messageCount: channel._count.channelId.toLocaleString()
 		}));
 	}
 
