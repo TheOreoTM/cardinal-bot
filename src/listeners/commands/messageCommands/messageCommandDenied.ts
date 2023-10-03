@@ -29,6 +29,7 @@ export class UserEvent extends Listener<typeof CardinalEvents.MessageCommandDeni
 
 				setTimeout(() => cooldownMessageCooldown.delete(message.author.id), seconds(5));
 			}
+			return;
 		}
 		const embed = new CardinalEmbedBuilder().setStyle('fail').setDescription(content);
 		return sendTemporaryMessage(message, { embeds: [embed], allowedMentions: { users: [message.author.id], roles: [] } }, seconds(7));
