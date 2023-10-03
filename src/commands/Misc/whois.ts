@@ -62,6 +62,7 @@ export class WhoisCommand extends CardinalCommand {
 		const globalName = member.user.globalName;
 		const highestServerRole = member.roles.highest;
 		const roles = member.roles.cache;
+		roles.delete(member.guild.id);
 		const formattedRoles = roles
 			.map((role) => {
 				return `<@&${role.id}>`;
@@ -72,7 +73,7 @@ export class WhoisCommand extends CardinalCommand {
 		const embed = new EmbedBuilder()
 			.setColor(member.displayHexColor)
 			.setAuthor({ name: memberTag, iconURL: memberAvatarURL })
-			.setImage(memberAvatarURL)
+			.setThumbnail(memberAvatarURL)
 			.setTitle(globalName)
 			.addFields(
 				{
@@ -87,7 +88,7 @@ export class WhoisCommand extends CardinalCommand {
 				},
 				{
 					name: 'Information',
-					value: [`Bot: ${isBot}`, `Highest Server Role: ${highestServerRole}`].join('\n'),
+					value: [`Bot: ${isBot}`, `Highest Role: ${highestServerRole}`].join('\n'),
 					inline: true
 				},
 				{
