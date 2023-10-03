@@ -3,23 +3,30 @@ import type { GuildMessage } from '#lib/types';
 import { formatRoles } from '#utils/formatters';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
+import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationCommandType, EmbedBuilder, GuildMember } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: 'ADD DESCRIPTION',
+	description: 'View information about a member',
 	detailedDescription: {
-		extendedHelp: 'ADD'
+		extendedHelp: 'View information a member'
 	}
 })
 export class WhoisCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
 	public override registerApplicationCommands(registry: CardinalCommand.Registry) {
 		// Register Chat Input command
-		registry.registerChatInputCommand({
-			name: this.name,
-			description: this.description
-		});
+		registry.registerChatInputCommand((builder) =>
+			builder //
+				.setName(this.name)
+				.setDescription(this.description)
+				.addUserOption((option) =>
+					option //
+						.setName('member')
+						.setDescription('The member you want to whois')
+				)
+		);
 
 		// Register Context Menu command available from any user
 		registry.registerContextMenuCommand({
@@ -29,15 +36,15 @@ export class WhoisCommand extends CardinalCommand {
 	}
 
 	// Message command
-	public async messageRun(message: GuildMessage) {
-		const member = message.member;
+	public async messageRun(message: GuildMessage, args: Args) {
+		const member = await args.pick('member').catch(() => message.member);
 		const embed = await this.whois(member);
 		send(message, { embeds: [embed] });
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		const member = interaction.member;
+		const member = interaction.options.getMember('member') ?? interaction.member;
 		const embed = await this.whois(member);
 		interaction.reply({
 			embeds: [embed]
@@ -63,6 +70,7 @@ export class WhoisCommand extends CardinalCommand {
 		const highestServerRole = member.roles.highest;
 		const roles = member.roles.cache;
 		roles.delete(member.guild.id);
+		roles.reverse();
 		const formattedRoles = roles
 			.map((role) => {
 				return `<@&${role.id}>`;
@@ -78,12 +86,12 @@ export class WhoisCommand extends CardinalCommand {
 			.addFields(
 				{
 					name: 'Joined',
-					value: memberJoinedTimestamp.getLongDateTime(),
+					value: memberJoinedTimestamp.getLongDate(),
 					inline: true
 				},
 				{
 					name: 'Registered',
-					value: accountCreatedTimestamp.getLongDateTime(),
+					value: accountCreatedTimestamp.getLongDate(),
 					inline: true
 				},
 				{
