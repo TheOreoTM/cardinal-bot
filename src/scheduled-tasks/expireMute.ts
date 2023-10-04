@@ -35,6 +35,7 @@ export class ExpireMuteTask extends ScheduledTask {
 			if (!member) return;
 			const staff = guild.members.me ?? (await guild.members.fetchMe());
 
+			console.log(mute.removedRoles);
 			await member.roles.set(mute.removedRoles).catch(() => {
 				const removedRoles = mute.removedRoles;
 				const index = mute.removedRoles.indexOf(guild.roles.premiumSubscriberRole?.id ?? '');
