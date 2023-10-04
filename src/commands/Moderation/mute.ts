@@ -70,7 +70,7 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		const filteredRoles = target.roles.cache.filter((role) => role.tags);
+		const filteredRoles = target.roles.cache.filter((role) => role.tags === null);
 		const removedRoles = Array.from(filteredRoles.keys());
 		const boosterRole = target.guild.roles.premiumSubscriberRole;
 		const rolesToAdd = [muteRole.id];
