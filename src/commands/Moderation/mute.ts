@@ -96,7 +96,7 @@ export class muteCommand extends ModerationCommand {
 			embeds: [
 				new CardinalEmbedBuilder()
 					.setStyle('info')
-					.setDescription(`You have been muted${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
+					.setDescription(`You have been muted ${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
 			]
 		});
 
