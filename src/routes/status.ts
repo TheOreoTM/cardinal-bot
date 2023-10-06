@@ -6,7 +6,7 @@ import { methods, Route, type ApiRequest, type ApiResponse } from '@sapphire/plu
 })
 export class UserRoute extends Route {
 	public [methods.GET](request: ApiRequest, response: ApiResponse) {
-		console.log(request.auth);
+		console.log(JSON.stringify(request), request.auth);
 		response.json({ message: 'I am alive' });
 	}
 
