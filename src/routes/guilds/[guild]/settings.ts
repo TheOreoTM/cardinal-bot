@@ -1,5 +1,4 @@
-import { seconds } from '#utils/common';
-import { authenticated, ratelimit } from '#utils/utils';
+import { authenticated } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 
@@ -9,7 +8,7 @@ import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@s
 })
 export class UserRoute extends Route {
 	@authenticated()
-	@ratelimit(seconds(5), 2, true)
+	// @ratelimit(seconds(5), 2, true)
 	public async [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const guildId = request.params.guild;
 
