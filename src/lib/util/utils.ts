@@ -24,6 +24,47 @@ import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
 
+export const authenticated = () =>
+	createFunctionPrecondition(
+		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`),
+		(_request: ApiRequest, response: ApiResponse) => response.error(HttpCodes.Unauthorized)
+	);
+
+/**
+ * @param time The amount of milliseconds for the ratelimits from this manager to expire.
+ * @param limit The amount of times a {@link RateLimit} can drip before it's limited.
+ * @param auth Whether or not this should be auth-limited
+ */
+export function ratelimit(time: number, limit = 1, auth = false) {
+	const manager = new RateLimitManager(time, limit);
+	const xRateLimitLimit = time;
+	return createFunctionPrecondition(
+		(request: ApiRequest, response: ApiResponse) => {
+			const id = (auth ? request.auth!.id : request.headers['x-forwarded-for'] || request.socket.remoteAddress) as string;
+			const bucket = manager.acquire(id);
+
+			response.setHeader('Date', new Date().toUTCString());
+			if (bucket.limited) {
+				response.setHeader('Retry-After', bucket.remainingTime.toString());
+				return false;
+			}
+
+			try {
+				bucket.consume();
+			} catch {}
+
+			response.setHeader('X-RateLimit-Limit', xRateLimitLimit);
+			response.setHeader('X-RateLimit-Remaining', bucket.remaining.toString());
+			response.setHeader('X-RateLimit-Reset', bucket.remainingTime.toString());
+
+			return true;
+		},
+		(_request: ApiRequest, response: ApiResponse) => {
+			response.error(HttpCodes.TooManyRequests);
+		}
+	);
+}
+
 /**
  *
  * @param command The name of the slash command you want to get the id of
@@ -231,6 +272,10 @@ export function generateSendMessageAsGuildButton(guild: Guild) {
 
 import { lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
+import { createFunctionPrecondition } from '@sapphire/decorators';
+import { envParseString } from '@skyra/env-utilities';
+import { RateLimitManager } from '@sapphire/ratelimits';
 
 export function countlines(path: string) {
 	let linesOfCode = 0;

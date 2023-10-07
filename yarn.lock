@@ -448,6 +448,11 @@
   resolved "https://registry.yarnpkg.com/@sapphire/ratelimits/-/ratelimits-2.4.6.tgz#9a936b451a9090ed574409e4dc0af000952792f8"
   integrity sha512-E8ZogD+gtXw/iAFuyd42ZzUcYzOC3qGXZFOjU12o0cSYWObh7kQEqkS62BB0hMXy+GJH0X2+kqgMklME8EhWUg==
 
+"@sapphire/ratelimits@^2.4.7":
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/@sapphire/ratelimits/-/ratelimits-2.4.7.tgz#bc4754bb29e275ab321f68a09556857265162d2d"
+  integrity sha512-IJQySiK+A8P4E+0oW2TGDy4RBjMsw3hccFL0y4kjQ2VZNzPDHJSYR4Pb1TzlG6V9YTVdCNWJODFXXyVn3tEQ/A==
+
 "@sapphire/result@^2.6.3", "@sapphire/result@^2.6.4":
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/@sapphire/result/-/result-2.6.4.tgz#13816254f94a42a95b9d6068ddc81fbf2173ded4"
