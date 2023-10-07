@@ -20,7 +20,7 @@ export class UserRoute extends Route {
 
 		const data = await this.container.db.guild.findUnique({
 			where: {
-				guildId: guild.id
+				guildId
 			}
 		});
 
