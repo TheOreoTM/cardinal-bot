@@ -40,7 +40,6 @@ export const endGiveaway = async (gw: GiveawayData) => {
 
 	const channel = container.client.channels.cache.get(giveaway.channelId);
 	if (!channel || !channel.isTextBased()) {
-		await giveaway.delete();
 		return;
 	}
 	const message = await channel.messages.fetch(giveaway.messageId);

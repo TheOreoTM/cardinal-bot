@@ -18,6 +18,14 @@ export class GiveawayExpireTask extends ScheduledTask {
 			}
 		});
 
+		await this.container.db.giveaway.deleteMany({
+			where: {
+				expiresAt: {
+					lt: now
+				}
+			}
+		});
+
 		for (const giveaway of giveaways) {
 			console.log(giveaway);
 			const gw = GiveawayManager.fromDatabase(giveaway);
