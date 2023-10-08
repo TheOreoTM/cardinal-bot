@@ -9,3 +9,4 @@ export * from './Timestamp.js';
 export * from './LanguageHelp.js';
 export * from './ChannelsConfig.js';
 export * from './RestrictionManager.js';
+export * from './GiveawayManager.js';

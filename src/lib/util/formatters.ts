@@ -123,9 +123,9 @@ const order: Record<PermissionsString, number> = {
 };
 
 /**
- * Returns an array formated like "item1, iteme2 and item3"
+ * Returns an array formated like "item1, item2 and item3"
  * @param items An array of strings
- * @returns a string formated like "item1, iteme2 and item3"
+ * @returns a string formated like "item1, item2 and item3"
  */
 export function andList(items: string[]): string {
 	const length = items.length;

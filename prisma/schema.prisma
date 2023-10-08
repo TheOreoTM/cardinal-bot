@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Giveaway {
+  id           Int      @id @default(autoincrement())
+  messageId    String   @unique
+  channelId    String
+  hosterId     String
+  guildId      String
+  prize        String
+  description  String?  @db.Text
+  winnerAmount Int
+  participants String[] @default([])
+  expiresAt    DateTime
+}
+
 model Modlog {
   id         Int       @id @default(autoincrement())
   caseId     Int?

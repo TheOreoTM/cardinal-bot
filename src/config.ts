@@ -14,7 +14,7 @@ export const Presence = {
 
 export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'host'> {
 	return {
-		port: envParseNumber('REDIS_PORT'), // TODO: Get a new redis database
+		port: envParseNumber('REDIS_PORT'),
 		password: envParseString('REDIS_PASSWORD'),
 		host: envParseString('REDIS_HOST')
 	};

@@ -14,7 +14,8 @@ export const enum PermissionLevels {
 export const CardinalEvents = {
 	...Events,
 	...SubcommandPluginEvents,
-	RawReactionAdd: 'rawReactionAdd'
+	RawReactionAdd: 'rawReactionAdd',
+	GiveawayEnd: 'giveawayEnd'
 	// TODO: Add custom events here
 };
 

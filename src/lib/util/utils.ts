@@ -15,14 +15,62 @@ import {
 	type Guild,
 	type ImageURLOptions,
 	type Message,
-	type User
+	type User,
+	userMention
 } from 'discord.js';
-import { CardinalColors, ZeroWidthSpace } from '#constants';
+import { BotClientID, CardinalColors, ZeroWidthSpace } from '#constants';
 import { isNullishOrEmpty } from '@sapphire/utilities';
-import { CardinalEmbedBuilder } from '#lib/structures';
+import { CardinalEmbedBuilder, GiveawayManager, type GiveawayData, Timestamp } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
+import { lstatSync, readdirSync, readFileSync } from 'fs';
+import { join } from 'path';
+import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
+import { createFunctionPrecondition } from '@sapphire/decorators';
+import { envParseString } from '@skyra/env-utilities';
+import { RateLimitManager } from '@sapphire/ratelimits';
+import { bold } from 'discord.js';
+import { andList } from './formatters';
+
+export const endGiveaway = async (gw: GiveawayData) => {
+	const giveaway = GiveawayManager.fromDatabase(gw);
+	const winners = giveaway.getWinners();
+	const channel = container.client.channels.cache.get(giveaway.channelId);
+	if (!channel || !channel.isTextBased()) {
+		await giveaway.delete();
+		return;
+	}
+	const message = await channel.messages.fetch(giveaway.messageId);
+	if (!message) {
+		channel.send({
+			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
+		});
+	}
+
+	const formattedEndTime = new Timestamp(giveaway.endsAtTimestamp);
+	const formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
+	const description = [];
+	if (giveaway.description) description.push(`**Description:** ${giveaway.description}`);
+	description.push(`Ended: ${formattedEndTime.getRelativeTime} (${formattedEndTime.getLongDateTime})`);
+	description.push(`Hosted by: ${userMention(giveaway.hosterId)}`);
+	description.push(`Participants: **${giveaway.participants.length}**`);
+	description.push(`Winners: ${andList(formattedWinners)}`);
+
+	const embed = new CardinalEmbedBuilder()
+		.setStyle('default')
+		.setTitle(giveaway.prize)
+		.setDescription(description.join('\n'))
+		.setTimestamp(giveaway.endsAt);
+
+	if (message && message.author.id === BotClientID) {
+		message.edit({ content: '', embeds: [embed], components: [] });
+	}
+
+	await message.channel.send({
+		content: `Congratulations ${andList(formattedWinners)}! You won the ${bold(giveaway.prize)}`
+	});
+};
 
 export const authenticated = () =>
 	createFunctionPrecondition(
@@ -269,13 +317,6 @@ export function generateSendMessageAsGuildButton(guild: Guild) {
 		.setLabel(`Sent from ${guild.name.slice(0, ButtonLimits.MaximumLabelCharacters - 'sent from'.length)}`)
 		.setCustomId(`sentFrom-${guild.id}`);
 }
-
-import { lstatSync, readdirSync, readFileSync } from 'fs';
-import { join } from 'path';
-import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
-import { createFunctionPrecondition } from '@sapphire/decorators';
-import { envParseString } from '@skyra/env-utilities';
-import { RateLimitManager } from '@sapphire/ratelimits';
 
 export function countlines(path: string) {
 	let linesOfCode = 0;
