@@ -82,7 +82,10 @@ export class GiveawayManager {
 	}
 
 	public getWinners() {
-		if (this.data.participants.length < this.data.winnerAmount) throw InsufficientEntriesError;
+		if (this.data.participants.length < this.data.winnerAmount) {
+			this.delete();
+			throw InsufficientEntriesError;
+		}
 
 		const winners = pickRandom(this.data.participants, this.data.winnerAmount);
 		return winners;
