@@ -31,7 +31,7 @@ import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { bold } from 'discord.js';
-import { andList } from './formatters';
+import { andList } from '#utils/formatters';
 
 export const endGiveaway = async (gw: GiveawayData) => {
 	const giveaway = GiveawayManager.fromDatabase(gw);
