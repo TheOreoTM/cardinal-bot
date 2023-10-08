@@ -64,7 +64,8 @@ export const endGiveaway = async (gw: GiveawayData) => {
 		.setDescription(description.join('\n'))
 		.setTimestamp(giveaway.endsAt);
 
-	if (message && message.author.id === BotClientID) {
+	console.log('hi');
+	if (message) {
 		message.edit({ content: '', embeds: [embed], components: [] });
 	}
 
