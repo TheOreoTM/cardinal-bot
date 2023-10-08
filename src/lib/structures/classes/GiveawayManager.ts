@@ -163,8 +163,19 @@ export class GiveawayManager {
 		return new GiveawayManager(data);
 	}
 
-	public toDatabase(): GiveawayData {
-		return { ...this.data };
+	public toDatabase(): Omit<GiveawayData, 'id'> {
+		const data = this.data;
+		return {
+			winnerAmount: data.winnerAmount,
+			channelId: data.channelId,
+			description: data.description,
+			expiresAt: data.expiresAt,
+			guildId: data.guildId,
+			hosterId: data.hosterId,
+			messageId: data.messageId,
+			participants: data.participants,
+			prize: data.prize
+		};
 	}
 }
 
