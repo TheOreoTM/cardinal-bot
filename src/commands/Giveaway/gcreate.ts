@@ -126,5 +126,7 @@ export class UserCommand extends CardinalCommand {
 		await this.container.db.giveaway.create({
 			data: gwData
 		});
+
+		console.log(gwData);
 	}
 }
