@@ -4,8 +4,7 @@ import {
 	type ChatInputCommandSuccessPayload,
 	type Command,
 	type ContextMenuCommandSuccessPayload,
-	type MessageCommandSuccessPayload,
-	UserError
+	type MessageCommandSuccessPayload
 } from '@sapphire/framework';
 import { cyan } from 'colorette';
 import {
@@ -52,13 +51,13 @@ export const endGiveaway = async (gw: GiveawayData) => {
 		return;
 	}
 
-	if (winners instanceof UserError) {
+	if (!winners) {
 		message.edit({
 			embeds: [
 				new CardinalEmbedBuilder(message.embeds[0].data).setColor(CardinalColors.Fail).setDescription('Not enough entries to get a winner.')
 			]
 		});
-		channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(winners.message)] });
+		channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
 		return;
 	}
 

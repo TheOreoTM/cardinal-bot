@@ -81,10 +81,10 @@ export class GiveawayManager {
 		}
 	}
 
-	public getWinners(): string[] | UserError {
+	public getWinners(): string[] | null {
 		if (this.data.participants.length < this.data.winnerAmount) {
 			this.delete();
-			throw InsufficientEntriesError;
+			return null;
 		}
 
 		const winners = pickRandom(this.data.participants, this.data.winnerAmount);
@@ -180,12 +180,6 @@ export class GiveawayManager {
 		};
 	}
 }
-
-const InsufficientEntriesError = new UserError({
-	message: `Not enough participants`,
-	identifier: 'DeadServer'
-});
-
 export type GiveawayData = {
 	id: number;
 	messageId: string;
