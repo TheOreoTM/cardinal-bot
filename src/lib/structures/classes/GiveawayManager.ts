@@ -83,7 +83,6 @@ export class GiveawayManager {
 
 	public getWinners(): string[] | null {
 		if (this.data.participants.length < this.data.winnerAmount) {
-			this.delete();
 			return null;
 		}
 
