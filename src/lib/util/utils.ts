@@ -19,7 +19,7 @@ import {
 	type User,
 	userMention
 } from 'discord.js';
-import { BotClientID, CardinalColors, ZeroWidthSpace } from '#constants';
+import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { isNullishOrEmpty } from '@sapphire/utilities';
 import { CardinalEmbedBuilder, GiveawayManager, type GiveawayData, Timestamp } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
@@ -49,6 +49,7 @@ export const endGiveaway = async (gw: GiveawayData) => {
 		channel.send({
 			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
 		});
+		return;
 	}
 
 	if (winners instanceof UserError) {
@@ -57,7 +58,8 @@ export const endGiveaway = async (gw: GiveawayData) => {
 				new CardinalEmbedBuilder(message.embeds[0].data).setColor(CardinalColors.Fail).setDescription('Not enough entries to get a winner.')
 			]
 		});
-		return channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(winners.message)] });
+		channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(winners.message)] });
+		return;
 	}
 
 	const formattedEndTime = new Timestamp(giveaway.endsAtTimestamp);
