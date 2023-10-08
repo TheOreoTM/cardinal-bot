@@ -34,6 +34,7 @@ import { bold } from 'discord.js';
 import { andList } from '#utils/formatters';
 
 export const endGiveaway = async (gw: GiveawayData) => {
+	console.log('hi');
 	const giveaway = GiveawayManager.fromDatabase(gw);
 	const winners = giveaway.getWinners();
 	const channel = container.client.channels.cache.get(giveaway.channelId);

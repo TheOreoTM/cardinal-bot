@@ -89,7 +89,6 @@ export class GiveawayManager {
 	}
 
 	public async end() {
-		this.data.expiresAt = new Date(Date.now());
 		await endGiveaway(this.data);
 	}
 
