@@ -1,10 +1,11 @@
-import type { CardinalClient } from '#lib/CardinalClient';
+import { CardinalClient } from '#lib/CardinalClient';
 import {
 	container,
 	type ChatInputCommandSuccessPayload,
 	type Command,
 	type ContextMenuCommandSuccessPayload,
-	type MessageCommandSuccessPayload
+	type MessageCommandSuccessPayload,
+	UserError
 } from '@sapphire/framework';
 import { cyan } from 'colorette';
 import {
@@ -37,6 +38,7 @@ export const endGiveaway = async (gw: GiveawayData) => {
 	const giveaway = GiveawayManager.fromDatabase(gw);
 	await giveaway.delete();
 	const winners = giveaway.getWinners();
+
 	const channel = container.client.channels.cache.get(giveaway.channelId);
 	if (!channel || !channel.isTextBased()) {
 		await giveaway.delete();
@@ -49,8 +51,17 @@ export const endGiveaway = async (gw: GiveawayData) => {
 		});
 	}
 
+	if (winners instanceof UserError) {
+		message.edit({
+			embeds: [
+				new CardinalEmbedBuilder(message.embeds[0].data).setColor(CardinalColors.Fail).setDescription('Not enough entries to get a winner.')
+			]
+		});
+		return channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(winners.message)] });
+	}
+
 	const formattedEndTime = new Timestamp(giveaway.endsAtTimestamp);
-	const formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
+	let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
 	const description = [];
 	if (giveaway.description) description.push(`**Description:** ${giveaway.description}`);
 	description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);

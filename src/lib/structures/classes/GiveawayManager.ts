@@ -81,7 +81,7 @@ export class GiveawayManager {
 		}
 	}
 
-	public getWinners() {
+	public getWinners(): string[] | UserError {
 		if (this.data.participants.length < this.data.winnerAmount) {
 			this.delete();
 			throw InsufficientEntriesError;
