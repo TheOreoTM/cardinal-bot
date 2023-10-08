@@ -52,7 +52,7 @@ export const endGiveaway = async (gw: GiveawayData) => {
 	const formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
 	const description = [];
 	if (giveaway.description) description.push(`**Description:** ${giveaway.description}`);
-	description.push(`Ended: ${formattedEndTime.getRelativeTime} (${formattedEndTime.getLongDateTime})`);
+	description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
 	description.push(`Hosted by: ${userMention(giveaway.hosterId)}`);
 	description.push(`Participants: **${giveaway.participants.length}**`);
 	description.push(`Winners: ${andList(formattedWinners)}`);
