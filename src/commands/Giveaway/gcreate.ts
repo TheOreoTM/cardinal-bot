@@ -11,7 +11,8 @@ import { userMention } from 'discord.js';
 	description: 'Create a giveaway',
 	detailedDescription: {
 		extendedHelp: 'Start a giveaway'
-	}
+	},
+	enabled: false
 })
 export class UserCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
