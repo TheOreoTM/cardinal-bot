@@ -11,7 +11,6 @@ export class UserEvent extends Listener {
 		const lastMinuteMessage = await this.container.db.message.findFirst({
 			where: {
 				memberId: message.member.id,
-				channelId: message.channelId,
 				guildId: message.guildId,
 				minuteMessage: true,
 				createdAt: {
