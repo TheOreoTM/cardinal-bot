@@ -24,7 +24,7 @@ export class StatsCachingTask extends ScheduledTask {
 				}
 			});
 			const topStatsData = await this.getTopData(guild.id, data?.lookback ?? 7);
-			redis.set(`${guild.id}-topData`, JSON.stringify(topStatsData), 'EX', 300);
+			redis.set(`${guild.id}-topData`, JSON.stringify(topStatsData), 'EX', 120);
 
 			// Get message counts for each member in the guild
 			const members = Array.from(guild.members.cache.keys());
