@@ -3,7 +3,6 @@ import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
-import { CookieStore } from '@sapphire/plugin-api';
 import { send } from '@sapphire/plugin-editable-commands';
 import { DurationFormatter } from '@sapphire/time-utilities';
 
@@ -70,11 +69,6 @@ export class muteCommand extends ModerationCommand {
 				reason: reason
 			});
 		}
-
-		const filteredRoles = target.roles.cache.filter((role) => role.tags === null);
-		console.log(filteredRoles);
-		console.log(target.roles.cache.filter((r) => r.tags));
-		console.log(target.roles.cache);
 
 		const removedRoles = Array.from(target.roles.cache.keys());
 		console.log(removedRoles);
