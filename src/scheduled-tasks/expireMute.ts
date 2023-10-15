@@ -27,15 +27,15 @@ export class ExpireMuteTask extends ScheduledTask {
 				where: { id: mute.id }
 			});
 			const guild = this.container.client.guilds.cache.get(mute.modlog.guildId);
-			if (!guild) return;
+			if (!guild) return console.log('Returned bc no guild');
 			const muteRole =
 				guild.roles.cache.get(await guild.settings.roles.mute()) ?? guild.roles.cache.find((role) => role.name.toLowerCase() == 'muted');
-			if (!muteRole) return;
-			const member = guild.members.cache.get(mute.modlog.memberId);
-			if (!member) return;
+			if (!muteRole) return console.log('Returned bc no muterole');
+			const member = await guild.members.fetch(mute.modlog.memberId);
+			if (!member) return console.log('Returned bc no member');
 			const staff = guild.members.me ?? (await guild.members.fetchMe());
 
-			console.log(mute.removedRoles);
+			console.log('Removed roles expire mute:', mute.removedRoles);
 			await member.roles.set(mute.removedRoles).catch(() => {
 				const removedRoles = mute.removedRoles;
 				const index = mute.removedRoles.indexOf(guild.roles.premiumSubscriberRole?.id ?? '');

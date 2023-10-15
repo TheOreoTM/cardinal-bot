@@ -71,7 +71,7 @@ export class muteCommand extends ModerationCommand {
 		}
 
 		const removedRoles = Array.from(target.roles.cache.keys());
-		console.log(removedRoles);
+		console.log('Mute command removed roles:', removedRoles);
 		const boosterRole = target.guild.roles.premiumSubscriberRole;
 		const rolesToAdd = [muteRole.id];
 
@@ -95,7 +95,7 @@ export class muteCommand extends ModerationCommand {
 			embeds: [
 				new CardinalEmbedBuilder()
 					.setStyle('info')
-					.setDescription(`You have been muted ${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
+					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
 			]
 		});
 
