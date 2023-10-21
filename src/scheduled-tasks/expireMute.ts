@@ -27,23 +27,24 @@ export class ExpireMuteTask extends ScheduledTask {
 				where: { id: mute.id }
 			});
 			const guild = this.container.client.guilds.cache.get(mute.modlog.guildId);
-			if (!guild) return console.log('Returned bc no guild');
+			if (!guild) return this.container.logger.warn('Returned bc no guild');
 			const muteRole =
 				guild.roles.cache.get(await guild.settings.roles.mute()) ?? guild.roles.cache.find((role) => role.name.toLowerCase() == 'muted');
-			if (!muteRole) return console.log('Returned bc no muterole');
+			if (!muteRole) return this.container.logger.warn('Returned bc no muterole');
 			const member = await guild.members.fetch(mute.modlog.memberId);
-			if (!member) return console.log('Returned bc no member');
+			if (!member) return this.container.logger.warn('Returned bc no member');
 			const staff = guild.members.me ?? (await guild.members.fetchMe());
 
-			console.log('Removed roles expire mute:', mute.removedRoles);
-			await member.roles.set(mute.removedRoles).catch(() => {
-				const removedRoles = mute.removedRoles;
-				const index = mute.removedRoles.indexOf(guild.roles.premiumSubscriberRole?.id ?? '');
-				if (index) {
-					removedRoles.splice(index, 1);
-					member.roles.set(removedRoles);
-				}
-			});
+			this.container.logger.info('Removed roles expire mute:', mute.removedRoles);
+			await member.roles.set(mute.removedRoles);
+			// .catch(() => {
+			// 	const removedRoles = mute.removedRoles;
+			// 	const index = mute.removedRoles.indexOf(guild.roles.premiumSubscriberRole?.id ?? '');
+			// 	if (index) {
+			// 		removedRoles.splice(index, 1);
+			// 		member.roles.set(removedRoles);
+			// 	}
+			// });
 			const modlog = new Modlog({
 				member,
 				staff,

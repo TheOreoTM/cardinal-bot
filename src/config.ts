@@ -45,7 +45,7 @@ export const config: Config = {
 	},
 	partials: [Partials.GuildMember, Partials.Message, Partials.User, Partials.Channel],
 	logger: {
-		level: LogLevel.Debug
+		level: LogLevel.Info
 	},
 
 	presence: Presence,
