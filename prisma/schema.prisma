@@ -138,7 +138,10 @@ model Message {
 
   createdAt DateTime @default(now())
 
-  @@index([memberId, guildId, channelId])
+  @@index([memberId, guildId, channelId, minuteMessage])
+  @@index([createdAt])
+  @@index([minuteMessage])
+  @@index([minuteMessage, createdAt])
 }
 
 model Command {
