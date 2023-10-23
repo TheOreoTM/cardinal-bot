@@ -1,7 +1,7 @@
 import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
-import { getChannelStats, getUserStats, updateUsersInGuild } from '#utils/caching';
+import { getChannelStats, getUserStats } from '#utils/caching';
 import { days, minutes, seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -340,7 +340,7 @@ export class statsCommand extends CardinalSubcommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Set historical lookback to ${lookback} days`)]
 		});
 
-		return await updateUsersInGuild(message.guild);
+		return;
 	}
 
 	private async getLookback(guildId: string) {

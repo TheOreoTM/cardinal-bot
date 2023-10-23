@@ -2,7 +2,7 @@ import { days, minutes } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 import { redis } from '#root/index';
-import { getUserStats } from '#utils/caching';
+import { getCachedUserStats } from '#utils/caching';
 
 const MaxTakeAmount = 10;
 
@@ -32,7 +32,7 @@ export class StatsCachingTask extends ScheduledTask {
 			for (const member of members) {
 				const memberId = member;
 
-				getUserStats(guild.id, memberId, data?.lookback ?? 7);
+				getCachedUserStats(guild.id, memberId, data?.lookback ?? 7);
 			}
 		});
 	}
