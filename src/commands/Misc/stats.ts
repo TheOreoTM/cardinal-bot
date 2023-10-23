@@ -82,7 +82,7 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const allData = await getUserStats(user.guild.id, user.id, lookback);
+		const allData = await getUserStats(user.guild.id, user.id, lookback, this.take);
 		const data = allData.data;
 		const extraData = allData.extra;
 
@@ -143,7 +143,7 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const data = await getChannelStats(channel.guild.id, channel.id, lookback);
+		const data = await getChannelStats(channel.guild.id, channel.id, lookback, this.take);
 
 		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id);
 		const timeTaken = stopWatch.stop().toString();

@@ -5,9 +5,7 @@ import type { Prisma } from '@prisma/client';
 import { redis } from '#root/index';
 import type { Guild } from 'discord.js';
 
-const MaxTakeAmount = 10;
-
-export async function updateUsersInGuild(guild: Guild, lookbackAmount?: number) {
+export async function updateUsersInGuild(guild: Guild, lookbackAmount?: number, limit: number = 5) {
 	const data = await container.db.guild.findUnique({
 		where: {
 			guildId: guild.id
@@ -19,10 +17,10 @@ export async function updateUsersInGuild(guild: Guild, lookbackAmount?: number) 
 
 	const lookback = lookbackAmount ? lookbackAmount : data?.lookback ? data.lookback : 7;
 
-	guild.members.cache.forEach((member) => getCachedUserStats(guild.id, member.id, lookback));
+	guild.members.cache.forEach((member) => getCachedUserStats(guild.id, member.id, lookback, limit));
 }
 
-export async function findTopChannelsForMember(userId: string, guildId: string, lookback: number): Promise<ExtraType> {
+export async function findTopChannelsForMember(userId: string, guildId: string, lookback: number, limit: number): Promise<ExtraType> {
 	const now = new Date();
 	const lastLookback = new Date(now.getTime() - days(lookback));
 	const topChannels = await container.db.message.groupBy({
@@ -42,7 +40,7 @@ export async function findTopChannelsForMember(userId: string, guildId: string, 
 				channelId: 'desc'
 			}
 		},
-		take: MaxTakeAmount
+		take: limit
 	});
 
 	return topChannels.map((channel) => ({
@@ -51,7 +49,11 @@ export async function findTopChannelsForMember(userId: string, guildId: string, 
 	}));
 }
 
-export async function findTopMembersForChannel(channelId: string, guildId: string): Promise<{ memberId: string; messageCount: string }[]> {
+export async function findTopMembersForChannel(
+	channelId: string,
+	guildId: string,
+	limit: number
+): Promise<{ memberId: string; messageCount: string }[]> {
 	const topMembers = await container.db.message.groupBy({
 		by: ['memberId'],
 		where: {
@@ -66,7 +68,7 @@ export async function findTopMembersForChannel(channelId: string, guildId: strin
 				memberId: 'desc'
 			}
 		},
-		take: MaxTakeAmount
+		take: limit
 	});
 
 	return topMembers.map((member) => ({
@@ -75,21 +77,26 @@ export async function findTopMembersForChannel(channelId: string, guildId: strin
 	}));
 }
 
-export async function getUserStats(guildId: string, userId: string, lookback: number): Promise<{ data: DataType; extra: ExtraType }> {
+export async function getUserStats(guildId: string, userId: string, lookback: number, limit: number): Promise<{ data: DataType; extra: ExtraType }> {
 	const data = await getData({ memberId: userId, guildId }, lookback);
-	const extra = await findTopChannelsForMember(userId, guildId, lookback);
+	const extra = await findTopChannelsForMember(userId, guildId, lookback, limit);
 
 	return { data: data, extra: extra };
 }
 
-export async function getChannelStats(guildId: string, channelId: string, lookback: number) {
+export async function getChannelStats(guildId: string, channelId: string, lookback: number, limit: number) {
 	const data = await getData({ channelId: channelId, guildId }, lookback);
-	const extra = await findTopMembersForChannel(channelId, guildId);
+	const extra = await findTopMembersForChannel(channelId, guildId, limit);
 
 	return { ...data, ...extra };
 }
 
-export async function getCachedUserStats(guildId: string, userId: string, lookback: number): Promise<{ data: DataType; extra: ExtraType }> {
+export async function getCachedUserStats(
+	guildId: string,
+	userId: string,
+	lookback: number,
+	limit: number
+): Promise<{ data: DataType; extra: ExtraType }> {
 	const key = `${guildId}-stats-${userId}`;
 
 	const cachedData = await redis.get(key);
@@ -101,21 +108,21 @@ export async function getCachedUserStats(guildId: string, userId: string, lookba
 		return { data: data, extra: extraData };
 	}
 	const data = await getData({ memberId: userId, guildId }, lookback);
-	const extra = await findTopChannelsForMember(userId, guildId, lookback);
+	const extra = await findTopChannelsForMember(userId, guildId, lookback, limit);
 
 	redis.set(`${key}-extra`, JSON.stringify(extra), 'EX', 120);
 	redis.set(key, JSON.stringify(data), 'EX', 120);
 	return { data: data, extra: extra };
 }
 
-export async function getCachedChannelStats(guildId: string, channelId: string, lookback: number) {
+export async function getCachedChannelStats(guildId: string, channelId: string, lookback: number, limit: number) {
 	const key = `${guildId}-stats-${channelId}`;
 	const cachedData = await redis.get(key);
 	if (cachedData) {
 		return JSON.parse(cachedData) as DataType;
 	}
 	const data = await getData({ channelId: channelId, guildId }, lookback);
-	const extra = await findTopMembersForChannel(channelId, guildId);
+	const extra = await findTopMembersForChannel(channelId, guildId, limit);
 
 	redis.set(`${key}-extra`, JSON.stringify(extra), 'EX', 120);
 	redis.set(key, JSON.stringify(data), 'EX', 120);
@@ -124,45 +131,101 @@ export async function getCachedChannelStats(guildId: string, channelId: string, 
 
 async function getData(filter: Prisma.MessageWhereInput, lookback: number) {
 	const now = new Date();
-	const lastDay = new Date(now.getTime() - days(1));
-	const lastWeek = new Date(now.getTime() - days(7));
+	const lastDay = new Date(now.getTime() - days(1)); // 1 day in milliseconds
+	const lastWeek = new Date(now.getTime() - days(7)); // 1 week in milliseconds
 	const lastLookback = new Date(now.getTime() - days(lookback));
 
-	const whereFilter = {
-		AND: [
-			filter,
-			{
-				OR: [
-					{
-						AND: [{ createdAt: { gte: lastDay } }, { minuteMessage: true }]
-					},
-					{
-						AND: [{ createdAt: { gte: lastWeek } }, { minuteMessage: true }]
-					},
-					{
-						createdAt: { gte: lastLookback }
-					}
-				]
-			}
-		]
-	};
+	const whereFilter = filter;
 
-	const [messageCounts, messageTimeCounts] = await Promise.all([
-		container.db.message.count({ where: whereFilter }),
-		container.db.message.count({ where: { ...whereFilter, minuteMessage: true } })
-	]);
+	// Count messages within the last day
+	const messageCountLastDay = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastDay
+			}
+		}
+	});
+
+	// Count messages within the lookback period
+	const messageCountLookback = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastLookback
+			}
+		}
+	});
+
+	// Count messages within the last week
+	const messageCountLastWeek = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastWeek
+			}
+		}
+	});
+
+	// Count all-time messages
+	const messageCountAllTime = await container.db.message.count({
+		where: {
+			...whereFilter
+		}
+	});
+
+	// Count messages with minuteMessage set to true within the last day
+	const messageTimeLastDay = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastDay
+			},
+			minuteMessage: true
+		}
+	});
+
+	// Count messages with minuteMessage set to true within the lookback period
+	const messageTimeLookback = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastLookback
+			},
+			minuteMessage: true
+		}
+	});
+
+	// Count messages with minuteMessage set to true within the last week
+	const messageTimeLastWeek = await container.db.message.count({
+		where: {
+			...whereFilter,
+			createdAt: {
+				gte: lastWeek
+			},
+			minuteMessage: true
+		}
+	});
+
+	// Count all-time messages with minuteMessage set to true
+	const messageTimeAllTime = await container.db.message.count({
+		where: {
+			...whereFilter,
+			minuteMessage: true
+		}
+	});
 
 	const durationFormatter = new DurationFormatter();
 
 	const data: DataType = {
-		messageCountLastDay: messageCounts.toLocaleString(),
-		messageCountLookback: messageCounts.toLocaleString(),
-		messageCountLastWeek: messageCounts.toLocaleString(),
-		messageCountAllTime: messageCounts.toLocaleString(),
-		messageTimeLastDay: durationFormatter.format(minutes(messageTimeCounts)),
-		messageTimeLookback: durationFormatter.format(minutes(messageTimeCounts)),
-		messageTimeLastWeek: durationFormatter.format(minutes(messageTimeCounts)),
-		messageTimeAllTime: durationFormatter.format(minutes(messageTimeCounts))
+		messageCountLastDay: messageCountLastDay.toLocaleString(),
+		messageCountLookback: messageCountLookback.toLocaleString(),
+		messageCountLastWeek: messageCountLastWeek.toLocaleString(),
+		messageCountAllTime: messageCountAllTime.toLocaleString(),
+		messageTimeLastDay: durationFormatter.format(minutes(messageTimeLastDay)),
+		messageTimeLookback: durationFormatter.format(minutes(messageTimeLookback)),
+		messageTimeLastWeek: durationFormatter.format(minutes(messageTimeLastWeek)),
+		messageTimeAllTime: durationFormatter.format(minutes(messageTimeAllTime))
 	};
 
 	return data;
