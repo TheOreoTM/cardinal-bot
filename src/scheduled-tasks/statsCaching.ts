@@ -8,7 +8,7 @@ const MaxTakeAmount = 10;
 
 @ApplyOptions<ScheduledTask.Options>({
 	interval: minutes(2),
-	enabled: true
+	enabled: false
 })
 export class StatsCachingTask extends ScheduledTask {
 	public override async run() {
@@ -32,7 +32,7 @@ export class StatsCachingTask extends ScheduledTask {
 			for (const member of members) {
 				const memberId = member;
 
-				getCachedUserStats(guild.id, memberId, data?.lookback ?? 7);
+				getCachedUserStats(guild.id, memberId, data?.lookback ?? 7, 5);
 			}
 		});
 	}

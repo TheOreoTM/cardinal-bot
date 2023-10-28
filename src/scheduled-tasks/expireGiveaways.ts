@@ -4,7 +4,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 
 @ApplyOptions<ScheduledTask.Options>({
-	interval: seconds(3),
+	interval: seconds(5),
 	enabled: true
 })
 export class GiveawayExpireTask extends ScheduledTask {
