@@ -98,13 +98,13 @@ export class UserCommand extends CardinalCommand {
 
 		if (!interaction.channel) {
 			await interaction.reply({
-				components: [this.createJoinButton()],
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setTitle(prize).setDescription(`Something went wrong`)]
 			});
 			return;
 		}
 
 		interaction.reply({
+			components: [this.createJoinButton()],
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Created giveaway`)],
 			ephemeral: true
 		});

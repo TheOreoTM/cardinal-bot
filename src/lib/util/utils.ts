@@ -39,6 +39,7 @@ export const endGiveaway = async (gw: GiveawayData) => {
 
 	const channel = container.client.channels.cache.get(giveaway.channelId);
 	if (!channel || !channel.isTextBased()) {
+		console.log('!channel');
 		return;
 	}
 	const message = await channel.messages.fetch(giveaway.messageId);
@@ -55,7 +56,7 @@ export const endGiveaway = async (gw: GiveawayData) => {
 				new CardinalEmbedBuilder(message.embeds[0].data).setColor(CardinalColors.Fail).setDescription('Not enough entries to get a winner.')
 			]
 		});
-		channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
+		message.reply({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
 		return;
 	}
 

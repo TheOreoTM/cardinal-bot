@@ -27,9 +27,9 @@ export class GiveawayExpireTask extends ScheduledTask {
 		});
 
 		for (const giveaway of giveaways) {
-			console.log(giveaway);
 			const gw = GiveawayManager.fromDatabase(giveaway);
 			await gw.end();
+			console.log(giveaway);
 		}
 	}
 }
