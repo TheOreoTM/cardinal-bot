@@ -1,6 +1,6 @@
 import { CardinalEvents } from '#lib/types';
 import { endGiveaway } from '#utils/utils';
-import { UserError, container } from '@sapphire/framework';
+import { container } from '@sapphire/framework';
 import { pickRandom } from '@sapphire/utilities';
 
 export class GiveawayManager {
@@ -102,16 +102,16 @@ export class GiveawayManager {
 		container.client.emit(CardinalEvents.GiveawayEnd, this);
 	}
 
-	public addParticipant({ userId, maxEntries = 1 }: { userId: string; maxEntries?: number }) {
+	public canEnter({ userId, maxEntries = 1 }: { userId: string; maxEntries?: number }) {
 		const amountOfExistingEntries = this.data.participants.filter((participant) => participant === userId).length;
-		if (amountOfExistingEntries + 1 > maxEntries) {
-			throw new UserError({
-				message: `Too many entries. You're allowed to have ${maxEntries}, but you already have ${amountOfExistingEntries}`,
-				identifier: 'EntryLimit'
-			});
-		}
+		if (amountOfExistingEntries + 1 > maxEntries) return false;
+		return true;
+	}
 
+	public addParticipant({ userId, maxEntries = 1 }: { userId: string; maxEntries?: number }) {
+		if (!this.canEnter({ userId, maxEntries })) return null;
 		this.data.participants.push(userId);
+		return true;
 	}
 
 	public async delete() {
@@ -177,6 +177,22 @@ export class GiveawayManager {
 			participants: data.participants,
 			prize: data.prize
 		};
+	}
+	/**
+	 * Reflect the changes in the Database
+	 */
+	public async save() {
+		await container.db.giveaway.upsert({
+			where: {
+				messageId: this.messageId
+			},
+			create: {
+				...this.toDatabase()
+			},
+			update: {
+				...this.toDatabase()
+			}
+		});
 	}
 }
 export type GiveawayData = {

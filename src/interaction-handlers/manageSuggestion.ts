@@ -1,5 +1,5 @@
 import { CardinalEmbedBuilder } from '#lib/structures';
-import { SuggestionStatus, type CardinalButtonInteraction } from '#lib/types';
+import { SuggestionStatus, type GuildButtonInteraction } from '#lib/types';
 import { minutes } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { capitalizeWords } from '#utils/formatters';
@@ -25,7 +25,7 @@ import {
 	interactionHandlerType: InteractionHandlerTypes.Button
 })
 export class ButtonHandler extends InteractionHandler {
-	public async run(interaction: CardinalButtonInteraction) {
+	public async run(interaction: GuildButtonInteraction) {
 		if (!interaction.guild || !interaction.member) return;
 
 		if (!(await isTrainee(interaction.member as GuildMember))) {

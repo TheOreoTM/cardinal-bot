@@ -5,7 +5,7 @@ import { EmbedLimits } from '@sapphire/discord.js-utilities';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { Duration } from '@sapphire/time-utilities';
-import { userMention } from 'discord.js';
+import { userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Create a giveaway',
@@ -62,8 +62,10 @@ export class UserCommand extends CardinalCommand {
 		description.push(`Participants: **0**`);
 		description.push(`Winners: **${winnerAmount}**`);
 		const msg = await channel.send({
+			components: [this.createJoinButton()],
 			embeds: [new CardinalEmbedBuilder().setStyle('default').setTitle(prize).setDescription(description.join('\n'))]
 		});
+
 		return this.createGiveaway({
 			prize,
 			winnerAmount,
@@ -96,6 +98,7 @@ export class UserCommand extends CardinalCommand {
 
 		if (!interaction.channel) {
 			await interaction.reply({
+				components: [this.createJoinButton()],
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setTitle(prize).setDescription(`Something went wrong`)]
 			});
 			return;
@@ -120,6 +123,12 @@ export class UserCommand extends CardinalCommand {
 			description: null,
 			hosterId: msg.author.id
 		});
+	}
+
+	private createJoinButton() {
+		const button = new ButtonBuilder().setCustomId(`gw-join`).setLabel('Join').setEmoji('🎉').setStyle(ButtonStyle.Success);
+
+		return new ActionRowBuilder<ButtonBuilder>().addComponents(button);
 	}
 
 	private async createGiveaway(data: Partial<GiveawayData>) {

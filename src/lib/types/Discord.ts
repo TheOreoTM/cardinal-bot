@@ -64,8 +64,8 @@ export interface GuildCommandInteractionOptionResolver extends CommandInteractio
 	getRole(name: string, required?: boolean): Role;
 }
 
-export interface CardinalButtonInteraction extends ButtonInteraction {
-	readonly message: Message;
+export interface GuildButtonInteraction extends ButtonInteraction {
+	readonly message: GuildMessage;
 	client: CardinalClient<true>;
 	readonly guild: Guild;
 	readonly guildId: string;
