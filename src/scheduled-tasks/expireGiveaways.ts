@@ -13,7 +13,7 @@ export class GiveawayExpireTask extends ScheduledTask {
 		const giveaways = await this.container.db.giveaway.findMany({
 			where: {
 				expiresAt: {
-					lt: now
+					lte: now
 				}
 			}
 		});
@@ -21,15 +21,15 @@ export class GiveawayExpireTask extends ScheduledTask {
 		await this.container.db.giveaway.deleteMany({
 			where: {
 				expiresAt: {
-					lt: now
+					lte: now
 				}
 			}
 		});
 
 		for (const giveaway of giveaways) {
 			const gw = GiveawayManager.fromDatabase(giveaway);
-			await gw.end();
 			console.log(giveaway);
+			await gw.end();
 		}
 	}
 }

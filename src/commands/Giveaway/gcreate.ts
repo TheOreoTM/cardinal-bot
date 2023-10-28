@@ -98,18 +98,19 @@ export class UserCommand extends CardinalCommand {
 
 		if (!interaction.channel) {
 			await interaction.reply({
+				ephemeral: true,
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setTitle(prize).setDescription(`Something went wrong`)]
 			});
 			return;
 		}
 
 		interaction.reply({
-			components: [this.createJoinButton()],
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Created giveaway`)],
-			ephemeral: true
+			ephemeral: true,
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Created giveaway`)]
 		});
 
 		const msg = await interaction.channel?.send({
+			components: [this.createJoinButton()],
 			embeds: [new CardinalEmbedBuilder().setStyle('default').setTitle(prize).setDescription(description.join('\n'))]
 		});
 

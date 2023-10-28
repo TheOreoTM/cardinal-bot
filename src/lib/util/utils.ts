@@ -60,6 +60,8 @@ export const endGiveaway = async (gw: GiveawayData) => {
 		return;
 	}
 
+	console.log('I made it here');
+
 	const formattedEndTime = new Timestamp(giveaway.endsAtTimestamp);
 	let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
 	const description = [];
