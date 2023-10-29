@@ -182,7 +182,7 @@ export class GiveawayManager {
 	 * Reflect the changes in the Database
 	 */
 	public async save() {
-		await container.db.giveaway.upsert({
+		return await container.db.giveaway.upsert({
 			where: {
 				messageId: this.messageId
 			},

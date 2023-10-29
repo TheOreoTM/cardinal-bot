@@ -45,7 +45,8 @@ export class ButtonHandler extends InteractionHandler {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription('Successfully joined the giveaway.')]
 		});
 
-		await manager.save();
+		const savedData = await manager.save();
+		console.log(savedData);
 	}
 
 	public override parse(interaction: ButtonInteraction) {
