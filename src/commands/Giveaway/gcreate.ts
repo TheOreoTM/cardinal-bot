@@ -66,6 +66,7 @@ export class UserCommand extends CardinalCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('default').setTitle(prize).setDescription(description.join('\n'))]
 		});
 
+		if (message.deletable) message.delete();
 		return this.createGiveaway({
 			prize,
 			winnerAmount,
