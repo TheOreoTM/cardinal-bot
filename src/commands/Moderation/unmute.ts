@@ -21,7 +21,7 @@ export class unmuteCommand extends ModerationCommand {
 
 		if (!target) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to warn')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to unmute')]
 			});
 		}
 
