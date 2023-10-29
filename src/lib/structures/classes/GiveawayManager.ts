@@ -105,7 +105,13 @@ export class GiveawayManager {
 		if (!channel || !channel.isTextBased()) {
 			return;
 		}
-		const message = await channel.messages.fetch(this.messageId);
+		const message = await channel.messages.fetch(this.messageId).catch(() => {
+			channel.send({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
+			});
+			return;
+		});
+
 		if (!message) {
 			channel.send({
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
