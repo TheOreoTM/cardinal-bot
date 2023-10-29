@@ -130,7 +130,10 @@ export class GiveawayManager {
 						.setDescription('Not enough entries to get a winner.')
 				]
 			});
+
 			message.reply({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
+			this.data.expired = true;
+			this.save();
 			return;
 		}
 
