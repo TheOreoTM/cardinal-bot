@@ -46,6 +46,7 @@ export class ButtonHandler extends InteractionHandler {
 		});
 
 		await manager.save();
+		await manager.updateMessage();
 	}
 
 	public override parse(interaction: ButtonInteraction) {

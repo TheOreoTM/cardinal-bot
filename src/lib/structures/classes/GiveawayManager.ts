@@ -132,8 +132,6 @@ export class GiveawayManager {
 			});
 
 			message.reply({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
-			this.data.expired = true;
-			this.save();
 			return;
 		}
 
@@ -163,6 +161,9 @@ export class GiveawayManager {
 		await message.reply({
 			content: replyMessage
 		});
+
+		this.data.expired = true;
+		this.save();
 	}
 
 	/**
@@ -249,6 +250,47 @@ export class GiveawayManager {
 			expired: data.expired,
 			prize: data.prize
 		};
+	}
+
+	/**
+	 * Update the message with the new information
+	 *
+	 */
+	public async updateMessage() {
+		const channel = container.client.channels.cache.get(this.channelId);
+		if (!channel || !channel.isTextBased()) {
+			return;
+		}
+		const message = await channel.messages.fetch(this.messageId).catch(() => {
+			channel.send({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
+			});
+			return;
+		});
+
+		if (!message) {
+			channel.send({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
+			});
+			return;
+		}
+
+		const formattedEndTime = new Timestamp(this.endsAt.getTime());
+
+		const description = [];
+		if (this.description) description.push(`**Description:** ${this.description}`);
+		description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
+		description.push(`Hosted by: ${userMention(this.hosterId)}`);
+		description.push(`Participants: **${this.participants.length}**`);
+		description.push(`Winners: **${this.winnerAmount}**`);
+
+		const embed = new CardinalEmbedBuilder()
+			.setStyle('default')
+			.setTitle(this.prize)
+			.setDescription(description.join('\n'))
+			.setTimestamp(this.endsAt);
+
+		message.edit({ embeds: [embed] });
 	}
 	/**
 	 * Reflect the changes in the Database
