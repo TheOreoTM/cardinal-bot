@@ -278,8 +278,8 @@ export class GiveawayManager {
 		const formattedEndTime = new Timestamp(this.endsAt.getTime());
 
 		const description = [];
-		if (this.description) description.push(`**Description:** ${this.description}`);
-		description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
+		if (this.description) description.push(`${this.description}\n`);
+		description.push(`Ends: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
 		description.push(`Hosted by: ${userMention(this.hosterId)}`);
 		description.push(`Participants: **${this.participants.length}**`);
 		description.push(`Winners: **${this.winnerAmount}**`);
