@@ -4,8 +4,8 @@ import { pickRandom } from '@sapphire/utilities';
 import { CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
 import { andList } from '#utils/formatters';
-import { bold } from 'colorette';
-import { userMention } from 'discord.js';
+
+import { bold, userMention } from 'discord.js';
 
 export class GiveawayManager {
 	readonly data: GiveawayData;
@@ -103,7 +103,6 @@ export class GiveawayManager {
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
-			console.log('!channel');
 			return;
 		}
 		const message = await channel.messages.fetch(this.messageId);
@@ -126,9 +125,7 @@ export class GiveawayManager {
 			return;
 		}
 
-		console.log('I made it here');
-		console.log(winners);
-		const formattedEndTime = new Timestamp(this.endsAtTimestamp);
+		const formattedEndTime = new Timestamp(this.endsAt.getTime());
 		console.log(formattedEndTime);
 		let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
 		console.log(formattedWinners);

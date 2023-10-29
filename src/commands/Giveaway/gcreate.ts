@@ -74,7 +74,7 @@ export class UserCommand extends CardinalCommand {
 			channelId: msg.channelId,
 			guildId: msg.guildId,
 			description: null,
-			hosterId: msg.author.id
+			hosterId: message.author.id
 		});
 	}
 
@@ -122,7 +122,7 @@ export class UserCommand extends CardinalCommand {
 			channelId: msg.channelId,
 			guildId: msg.guildId,
 			description: null,
-			hosterId: msg.author.id
+			hosterId: interaction.user.id
 		});
 	}
 
