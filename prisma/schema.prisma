@@ -17,6 +17,7 @@ model Giveaway {
   description  String?  @db.Text
   winnerAmount Int
   participants String[] @default([])
+  expired      Boolean  @default(false)
   expiresAt    DateTime
 }
 

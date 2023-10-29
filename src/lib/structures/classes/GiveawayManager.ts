@@ -21,6 +21,7 @@ export class GiveawayManager {
 			description: data?.description || null,
 			winnerAmount: data?.winnerAmount || 0,
 			participants: data?.participants || [],
+			expired: data?.expired || false,
 			expiresAt: data?.expiresAt || new Date()
 		};
 	}
@@ -98,8 +99,8 @@ export class GiveawayManager {
 		return winners;
 	}
 
-	public async end() {
-		const winners = this.getWinners();
+	public async end(winnersList?: string[]) {
+		const winners = winnersList ? winnersList : this.getWinners();
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
@@ -237,6 +238,7 @@ export class GiveawayManager {
 			hosterId: data.hosterId,
 			messageId: data.messageId,
 			participants: data.participants,
+			expired: data.expired,
 			prize: data.prize
 		};
 	}
@@ -267,5 +269,6 @@ export type GiveawayData = {
 	description: string | null;
 	winnerAmount: number;
 	participants: string[];
+	expired: boolean;
 	expiresAt: Date;
 };

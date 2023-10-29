@@ -18,11 +18,14 @@ export class GiveawayExpireTask extends ScheduledTask {
 			}
 		});
 
-		await this.container.db.giveaway.deleteMany({
+		await this.container.db.giveaway.updateMany({
 			where: {
 				expiresAt: {
 					lte: now
 				}
+			},
+			data: {
+				expired: true
 			}
 		});
 
