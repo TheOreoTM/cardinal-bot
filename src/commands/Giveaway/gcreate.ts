@@ -111,7 +111,7 @@ export class UserCommand extends CardinalCommand {
 		const formattedEndTime = new Timestamp(expiresAt.getTime());
 
 		const description = [];
-		if (giveawayDescription) description.push(`**Description:** ${giveawayDescription}`);
+		if (giveawayDescription) description.push(`${giveawayDescription}\n`);
 		description.push(`Ends: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
 		description.push(`Hosted by: ${userMention(interaction.member.id)}`);
 		description.push(`Participants: **0**`);
