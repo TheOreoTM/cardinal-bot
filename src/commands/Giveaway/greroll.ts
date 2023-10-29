@@ -24,7 +24,7 @@ export class UserCommand extends CardinalCommand {
 
 		// Register Context Menu command available from any message
 		registry.registerContextMenuCommand({
-			name: this.name,
+			name: 'Reroll Giveaway',
 			type: ApplicationCommandType.Message
 		});
 	}

@@ -101,6 +101,7 @@ export class GiveawayManager {
 
 	public async end(winnersList?: string[]) {
 		const winners = winnersList ? winnersList : this.getWinners();
+		console.log('🚀 ~ file: GiveawayManager.ts:104 ~ GiveawayManager ~ end ~ winners:', winners);
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
