@@ -100,9 +100,8 @@ export class GiveawayManager {
 		return winners;
 	}
 
-	public async end(winnersList?: string[] | null) {
-		const winners = winnersList ? winnersList : this.getWinners();
-		console.log('🚀 ~ file: GiveawayManager.ts:104 ~ GiveawayManager ~ end ~ winners:', winners);
+	public async end(data?: { winnersList?: string[] | null; reroll?: boolean }) {
+		const winners = data?.winnersList ? data.winnersList : this.getWinners();
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
@@ -154,8 +153,12 @@ export class GiveawayManager {
 			message.edit({ content: '', embeds: [embed], components: [] });
 		}
 
+		const replyMessage = data?.reroll
+			? `${bold(`[REROLL]`)} Congratulations ${andList(formattedWinners)}! You are the new winner of the ${bold(this.prize)}`
+			: `Congratulations ${andList(formattedWinners)}! You won the ${bold(this.prize)}`;
+
 		await message.reply({
-			content: `Congratulations ${andList(formattedWinners)}! You won the ${bold(this.prize)}`
+			content: replyMessage
 		});
 	}
 

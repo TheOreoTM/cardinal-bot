@@ -72,6 +72,13 @@ export class UserCommand extends CardinalCommand {
 		}
 		const giveaway = new GiveawayManager(data);
 		const newWinners = giveaway.reroll(); // TODO: Implement logic in DB to store the winners
-		giveaway.end(newWinners);
+		giveaway.end({ reroll: true, winnersList: newWinners });
+
+		if (!(interactionOrMessage instanceof Message)) {
+			interactionOrMessage.reply({
+				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription('Rerolled the giveaway')],
+				ephemeral: true
+			});
+		}
 	}
 }
