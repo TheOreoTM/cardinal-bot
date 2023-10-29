@@ -77,9 +77,10 @@ export class GiveawayManager {
 		if (remainingParticipants.length === 0) {
 			// If there are no remaining participants, include the current winners in the reroll
 
-			const newWinners = pickRandom(this.data.participants, this.data.winnerAmount);
+			const newWinners = this.getWinners();
 			return newWinners;
 		} else {
+			if (this.data.participants.length === 1) return this.data.participants;
 			// Implement your logic to randomly select new winners from remainingParticipants
 			const newWinners = pickRandom(remainingParticipants, this.data.winnerAmount);
 			return newWinners;
@@ -99,7 +100,7 @@ export class GiveawayManager {
 		return winners;
 	}
 
-	public async end(winnersList?: string[]) {
+	public async end(winnersList?: string[] | null) {
 		const winners = winnersList ? winnersList : this.getWinners();
 		console.log('🚀 ~ file: GiveawayManager.ts:104 ~ GiveawayManager ~ end ~ winners:', winners);
 
