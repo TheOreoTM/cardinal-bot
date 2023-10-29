@@ -12,7 +12,6 @@ import { userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'disco
 	detailedDescription: {
 		extendedHelp: 'Start a giveaway'
 	},
-	enabled: true,
 	preconditions: ['Staff']
 })
 export class UserCommand extends CardinalCommand {
@@ -138,7 +137,5 @@ export class UserCommand extends CardinalCommand {
 		await this.container.db.giveaway.create({
 			data: gwData
 		});
-
-		console.log(gwData);
 	}
 }

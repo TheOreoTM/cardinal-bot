@@ -23,7 +23,6 @@ export class UserRoute extends Route {
 			}
 		});
 
-		console.log('Data for ', guild.id);
 		response.json(data);
 	}
 

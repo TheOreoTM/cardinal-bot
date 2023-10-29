@@ -126,9 +126,7 @@ export class GiveawayManager {
 		}
 
 		const formattedEndTime = new Timestamp(this.endsAt.getTime());
-		console.log(formattedEndTime);
 		let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
-		console.log(formattedWinners);
 		const description = [];
 		if (this.description) description.push(`**Description:** ${this.description}`);
 		description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
@@ -142,12 +140,11 @@ export class GiveawayManager {
 			.setDescription(description.join('\n'))
 			.setTimestamp(this.endsAt);
 
-		console.log('hi');
 		if (message) {
 			message.edit({ content: '', embeds: [embed], components: [] });
 		}
 
-		await message.channel.send({
+		await message.reply({
 			content: `Congratulations ${andList(formattedWinners)}! You won the ${bold(this.prize)}`
 		});
 	}
