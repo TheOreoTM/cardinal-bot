@@ -12,7 +12,8 @@ import { userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'disco
 	detailedDescription: {
 		extendedHelp: 'Start a giveaway'
 	},
-	enabled: true
+	enabled: true,
+	preconditions: ['Staff']
 })
 export class UserCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
