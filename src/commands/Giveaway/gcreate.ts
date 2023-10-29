@@ -7,6 +7,10 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { Duration } from '@sapphire/time-utilities';
 import { userMention, ButtonBuilder, ButtonStyle, ActionRowBuilder } from 'discord.js';
 
+const MaxWinnerAmount = 10;
+const MinWinnerAmount = 1;
+const MaxDescriptionLength = 256;
+const MinDescriptionLength = 1;
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Create a giveaway',
 	detailedDescription: {
@@ -30,13 +34,22 @@ export class UserCommand extends CardinalCommand {
 						.setRequired(true)
 				)
 				.addNumberOption((option) =>
-					option.setName('winner_amount').setDescription('The amount of winners').setMaxValue(10).setMinValue(1).setRequired(true)
+					option
+						.setName('winner_amount')
+						.setDescription('The amount of winners')
+						.setMaxValue(MaxWinnerAmount)
+						.setMinValue(MinWinnerAmount)
+						.setRequired(true)
 				)
 				.addStringOption((option) =>
 					option.setName('duration').setDescription('How long you want the giveaway for. (eg. 2d, 1w, 4h)').setRequired(true)
 				)
 				.addStringOption((option) =>
-					option.setName('description').setDescription('The description you want the giveaway to have').setMaxLength(256).setMinLength(1)
+					option
+						.setName('description')
+						.setDescription('The description you want the giveaway to have')
+						.setMaxLength(MaxDescriptionLength)
+						.setMinLength(MinDescriptionLength)
 				)
 		);
 	}
@@ -52,6 +65,13 @@ export class UserCommand extends CardinalCommand {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Please provide all the arguments in the valid format`)]
 			});
 		}
+
+		if (winnerAmount > MaxWinnerAmount || winnerAmount < MinWinnerAmount) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Winner Amount should be less than 10 and greater than 1')]
+			});
+		}
+
 		const expiresAt: Date = new Date(Date.now() + duration.offset);
 		const formattedEndTime = new Timestamp(expiresAt.getTime());
 

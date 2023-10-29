@@ -121,6 +121,7 @@ export class GiveawayManager {
 
 		if (!winners) {
 			message.edit({
+				components: [],
 				embeds: [
 					new CardinalEmbedBuilder(message.embeds[0].data)
 						.setColor(CardinalColors.Fail)
