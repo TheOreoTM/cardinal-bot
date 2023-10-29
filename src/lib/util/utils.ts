@@ -15,12 +15,11 @@ import {
 	type Guild,
 	type ImageURLOptions,
 	type Message,
-	type User,
-	userMention
+	type User
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { isNullishOrEmpty } from '@sapphire/utilities';
-import { CardinalEmbedBuilder, GiveawayManager, type GiveawayData, Timestamp } from '#lib/structures';
+import { CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
@@ -30,64 +29,6 @@ import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-a
 import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
-import { bold } from 'discord.js';
-import { andList } from '#utils/formatters';
-
-export const endGiveaway = async (gw: GiveawayData) => {
-	const giveaway = new GiveawayManager(gw);
-	const winners = giveaway.getWinners();
-
-	const channel = container.client.channels.cache.get(giveaway.channelId);
-	if (!channel || !channel.isTextBased()) {
-		console.log('!channel');
-		return;
-	}
-	const message = await channel.messages.fetch(giveaway.messageId);
-	if (!message) {
-		channel.send({
-			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
-		});
-		return;
-	}
-
-	if (!winners) {
-		message.edit({
-			embeds: [
-				new CardinalEmbedBuilder(message.embeds[0].data).setColor(CardinalColors.Fail).setDescription('Not enough entries to get a winner.')
-			]
-		});
-		message.reply({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
-		return;
-	}
-
-	console.log('I made it here');
-	console.log(winners);
-	const formattedEndTime = new Timestamp(giveaway.endsAtTimestamp);
-	console.log(formattedEndTime);
-	let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
-	console.log(formattedWinners);
-	const description = [];
-	if (giveaway.description) description.push(`**Description:** ${giveaway.description}`);
-	description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
-	description.push(`Hosted by: ${userMention(giveaway.hosterId)}`);
-	description.push(`Participants: **${giveaway.participants.length}**`);
-	description.push(`Winners: ${andList(formattedWinners)}`);
-
-	const embed = new CardinalEmbedBuilder()
-		.setStyle('default')
-		.setTitle(giveaway.prize)
-		.setDescription(description.join('\n'))
-		.setTimestamp(giveaway.endsAt);
-
-	console.log('hi');
-	if (message) {
-		message.edit({ content: '', embeds: [embed], components: [] });
-	}
-
-	await message.channel.send({
-		content: `Congratulations ${andList(formattedWinners)}! You won the ${bold(giveaway.prize)}`
-	});
-};
 
 export const authenticated = () =>
 	createFunctionPrecondition(

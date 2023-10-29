@@ -1,7 +1,12 @@
 import { CardinalEvents } from '#lib/types';
-import { endGiveaway } from '#utils/utils';
 import { container } from '@sapphire/framework';
 import { pickRandom } from '@sapphire/utilities';
+import { CardinalEmbedBuilder } from './CardinalEmbedBuilder';
+import { CardinalColors } from '#utils/constants';
+import { andList } from '#utils/formatters';
+import { bold } from 'colorette';
+import { userMention } from 'discord.js';
+import { Timestamp } from './Timestamp';
 
 export class GiveawayManager {
 	readonly data: GiveawayData;
@@ -86,12 +91,69 @@ export class GiveawayManager {
 			return null;
 		}
 
+		if (this.data.participants.length === 1) {
+			return this.data.participants;
+		}
+
 		const winners = pickRandom(this.data.participants, this.data.winnerAmount);
 		return winners;
 	}
 
 	public async end() {
-		await endGiveaway(this.data);
+		const winners = this.getWinners();
+
+		const channel = container.client.channels.cache.get(this.channelId);
+		if (!channel || !channel.isTextBased()) {
+			console.log('!channel');
+			return;
+		}
+		const message = await channel.messages.fetch(this.messageId);
+		if (!message) {
+			channel.send({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
+			});
+			return;
+		}
+
+		if (!winners) {
+			message.edit({
+				embeds: [
+					new CardinalEmbedBuilder(message.embeds[0].data)
+						.setColor(CardinalColors.Fail)
+						.setDescription('Not enough entries to get a winner.')
+				]
+			});
+			message.reply({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Not enough entries to get a winner.')] });
+			return;
+		}
+
+		console.log('I made it here');
+		console.log(winners);
+		const formattedEndTime = new Timestamp(this.endsAtTimestamp);
+		console.log(formattedEndTime);
+		let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
+		console.log(formattedWinners);
+		const description = [];
+		if (this.description) description.push(`**Description:** ${this.description}`);
+		description.push(`Ended: ${formattedEndTime.getRelativeTime()} (${formattedEndTime.getLongDateTime()})`);
+		description.push(`Hosted by: ${userMention(this.hosterId)}`);
+		description.push(`Participants: **${this.participants.length}**`);
+		description.push(`Winners: ${andList(formattedWinners)}`);
+
+		const embed = new CardinalEmbedBuilder()
+			.setStyle('default')
+			.setTitle(this.prize)
+			.setDescription(description.join('\n'))
+			.setTimestamp(this.endsAt);
+
+		console.log('hi');
+		if (message) {
+			message.edit({ content: '', embeds: [embed], components: [] });
+		}
+
+		await message.channel.send({
+			content: `Congratulations ${andList(formattedWinners)}! You won the ${bold(this.prize)}`
+		});
 	}
 
 	/**
