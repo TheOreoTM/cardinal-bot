@@ -14,7 +14,8 @@ export class GiveawayExpireTask extends ScheduledTask {
 			where: {
 				expiresAt: {
 					lte: now
-				}
+				},
+				expired: false
 			}
 		});
 
