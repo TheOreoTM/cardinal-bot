@@ -1,12 +1,11 @@
 import { CardinalEvents } from '#lib/types';
 import { container } from '@sapphire/framework';
 import { pickRandom } from '@sapphire/utilities';
-import { CardinalEmbedBuilder } from './CardinalEmbedBuilder';
+import { CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
 import { andList } from '#utils/formatters';
 import { bold } from 'colorette';
 import { userMention } from 'discord.js';
-import { Timestamp } from './Timestamp';
 
 export class GiveawayManager {
 	readonly data: GiveawayData;
