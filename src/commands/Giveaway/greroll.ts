@@ -8,8 +8,9 @@ import { ApplicationCommandType, Message, type Snowflake } from 'discord.js';
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Reroll a giveaway',
 	detailedDescription: {
-		extendedHelp: 'ADD'
-	}
+		extendedHelp: `Determine a new set of winners for a giveaway that has already ended`
+	},
+	preconditions: ['Staff']
 })
 export class UserCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
@@ -59,13 +60,21 @@ export class UserCommand extends CardinalCommand {
 			}
 		});
 
-		if (!data) {
+		if (!data || !data.expired) {
 			interactionOrMessage instanceof Message
 				? send(interactionOrMessage, {
-						embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid giveaway message id')]
+						embeds: [
+							new CardinalEmbedBuilder()
+								.setStyle('fail')
+								.setDescription('Provide a valid giveaway message id, and make sure the giveaway has ended')
+						]
 				  })
 				: interactionOrMessage.reply({
-						embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid giveaway message id')],
+						embeds: [
+							new CardinalEmbedBuilder()
+								.setStyle('fail')
+								.setDescription('Provide a valid giveaway message id, and make sure the giveaway has ended')
+						],
 						ephemeral: true
 				  });
 			return;
