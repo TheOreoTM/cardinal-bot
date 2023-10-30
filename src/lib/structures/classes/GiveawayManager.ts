@@ -5,7 +5,7 @@ import { CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
 import { andList } from '#utils/formatters';
 
-import { TextChannel, bold, userMention } from 'discord.js';
+import { CategoryChannel, ForumChannel, PartialGroupDMChannel, bold, userMention } from 'discord.js';
 
 export class GiveawayManager {
 	readonly data: GiveawayData;
@@ -106,7 +106,7 @@ export class GiveawayManager {
 		const winners = data?.winnersList ? data.winnersList : this.getWinners();
 
 		const channel = container.client.channels.cache.get(this.channelId);
-		if (!channel || !(channel instanceof TextChannel)) {
+		if (!channel || channel instanceof CategoryChannel || channel instanceof PartialGroupDMChannel || channel instanceof ForumChannel) {
 			console.log('No gw channel 1', this.channelId);
 			return;
 		}
