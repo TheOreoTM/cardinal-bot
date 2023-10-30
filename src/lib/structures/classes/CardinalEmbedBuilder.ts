@@ -1,6 +1,6 @@
 import { CardinalColors, CardinalEmojis, RandomLoadingMessage } from '#constants';
 import { CardinalEmbedStyles } from '#lib/types';
-import { pickRandom } from '@sapphire/utilities';
+import { pickRandom } from '#utils/utils';
 import { EmbedBuilder, type APIEmbed, type EmbedData } from 'discord.js';
 
 export class CardinalEmbedBuilder extends EmbedBuilder {

@@ -1,11 +1,11 @@
 import { CardinalEvents } from '#lib/types';
 import { container } from '@sapphire/framework';
-import { pickRandom } from '@sapphire/utilities';
 import { CardinalEmbedBuilder, Timestamp } from '#lib/structures';
 import { CardinalColors } from '#utils/constants';
 import { andList } from '#utils/formatters';
 
 import { CategoryChannel, ForumChannel, PartialGroupDMChannel, bold, userMention } from 'discord.js';
+import { pickRandoms } from '#utils/utils';
 
 export class GiveawayManager {
 	readonly data: GiveawayData;
@@ -82,7 +82,7 @@ export class GiveawayManager {
 		} else {
 			if (this.data.participants.length === 1) return this.data.participants;
 			// Implement your logic to randomly select new winners from remainingParticipants
-			const newWinners = pickRandom(remainingParticipants, this.data.winnerAmount);
+			const newWinners = pickRandoms(remainingParticipants, this.data.winnerAmount);
 			return newWinners;
 		}
 	}
@@ -96,9 +96,9 @@ export class GiveawayManager {
 			return this.data.participants;
 		}
 
-		const winners = pickRandom(this.data.participants, this.data.winnerAmount);
+		const winners = pickRandoms(this.data.participants, this.data.winnerAmount);
 
-		if (this.data.winnerAmount === 1) return [winners.toString()];
+		if (this.data.winnerAmount === 1) return winners;
 		return winners;
 	}
 

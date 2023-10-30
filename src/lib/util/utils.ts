@@ -30,6 +30,29 @@ import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 
+export function pickRandom<T>(array: ReadonlyArray<T>) {
+	const arr = [...array];
+
+	return arr[Math.floor(Math.random() * arr.length)];
+}
+
+export function pickRandoms<T>(array: ReadonlyArray<T>, amount = 1) {
+	const arr = [...array];
+	if (amount === undefined || amount === 1) {
+		return [arr[Math.floor(Math.random() * arr.length)]];
+	}
+
+	if (arr.length === 0 || amount === 0) {
+		return [];
+	}
+
+	if (arr.length === 1) {
+		return arr;
+	}
+
+	return Array.from({ length: Math.min(amount, arr.length) }, () => arr.splice(Math.floor(Math.random() * arr.length), 1)[0]);
+}
+
 export const authenticated = () =>
 	createFunctionPrecondition(
 		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`),
