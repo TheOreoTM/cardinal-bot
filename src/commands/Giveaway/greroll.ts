@@ -60,6 +60,8 @@ export class UserCommand extends CardinalCommand {
 			}
 		});
 
+		console.log(data);
+
 		if (!data || !data.expired) {
 			interactionOrMessage instanceof Message
 				? send(interactionOrMessage, {

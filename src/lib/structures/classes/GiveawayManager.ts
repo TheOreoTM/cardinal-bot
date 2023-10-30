@@ -105,8 +105,10 @@ export class GiveawayManager {
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
+			console.log('No gw channel', this.channelId);
 			return;
 		}
+
 		const message = await channel.messages.fetch(this.messageId).catch(() => {
 			channel.send({
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
