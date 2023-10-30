@@ -141,7 +141,6 @@ export class GiveawayManager {
 			return;
 		}
 
-		console.log(winners);
 		const formattedEndTime = new Timestamp(this.endsAt.getTime());
 		let formattedWinners = winners.map((winnerId) => `<@${winnerId}>`);
 		const description = [];
