@@ -107,7 +107,7 @@ export class GiveawayManager {
 
 		const channel = container.client.channels.cache.get(this.channelId);
 		if (!channel || !channel.isTextBased()) {
-			console.log('No gw channel', this.channelId);
+			console.log('No gw channel 1', this.channelId);
 			return;
 		}
 
@@ -115,6 +115,8 @@ export class GiveawayManager {
 			channel.send({
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`The original giveaway message was deleted`)]
 			});
+			console.log('No gw channel 2', this.channelId);
+
 			return;
 		});
 
