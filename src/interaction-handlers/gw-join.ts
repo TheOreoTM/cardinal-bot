@@ -20,6 +20,8 @@ export class ButtonHandler extends InteractionHandler {
 			}
 		});
 
+		console.log(fromDb);
+
 		if (!fromDb) {
 			interaction.reply({ ephemeral: true, embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('This giveaway has ended')] });
 			return;
