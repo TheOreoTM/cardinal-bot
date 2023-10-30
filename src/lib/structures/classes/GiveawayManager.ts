@@ -97,6 +97,8 @@ export class GiveawayManager {
 		}
 
 		const winners = pickRandom(this.data.participants, this.data.winnerAmount);
+
+		if (this.data.winnerAmount === 1) return [winners.toString()];
 		return winners;
 	}
 
