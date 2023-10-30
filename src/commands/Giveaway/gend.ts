@@ -6,9 +6,9 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationCommandType, Message, type Snowflake } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: 'Reroll a giveaway',
+	description: 'End a giveaway',
 	detailedDescription: {
-		extendedHelp: `Determine a new set of winners for a giveaway that has already ended`,
+		extendedHelp: `End an ongoing giveaway`,
 		usages: ['Message'],
 		explainedUsage: [['Message', 'The message id of the giveaway message']],
 		examples: ['1168516600937316463']
@@ -28,7 +28,7 @@ export class UserCommand extends CardinalCommand {
 
 		// Register Context Menu command available from any message
 		registry.registerContextMenuCommand({
-			name: 'Reroll Giveaway',
+			name: 'End Giveaway',
 			type: ApplicationCommandType.Message
 		});
 	}
@@ -41,35 +41,35 @@ export class UserCommand extends CardinalCommand {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a giveaway message id')]
 			});
 		}
-		return this.rerollGiveaway(giveawayMessage.id, message);
+		return this.endGiveaway(giveawayMessage.id, message);
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
 		const messageId = interaction.options.getString('message_id', true);
-		return this.rerollGiveaway(messageId, interaction);
+		return this.endGiveaway(messageId, interaction);
 	}
 
 	// Context Menu command
 	public async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
 		const targetMessageId = interaction.targetId;
-		return this.rerollGiveaway(targetMessageId, interaction);
+		return this.endGiveaway(targetMessageId, interaction);
 	}
 
-	private async rerollGiveaway(giveawayMessageId: Snowflake, interactionOrMessage: InteractionOrMessage) {
+	private async endGiveaway(giveawayMessageId: Snowflake, interactionOrMessage: InteractionOrMessage) {
 		const data = await this.container.db.giveaway.findUnique({
 			where: {
 				messageId: giveawayMessageId
 			}
 		});
 
-		if (!data || !data.expired) {
+		if (!data || data.expired) {
 			interactionOrMessage instanceof Message
 				? send(interactionOrMessage, {
 						embeds: [
 							new CardinalEmbedBuilder()
 								.setStyle('fail')
-								.setDescription('Provide a valid giveaway message id, and make sure the giveaway has ended')
+								.setDescription('Provide a valid giveaway message id, and make sure the giveaway has not ended')
 						]
 				  })
 				: interactionOrMessage.reply({
@@ -82,13 +82,13 @@ export class UserCommand extends CardinalCommand {
 				  });
 			return;
 		}
+
 		const giveaway = new GiveawayManager(data);
-		const newWinners = giveaway.getWinners(); // TODO: Implement logic in DB to store the winners and use .reroll()
-		giveaway.end({ reroll: true, winnersList: newWinners });
+		giveaway.end();
 
 		if (!(interactionOrMessage instanceof Message)) {
 			interactionOrMessage.reply({
-				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription('Rerolled the giveaway')],
+				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription('Ended the giveaway')],
 				ephemeral: true
 			});
 		}
