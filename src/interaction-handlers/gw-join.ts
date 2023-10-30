@@ -15,7 +15,8 @@ export class ButtonHandler extends InteractionHandler {
 		const fromDb = await this.container.db.giveaway.findUnique({
 			where: {
 				messageId,
-				guildId
+				guildId,
+				expired: false
 			}
 		});
 
