@@ -5,7 +5,7 @@ import type { CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User, Snowflake } from 'discord.js';
 import type { Duration } from '@sapphire/time-utilities';
-import type { UnmuteMemberTaskPaylod } from '#root/tasks/UnmuteMember';
+import type { UnmuteMemberTaskPaylod } from '#root/scheduled-tasks/UnmuteMember';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
