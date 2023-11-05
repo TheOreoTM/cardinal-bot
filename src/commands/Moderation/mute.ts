@@ -100,6 +100,8 @@ export class muteCommand extends ModerationCommand {
 			]
 		});
 
+		console.log(this.container.tasks.queue);
+
 		return;
 	}
 

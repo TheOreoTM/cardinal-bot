@@ -128,7 +128,6 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		}
 
 		await this.sendModlog(mute.modlogId);
-		console.log(container.tasks.queue);
 
 		return this;
 	}
