@@ -10,7 +10,10 @@ export interface UnmuteMemberTaskPaylod {
 
 @ApplyOptions<ScheduledTask.Options>({
 	name: 'UnmuteMemberTask',
-	enabled: true
+	enabled: true,
+	bullJobsOptions: {
+		removeOnComplete: true
+	}
 })
 export class UnmuteMemberTask extends ScheduledTask {
 	public async run(payload: UnmuteMemberTaskPaylod) {
