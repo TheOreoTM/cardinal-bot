@@ -25,7 +25,7 @@ export class UnmuteMemberTask extends ScheduledTask {
 		});
 
 		if (!mute) {
-			return;
+			return console.log('yeah', payload.muteId);
 		}
 
 		this.container.db.mute.delete({
