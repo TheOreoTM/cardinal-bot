@@ -5,8 +5,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 
 @ApplyOptions<ScheduledTask.Options>({
-	interval: seconds(10),
-	enabled: false
+	interval: seconds(5),
+	enabled: true
 })
 export class ExpireMuteTask extends ScheduledTask {
 	public override async run() {
