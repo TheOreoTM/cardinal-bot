@@ -27,12 +27,6 @@ declare module '@sapphire/pieces' {
 	}
 }
 
-declare module '@sapphire/plugin-scheduled-tasks' {
-	interface ScheduledTasks {
-		UnmuteMemberTask: never;
-	}
-}
-
 declare module '@sapphire/framework' {
 	interface Preconditions {
 		CommandRestriction: never;

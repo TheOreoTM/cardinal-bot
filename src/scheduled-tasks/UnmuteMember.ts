@@ -54,3 +54,9 @@ export class UnmuteMemberTask extends ScheduledTask {
 		await modlog.createUnmute();
 	}
 }
+
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		UnmuteMemberTask: never;
+	}
+}
