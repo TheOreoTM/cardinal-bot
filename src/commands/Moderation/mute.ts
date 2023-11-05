@@ -85,7 +85,6 @@ export class muteCommand extends ModerationCommand {
 			});
 		});
 
-		this.container.tasks.create('manual', 'payload', 5000);
 		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 		});
