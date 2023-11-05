@@ -12,11 +12,12 @@ export const Presence = {
 	status: 'online'
 } as PresenceData;
 
-export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'host'> {
+export function parseRedisOption(): Pick<RedisOptions, 'port' | 'password' | 'host' | 'db'> {
 	return {
 		port: envParseNumber('REDIS_PORT'),
 		password: envParseString('REDIS_PASSWORD'),
-		host: envParseString('REDIS_HOST')
+		host: envParseString('REDIS_HOST'),
+		db: 0
 	};
 }
 
