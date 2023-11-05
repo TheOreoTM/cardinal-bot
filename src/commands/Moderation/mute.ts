@@ -100,9 +100,9 @@ export class muteCommand extends ModerationCommand {
 			]
 		});
 
-		console.log(this.container.tasks.get('manual'));
-		console.log(this.container.tasks.get('UnmuteMemberTask'));
-		console.log(this.container.tasks.get('scheduled-tasks'));
+		console.log(await this.container.tasks.get('manual'));
+		console.log(await this.container.tasks.get('UnmuteMemberTask'));
+		console.log(await this.container.tasks.get('scheduled-tasks'));
 
 		return;
 	}
