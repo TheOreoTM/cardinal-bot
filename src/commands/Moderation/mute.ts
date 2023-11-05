@@ -90,6 +90,7 @@ export class muteCommand extends ModerationCommand {
 		});
 
 		modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
+		this.container.tasks.create('manual', 'hi', 5000);
 
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [

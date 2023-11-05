@@ -124,11 +124,12 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		if (data.expiresAt) {
 			const offset = data.expiresAt.getTime() - Date.now();
 			console.log(offset);
-			const b = await container.tasks.create('UnmuteMemberTask', { muteId: mute.id }, offset);
-			console.log(b);
+			container.tasks.create('UnmuteMemberTask', { muteId: mute.id }, offset);
 		}
 
 		await this.sendModlog(mute.modlogId);
+		console.log(container.tasks.queue);
+
 		return this;
 	}
 
