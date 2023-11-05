@@ -52,7 +52,7 @@ export class UnmuteMemberTask extends ScheduledTask {
 			reason: 'Mute expired',
 			caseId: await new CardinalIndexBuilder().modlogId(member.guild.id)
 		});
-		await modlog.createUnmute();
+		modlog.createUnmute().then(() => console.log('bye'));
 	}
 }
 

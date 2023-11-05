@@ -154,6 +154,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public async createUnmute() {
 		const unmute = await container.db.modlog.create({ data: this });
+		console.log('hi');
 		await this.sendModlog(unmute.id);
 	}
 
