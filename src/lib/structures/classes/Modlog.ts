@@ -143,6 +143,11 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			}
 		});
 
+		if (data.expiresAt) {
+			const offset = data.expiresAt.getTime() - Date.now();
+			container.tasks.create('UnbanMemberTask', { banId: ban.id }, offset);
+		}
+
 		await this.sendModlog(ban.modlogId);
 		return this;
 	}

@@ -155,6 +155,8 @@ export class UserCommand extends CardinalCommand {
 
 	private async createGiveaway(data: Partial<GiveawayData>) {
 		const gwData = new GiveawayManager(data).toDatabase();
+		const offset = gwData.expiresAt.getTime() - Date.now();
+		this.container.tasks.create('EndGiveawayTask', { giveawayMessageId: gwData.messageId }, offset);
 		await this.container.db.giveaway.create({
 			data: gwData
 		});

@@ -60,6 +60,14 @@ declare module '@sapphire/framework' {
 	}
 }
 
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		UnmuteMemberTask: never;
+		UnbanMemberTask: never;
+		EndGiveawayTask: never;
+	}
+}
+
 declare module 'discord.js' {
 	interface Client {
 		readonly llrCollectors: Set<LongLivingReactionCollector>;
