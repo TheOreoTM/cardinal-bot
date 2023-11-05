@@ -1,0 +1,22 @@
+{
+  "category": "tasks"
+}
+---
+import { ApplyOptions } from '@sapphire/decorators';
+import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
+
+interface {{name}}TaskPaylod {
+	
+}
+
+@ApplyOptions<ScheduledTask.Options>({
+	name: '{{name}}Task',
+	bullJobsOptions: { removeOnComplete: true }
+})
+export class {{name}}Task extends ScheduledTask {
+	public async run(payload: {{name}}TaskPaylod) {
+		this.container.logger.info('[{{name}}Task] Started');
+	}
+}
+
+// Add the return type declaration in Augments.d.ts

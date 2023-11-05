@@ -15,7 +15,8 @@ import {
 	type Guild,
 	type ImageURLOptions,
 	type Message,
-	type User
+	type User,
+	type Snowflake
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { isNullishOrEmpty } from '@sapphire/utilities';
@@ -29,6 +30,33 @@ import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-a
 import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
+
+/**
+ * Returns the cached member if it is cached. If its not cached it fetches it and returns it.
+ * Important: Doesnt check if the member fetched is valid or not
+ * @param guild The guild you want to search the member in
+ * @param memberId The id of the member you want to get
+ * @returns a GuildMember
+ */
+export async function getMember(guild: Guild, memberId: Snowflake) {
+	const cachedMember = guild.members.cache.get(memberId);
+	if (cachedMember) return cachedMember;
+	const fetchedGuild = await guild.members.fetch({ user: memberId });
+	return fetchedGuild;
+}
+
+/**
+ * Returns the cached guild if it is cached. If its not cached it fetches it and returns it.
+ * Important: Doesnt check if the guild fetched is valid or not
+ * @param guildId The id of the guild you want to get
+ * @returns a Guild
+ */
+export async function getGuild(guildId: Snowflake) {
+	const cachedGuild = container.client.guilds.cache.get(guildId);
+	if (cachedGuild) return cachedGuild;
+	const fetchedGuild = await container.client.guilds.fetch({ guild: guildId, cache: true });
+	return fetchedGuild;
+}
 
 export function pickRandom<T>(array: ReadonlyArray<T>) {
 	const arr = [...array];

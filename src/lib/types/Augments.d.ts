@@ -5,6 +5,7 @@ import type { CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User, Snowflake } from 'discord.js';
 import type { Duration } from '@sapphire/time-utilities';
+import type { UnmuteMemberTaskPaylod } from '#root/tasks/UnmuteMember';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -23,6 +24,12 @@ declare module '@skyra/env-utilities' {
 declare module '@sapphire/pieces' {
 	interface Container {
 		db: PrismaClient;
+	}
+}
+
+declare module '@sapphire/plugin-scheduled-tasks' {
+	interface ScheduledTasks {
+		UnmuteMemberTask: never;
 	}
 }
 

@@ -121,6 +121,11 @@ export class Modlog implements Prisma.ModlogCreateInput {
 			}
 		});
 
+		if (data.expiresAt) {
+			const offset = Date.now() - data.expiresAt.getTime();
+			container.tasks.create('UnmuteMemberTask', { muteId: mute.id }, offset);
+		}
+
 		await this.sendModlog(mute.modlogId);
 		return this;
 	}
