@@ -90,7 +90,6 @@ export class muteCommand extends ModerationCommand {
 		});
 
 		modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
-		this.container.tasks.create('manual', 'hi', 5000);
 
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [
@@ -99,10 +98,6 @@ export class muteCommand extends ModerationCommand {
 					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
 			]
 		});
-
-		console.log(await this.container.tasks.get('manual'));
-		console.log(await this.container.tasks.get('UnmuteMemberTask'));
-		console.log(await this.container.tasks.get('scheduled-tasks'));
 
 		return;
 	}
