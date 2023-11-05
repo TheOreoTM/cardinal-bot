@@ -24,13 +24,13 @@ export class UnmuteMemberTask extends ScheduledTask {
 			}
 		});
 
-		if (!mute) {
-			return console.log('yeah', payload.muteId);
-		}
-
-		this.container.db.mute.delete({
+		this.container.db.mute.deleteMany({
 			where: { id: payload.muteId }
 		});
+
+		if (!mute) {
+			return console.log('no mute', payload.muteId);
+		}
 
 		const guild = await getGuild(mute.modlog.guildId);
 		if (!guild) return this.container.logger.warn('[UnmuteMemberTask] Returned bc no guild');
