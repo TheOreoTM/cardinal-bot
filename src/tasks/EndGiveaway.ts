@@ -8,8 +8,7 @@ interface EndGiveawayTaskPaylod {
 }
 
 @ApplyOptions<ScheduledTask.Options>({
-	name: 'EndGiveawayTaskTask',
-	bullJobsOptions: { removeOnComplete: true }
+	name: 'EndGiveawayTask'
 })
 export class EndGiveawayTask extends ScheduledTask {
 	public async run(payload: EndGiveawayTaskPaylod) {
