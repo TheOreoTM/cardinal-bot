@@ -108,8 +108,8 @@ export class LanguageHelp {
 
 		// Supported Run Types
 		if (supportedRunTypes) {
-			const enabled = CardinalEmojis.On;
-			const disabled = CardinalEmojis.Off;
+			const enabled = CardinalEmojis.Success;
+			const disabled = CardinalEmojis.Fail;
 
 			const types = [];
 
