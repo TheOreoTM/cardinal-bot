@@ -116,7 +116,7 @@ export class LanguageHelp {
 			types.push(supportedRunTypes.messageCommand ? `${enabled} Message Command` : `${disabled} Message Command`);
 			types.push(supportedRunTypes.slashCommand ? `${enabled} Slash Command` : `${disabled} Slash Command`);
 			types.push(supportedRunTypes.contextCommand ? `${enabled} Context Command` : `${disabled} Context Command`);
-			output.push(this.supportedTypes, types.join('\n'));
+			output.push(this.supportedTypes, types.join('\n'), '');
 		}
 
 		// Cooldown
