@@ -1,3 +1,4 @@
+import { CardinalEmojis } from '#utils/constants';
 import { DurationFormatter } from '@sapphire/time-utilities';
 
 export class LanguageHelp {
@@ -9,6 +10,12 @@ export class LanguageHelp {
 	private examples: string = null!;
 	private reminder: string = null!;
 	private cooldown: string = null!;
+	private supportedTypes: string = null!;
+
+	public setRunTypes(text: string) {
+		this.supportedTypes = text;
+		return this;
+	}
 
 	public setAliases(text: string) {
 		this.aliases = text;
@@ -51,7 +58,16 @@ export class LanguageHelp {
 	}
 
 	public display(name: string, aliases: string | null, options: LanguageHelpDisplayOptions, prefixUsed: string) {
-		const { usages = [], extendedHelp, explainedUsage = [], possibleFormats = [], examples = [], reminder, cooldown } = options;
+		const {
+			supportedRunTypes,
+			usages = [],
+			extendedHelp,
+			explainedUsage = [],
+			possibleFormats = [],
+			examples = [],
+			reminder,
+			cooldown
+		} = options;
 		const output: string[] = [];
 
 		// Usages
@@ -90,6 +106,19 @@ export class LanguageHelp {
 			output.push(this.reminder, reminder, '');
 		}
 
+		// Supported Run Types
+		if (supportedRunTypes) {
+			const enabled = CardinalEmojis.On;
+			const disabled = CardinalEmojis.Off;
+
+			const types = [];
+
+			types.push(supportedRunTypes.messageCommand ? `${enabled} Message Command` : `${disabled} Message Command`);
+			types.push(supportedRunTypes.slashCommand ? `${enabled} Slash Command` : `${disabled} Slash Command`);
+			types.push(supportedRunTypes.contextCommand ? `${enabled} Context Command` : `${disabled} Context Command`);
+			output.push(this.supportedTypes, types.join('\n'));
+		}
+
 		// Cooldown
 		if (cooldown) {
 			output.push(this.cooldown, new DurationFormatter().format(cooldown));
@@ -107,4 +136,11 @@ export interface LanguageHelpDisplayOptions {
 	examples?: (null | string)[];
 	reminder?: string;
 	cooldown?: number;
+	supportedRunTypes?: SupportedRunTypesOptions;
+}
+
+export interface SupportedRunTypesOptions {
+	messageCommand: boolean;
+	slashCommand: boolean;
+	contextCommand: boolean;
 }

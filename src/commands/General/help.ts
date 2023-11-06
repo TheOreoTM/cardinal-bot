@@ -152,8 +152,13 @@ export class HelpCommand extends CardinalCommand {
 			possibleFormats: '🔢 | **Possible formats**',
 			examples: '🔗 | **Examples**',
 			reminders: '⏰ | **Reminder**',
+			supportedRunTypes: '📇 | **Supported Run Types**',
 			cooldown: '⏱️ | **Cooldown**'
 		};
+
+		const supportsSlash = command.supportsChatInputCommands();
+		const supportsMessage = command.supportsMessageCommands();
+		const supportsContext = command.supportsContextMenuCommands();
 
 		const builder = new LanguageHelp()
 			.setUsages(builderData.usages)
@@ -163,11 +168,17 @@ export class HelpCommand extends CardinalCommand {
 			.setExamples(builderData.examples)
 			.setPossibleFormats(builderData.possibleFormats)
 			.setReminder(builderData.reminders)
-			.setCooldown(builderData.cooldown);
+			.setCooldown(builderData.cooldown)
+			.setRunTypes(builderData.supportedRunTypes);
 
 		const extendedHelpData: LanguageHelpDisplayOptions = {
 			...command.detailedDescription,
-			cooldown: command.options.cooldownDelay ?? container.client.options.defaultCooldown?.delay
+			cooldown: command.options.cooldownDelay ?? container.client.options.defaultCooldown?.delay,
+			supportedRunTypes: {
+				contextCommand: supportsContext,
+				messageCommand: supportsMessage,
+				slashCommand: supportsSlash
+			}
 		};
 
 		const extendedHelp = builder.display(command.name, this.formatAliases(command.aliases), extendedHelpData, prefixUsed);
