@@ -79,11 +79,11 @@ export class statsCommand extends CardinalSubcommand {
 	public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
 
-		const messagesPerSecond = await this.container.db.message.count({
+		const messagesPerFiveSeconds = await this.container.db.message.count({
 			where: {
 				guildId: message.guildId,
 				createdAt: {
-					gte: new Date(Date.now() - seconds(1))
+					gte: new Date(Date.now() - seconds(5))
 				}
 			}
 		});
@@ -107,7 +107,7 @@ export class statsCommand extends CardinalSubcommand {
 		});
 
 		send(message, {
-			content: `msgs/second: ${messagesPerSecond}, msgs/minute: ${messagesPerMinute}, msgs/hour ${messagesPerHour}`
+			content: `msgs/5 second: ${messagesPerFiveSeconds}, msgs/minute: ${messagesPerMinute}, msgs/hour ${messagesPerHour}`
 		});
 	}
 
