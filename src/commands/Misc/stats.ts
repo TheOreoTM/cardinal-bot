@@ -2,7 +2,7 @@ import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
 import { getChannelStats, getUserStats } from '#utils/caching';
-import { days, minutes, seconds } from '#utils/common';
+import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -50,7 +50,10 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 			name: 'user',
 			messageRun: 'user'
 		},
-
+		{
+			name: 'server',
+			messageRun: 'server'
+		},
 		{
 			name: 'me',
 			messageRun: 'user',
@@ -72,6 +75,41 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 })
 export class statsCommand extends CardinalSubcommand {
 	public take: number = 5;
+
+	public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
+		this.initOptions(args);
+
+		const messagesPerSecond = await this.container.db.message.count({
+			where: {
+				guildId: message.guildId,
+				createdAt: {
+					lte: new Date(Date.now() - seconds(1))
+				}
+			}
+		});
+
+		const messagesPerMinute = await this.container.db.message.count({
+			where: {
+				guildId: message.guildId,
+				createdAt: {
+					lte: new Date(Date.now() - minutes(1))
+				}
+			}
+		});
+
+		const messagesPerHour = await this.container.db.message.count({
+			where: {
+				guildId: message.guildId,
+				createdAt: {
+					lte: new Date(Date.now() - hours(1))
+				}
+			}
+		});
+
+		send(message, {
+			content: `msgs/second: ${messagesPerSecond}, msgs/minute: ${messagesPerMinute}, msgs/hour ${messagesPerHour}`
+		});
+	}
 
 	public async user(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
