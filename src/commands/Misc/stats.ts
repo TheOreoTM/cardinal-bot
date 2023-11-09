@@ -83,7 +83,7 @@ export class statsCommand extends CardinalSubcommand {
 			where: {
 				guildId: message.guildId,
 				createdAt: {
-					lte: new Date(Date.now() - seconds(1))
+					gte: new Date(Date.now() - seconds(1))
 				}
 			}
 		});
@@ -92,7 +92,7 @@ export class statsCommand extends CardinalSubcommand {
 			where: {
 				guildId: message.guildId,
 				createdAt: {
-					lte: new Date(Date.now() - minutes(1))
+					gte: new Date(Date.now() - minutes(1))
 				}
 			}
 		});
@@ -101,7 +101,7 @@ export class statsCommand extends CardinalSubcommand {
 			where: {
 				guildId: message.guildId,
 				createdAt: {
-					lte: new Date(Date.now() - hours(1))
+					gte: new Date(Date.now() - hours(1))
 				}
 			}
 		});
