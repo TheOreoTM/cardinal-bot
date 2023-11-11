@@ -1,9 +1,15 @@
 import { PermissionLevels, type GuildMessage } from '#lib/types';
 import { CommandOptionsRunTypeEnum, PreconditionContainerArray, UserError, Command } from '@sapphire/framework';
 import { Subcommand, type SubcommandOptions } from '@sapphire/plugin-subcommands';
-import { PermissionFlagsBits, PermissionsBitField, type CacheType } from 'discord.js';
-import type { CardinalCommand } from './CardinalCommand';
-
+import {
+	PermissionFlagsBits,
+	PermissionsBitField,
+	ContextMenuCommandInteraction as CTXMenuCommandInteraction,
+	ChatInputCommandInteraction as ChatInputInteraction,
+	MessageContextMenuCommandInteraction as MessageCTXCommandInteraction,
+	UserContextMenuCommandInteraction as UserCTXMenuCommandInteraction
+} from 'discord.js';
+import type { CardinalCommand } from '#lib/structures';
 export abstract class CardinalSubcommand extends Subcommand {
 	/**
 	 * Whether the command can be disabled.
@@ -114,8 +120,9 @@ export namespace CardinalSubcommand {
 	export type JSON = Command.JSON;
 	export type Context = Command.Context;
 	export type RunInTypes = Command.RunInTypes;
-	export type ChatInputCommandInteraction<Cached extends CacheType = CacheType> = Command.ChatInputCommandInteraction<Cached>;
-	export type ContextMenuCommandInteraction<Cached extends CacheType = CacheType> = Command.ContextMenuCommandInteraction<Cached>;
-	export type AutocompleteInteraction<Cached extends CacheType = CacheType> = Command.AutocompleteInteraction<Cached>;
+	export type ChatInputCommandInteraction = ChatInputInteraction<'cached'>;
+	export type ContextMenuCommandInteraction = CTXMenuCommandInteraction<'cached'>;
+	export type UserContextMenuCommandInteraction = UserCTXMenuCommandInteraction<'cached'>;
+	export type MessageContextMenuCommandInteraction = MessageCTXCommandInteraction<'cached'>;
 	export type Registry = Command.Registry;
 }
