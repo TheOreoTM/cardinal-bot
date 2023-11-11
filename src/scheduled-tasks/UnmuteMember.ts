@@ -15,19 +15,23 @@ export interface UnmuteMemberTaskPaylod {
 export class UnmuteMemberTask extends ScheduledTask {
 	public async run(payload: UnmuteMemberTaskPaylod) {
 		this.container.logger.info('[UnmuteMemberTask] Started');
+
 		const mute = await this.container.db.mute.findUnique({
 			where: {
 				id: payload.muteId
 			},
 			select: {
 				modlog: true,
-				removedRoles: true
+				removedRoles: true,
+				id: true
 			}
 		});
 
-		this.container.db.mute.deleteMany({
+		const deletedData = await this.container.db.mute.delete({
 			where: { id: payload.muteId }
 		});
+
+		console.log(deletedData, payload.muteId);
 
 		if (!mute) {
 			return console.log('no mute', payload.muteId);
