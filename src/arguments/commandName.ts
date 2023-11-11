@@ -8,6 +8,7 @@ export class UserArgument extends Argument<CardinalCommand> {
 		const commands = this.container.stores.get('commands');
 		const found = commands.get(parameter.toLowerCase()) as CardinalCommand | undefined;
 		if (found) {
+			console.log('found');
 			return this.isAllowed(found, context)
 				? this.ok(found)
 				: this.error({
@@ -34,7 +35,10 @@ export class UserArgument extends Argument<CardinalCommand> {
 
 		const command = commands.find((cmd) => cmd.name === searchResult[0].target) as CardinalCommand | undefined;
 
-		if (command) return this.ok(command);
+		if (command) {
+			console.log('fuzzied');
+			return this.ok(command);
+		}
 
 		return this.error({
 			parameter,
