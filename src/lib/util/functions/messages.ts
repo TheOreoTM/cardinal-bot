@@ -2,14 +2,40 @@ import { canReact, canRemoveAllReactions } from '@sapphire/discord.js-utilities'
 import { container } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { RESTJSONErrorCodes } from 'discord-api-types/v9';
-import { Message, User, type MessageCreateOptions, type UserResolvable, Guild, ButtonBuilder, ActionRowBuilder, MessagePayload } from 'discord.js';
+import {
+	Message,
+	User,
+	type MessageCreateOptions,
+	type UserResolvable,
+	Guild,
+	ButtonBuilder,
+	ActionRowBuilder,
+	MessagePayload,
+	type InteractionReplyOptions,
+	InteractionResponse
+} from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { floatPromise, minutes, resolveOnErrorCodes, seconds } from '#utils/common';
 import { CardinalCommand } from '#lib/structures';
 import { generateSendMessageAsGuildButton } from '#utils/utils';
+import type { InteractionOrMessage } from '#lib/types';
 
 export const deletedMessages = new WeakSet<Message>();
 const messageCommands = new WeakMap<Message, CardinalCommand>();
+
+export function sendInteractionOrMessage(
+	interactionOrMessage: InteractionOrMessage,
+	messageOptions: MessageCreateOptions | InteractionReplyOptions
+): Promise<Message<boolean>> | Promise<InteractionResponse<true>> {
+	// Use TypeScript type checking to handle different cases
+	if (interactionOrMessage instanceof Message) {
+		// If it's a message, use send function with MessageCreateOptions
+		return send(interactionOrMessage, messageOptions as MessageCreateOptions);
+	} else {
+		// If it's an interaction, use reply function with InteractionReplyOptions
+		return interactionOrMessage.reply(messageOptions as InteractionReplyOptions);
+	}
+}
 
 /**
  * Send a message to a user as from a guild, (no components allowed)

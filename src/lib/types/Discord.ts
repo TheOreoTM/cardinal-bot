@@ -71,6 +71,9 @@ export interface GuildButtonInteraction extends ButtonInteraction {
 	readonly guildId: string;
 }
 
-export type InteractionOrMessage = Message | CardinalCommand.ChatInputCommandInteraction | CardinalCommand.ContextMenuCommandInteraction;
+export type InteractionOrMessage =
+	| CardinalCommand.Message
+	| CardinalCommand.ChatInputCommandInteraction
+	| CardinalCommand.ContextMenuCommandInteraction;
 export type InteractionOrMessageCommandContext = MessageCommandContext | ChatInputCommandContext | ContextMenuCommandContext;
 export type InteractionOrMessageCommand = MessageCommand | ChatInputCommand | ContextMenuCommand;
