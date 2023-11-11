@@ -1,5 +1,6 @@
 import { CardinalCommand, CardinalEmbedBuilder, Timestamp, type GiveawayData, GiveawayManager } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
+import { days } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord.js-utilities';
 import type { Args } from '@sapphire/framework';
@@ -11,10 +12,18 @@ const MaxWinnerAmount = 10;
 const MinWinnerAmount = 1;
 const MaxDescriptionLength = 256;
 const MinDescriptionLength = 1;
+const MaxDurationAmount = days(30);
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Create a giveaway',
 	detailedDescription: {
-		extendedHelp: 'Start a giveaway'
+		extendedHelp: 'Start a giveaway',
+		usages: ['Duration WinnerAmount Prize'],
+		explainedUsage: [
+			['Duration', 'How long the giveaway should last'],
+			['WinnerAmount', 'A number between 1 and 10'],
+			['Prize', 'The prize you want to giveaway']
+		],
+		examples: ['2d 1 Nitro']
 	},
 	preconditions: ['Staff']
 })
@@ -62,13 +71,23 @@ export class UserCommand extends CardinalCommand {
 
 		if (!duration || !winnerAmount || !prize) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Please provide all the arguments in the valid format`)]
+				embeds: [
+					new CardinalEmbedBuilder()
+						.setStyle('fail')
+						.setDescription(`Please provide all the arguments in the valid format\n*Hint: run \`help gcreate\`*`)
+				]
 			});
 		}
 
 		if (winnerAmount > MaxWinnerAmount || winnerAmount < MinWinnerAmount) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Winner Amount should be less than 10 and greater than 1')]
+			});
+		}
+
+		if (duration.offset > MaxDurationAmount) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Duration amount should be less than 30 days')]
 			});
 		}
 
