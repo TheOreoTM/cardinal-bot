@@ -24,6 +24,10 @@ function sortCommandsAlphabetically(_: CardinalCommand[], __: CardinalCommand[],
 
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['commands', 'cmd', 'cmds'],
+	quotes: [
+		["'", "'"],
+		['"', '"']
+	],
 	description: 'Displays all commands or the description of one.',
 	detailedDescription: {
 		usages: ['--cat/--categories', '--all', '[CategoryName]', '[Page]', '[CommandName]'],
