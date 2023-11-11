@@ -12,7 +12,8 @@ export interface UnmuteMemberTaskPaylod {
 	name: 'UnmuteMemberTask',
 	enabled: true,
 	customJobOptions: {
-		removeOnComplete: true
+		removeOnComplete: true,
+		removeOnFail: true
 	}
 })
 export class UnmuteMemberTask extends ScheduledTask {
@@ -59,6 +60,6 @@ export class UnmuteMemberTask extends ScheduledTask {
 			reason: 'Mute expired',
 			caseId: await new CardinalIndexBuilder().modlogId(member.guild.id)
 		});
-		modlog.createUnmute().then(() => console.log('bye'));
+		await modlog.createUnmute();
 	}
 }
