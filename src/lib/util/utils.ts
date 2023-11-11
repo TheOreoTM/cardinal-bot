@@ -83,7 +83,7 @@ export function pickRandoms<T>(array: ReadonlyArray<T>, amount = 1) {
 
 export const authenticated = () =>
 	createFunctionPrecondition(
-		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`),
+		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`) || Boolean(request.auth?.token),
 		(_request: ApiRequest, response: ApiResponse) => response.error(HttpCodes.Unauthorized)
 	);
 

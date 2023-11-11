@@ -9,7 +9,10 @@ interface UnbanMemberTaskPaylod {
 }
 
 @ApplyOptions<ScheduledTask.Options>({
-	name: 'UnbanMemberTask'
+	name: 'UnbanMemberTask',
+	customJobOptions: {
+		removeOnComplete: true
+	}
 })
 export class UnbanMemberTask extends ScheduledTask {
 	public async run(payload: UnbanMemberTaskPaylod) {
