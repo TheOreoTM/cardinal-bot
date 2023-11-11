@@ -50,7 +50,7 @@ export class modafkCommand extends CardinalSubcommand {
 				.addSubcommand((cmd) =>
 					cmd
 						.setName('clear')
-						.setDescription('Reset the AFK status message to default for a member')
+						.setDescription('Remove the AFK status of a member')
 						.addUserOption((option) =>
 							option.setName('target').setDescription('The member you want to clear/remove the AFK status of').setRequired(true)
 						)
@@ -177,7 +177,7 @@ export class modafkCommand extends CardinalSubcommand {
 		await modlog.createAfkReset();
 
 		return sendInteractionOrMessage(interactionOrMessage, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Cleared the afk status of ${getTag(target.user)}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Reset the afk status of ${getTag(target.user)}`)]
 		});
 	}
 }
