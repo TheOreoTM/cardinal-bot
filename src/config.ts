@@ -51,7 +51,12 @@ export const config: Config = {
 
 	presence: Presence,
 	tasks: {
-		bull: { connection: parseRedisOption() }
+		bull: {
+			connection: parseRedisOption(),
+			defaultJobOptions: {
+				removeOnComplete: true
+			}
+		}
 	},
 	api: {
 		origin: '*',
