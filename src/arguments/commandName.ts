@@ -7,16 +7,10 @@ export class UserArgument extends Argument<CardinalCommand> {
 	public async run(parameter: string, context: CommandArgumentContext) {
 		const commands = this.container.stores.get('commands');
 		const found = commands.get(parameter.toLowerCase()) as CardinalCommand | undefined;
-		if (found) {
+		if (found && this.isAllowed(found, context)) {
 			console.log('found');
-			return this.isAllowed(found, context)
-				? this.ok(found)
-				: this.error({
-						parameter,
-						identifier: 'InvalidCommand',
-						message: `No command resolved for the search \`${parameter}\``,
-						context
-				  });
+			return this.ok(found);
+			// Then go to a fuzzy search
 		}
 
 		const searchResult = new FuzzySearch(
