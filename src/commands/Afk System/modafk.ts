@@ -4,7 +4,6 @@ import { sendInteractionOrMessage } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
-import { send } from '@sapphire/plugin-editable-commands';
 import { GuildMember } from 'discord.js';
 
 @ApplyOptions<CardinalSubcommand.Options>({
@@ -39,10 +38,24 @@ export class modafkCommand extends CardinalSubcommand {
 			builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.addUserOption((option) =>
-					option.setName('target').setDescription('The member you want to clear/remove the AFK status of').setRequired(true)
+				.addSubcommand((cmd) =>
+					cmd
+						.setName('reset')
+						.setDescription('Reset the AFK status message to default for a member')
+						.addUserOption((option) =>
+							option.setName('target').setDescription('The member you want to clear/remove the AFK status of').setRequired(true)
+						)
+						.addStringOption((option) => option.setName('reason').setDescription('The reason of the action'))
 				)
-				.addStringOption((option) => option.setName('reason').setDescription('The reason of the action'))
+				.addSubcommand((cmd) =>
+					cmd
+						.setName('clear')
+						.setDescription('Reset the AFK status message to default for a member')
+						.addUserOption((option) =>
+							option.setName('target').setDescription('The member you want to clear/remove the AFK status of').setRequired(true)
+						)
+						.addStringOption((option) => option.setName('reason').setDescription('The reason of the action'))
+				)
 		);
 	}
 
@@ -115,6 +128,25 @@ export class modafkCommand extends CardinalSubcommand {
 
 		const reason = await args.pick('string').catch(() => 'No reason');
 
+		return this.reset(message, { target, reason, staff: message.member });
+	}
+
+	public async slashReset(interaction: CardinalSubcommand.ChatInputCommandInteraction) {
+		const target = interaction.options.getMember('target');
+		if (!target) {
+			return interaction.reply({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member in the server')]
+			});
+		}
+		const reason = interaction.options.getString('reason', false) ?? 'No reason';
+
+		return this.reset(interaction, { reason, staff: interaction.member, target });
+	}
+
+	private async reset(
+		interactionOrMessage: InteractionOrMessage,
+		{ target, staff, reason }: { reason: string; target: GuildMember; staff: GuildMember }
+	) {
 		await this.container.db.afk
 			.update({
 				where: {
@@ -136,16 +168,16 @@ export class modafkCommand extends CardinalSubcommand {
 
 		const modlog = new Modlog({
 			member: target,
-			staff: message.member,
+			staff: staff,
 			type: ModerationType.AfkReset,
 			reason: reason,
-			caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+			caseId: await new CardinalIndexBuilder().modlogId(staff.guild.id)
 		});
 
 		await modlog.createAfkReset();
 
-		return send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Reset the AFK status message for ${getTag(target.user)}`)]
+		return sendInteractionOrMessage(interactionOrMessage, {
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Cleared the afk status of ${getTag(target.user)}`)]
 		});
 	}
 }
