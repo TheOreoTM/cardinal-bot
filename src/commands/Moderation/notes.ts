@@ -80,6 +80,7 @@ export class notesCommand extends ModerationCommand {
 				.setTitle(`${notes.length} Notes`)
 				.setAuthor({ iconURL: target.displayAvatarURL(), name: `Notes for ${getTag(target.user)} (${target.id})` });
 
+			console.log(startIndex, endIndex);
 			for (let j = startIndex; j < endIndex; j++) {
 				const note = notes[j];
 				const formatter = new Timestamp(note.createdAt.getTime());
