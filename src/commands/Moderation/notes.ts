@@ -76,7 +76,7 @@ export class notesCommand extends ModerationCommand {
 			const endIndex = Math.min(startIndex + itemsPerPage, notes.length);
 			const embed = new CardinalEmbedBuilder()
 				.setStyle('default')
-				.setTitle(`${notes.length} Notes`)
+				.setTitle(`${notes.length} ${notes.length === 1 ? 'Note' : 'Notes'}`)
 				.setAuthor({ iconURL: target.displayAvatarURL(), name: `Notes for ${getTag(target.user)} (${target.id})` });
 
 			for (let j = startIndex; j < endIndex; j++) {
