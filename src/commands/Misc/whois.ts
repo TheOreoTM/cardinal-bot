@@ -104,12 +104,12 @@ export class WhoisCommand extends CardinalCommand {
 				},
 				{
 					name: `Roles [${roles.size}]`,
-					value: formattedRoles,
+					value: formattedRoles || 'None',
 					inline: false
 				},
 				{
 					name: 'Permissions',
-					value: formattedPerms.join(', '),
+					value: formattedPerms.join(', ') || 'None',
 					inline: false
 				}
 			);
