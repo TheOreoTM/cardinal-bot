@@ -81,7 +81,6 @@ export class notesCommand extends ModerationCommand {
 
 			for (let j = startIndex; j < endIndex; j++) {
 				const note = notes[j];
-				console.log(note);
 				const formatter = new Timestamp(note.createdAt.getTime());
 				embed.addFields({
 					name: `Note: ${note.noteId} | Moderator: ${note.staffName}`,
