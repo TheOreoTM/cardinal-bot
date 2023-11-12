@@ -1,10 +1,10 @@
 import { CardinalCommand, CardinalEmbedBuilder, CardinalIndexBuilder } from '#lib/structures';
-import { SuggestionStatus } from '#lib/types';
+import { SuggestionStatus, type InteractionOrMessage } from '#lib/types';
 import { CardinalEmojis } from '#utils/constants';
+import { sendInteractionOrMessage } from '#utils/functions';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { EmbedLimits } from '@sapphire/discord.js-utilities';
-import { send } from '@sapphire/plugin-editable-commands';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
@@ -17,7 +17,16 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 	}
 })
 export class suggestCommand extends CardinalCommand {
-	public override async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
+	public registerApplicationCommands(registry: CardinalCommand.Registry) {
+		registry.registerChatInputCommand((builder) =>
+			builder
+				.setName(this.name)
+				.setDescription(this.description)
+				.addStringOption((option) => option.setName('suggestion').setDescription('The suggestion you want to send').setRequired(true))
+		);
+	}
+
+	public async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
 		const suggestion = await args.rest('string').catch(() => {
 			return this.error({
 				identifier: 'NoSuggestion',
@@ -28,7 +37,17 @@ export class suggestCommand extends CardinalCommand {
 			});
 		});
 
-		const { guild, member } = message;
+		return this.suggest(message, suggestion);
+	}
+
+	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
+		const suggestion = interaction.options.getString('suggestion', true);
+
+		return this.suggest(interaction, suggestion);
+	}
+
+	private async suggest(interactionOrMessage: InteractionOrMessage, suggestion: string) {
+		const { guild, member } = interactionOrMessage;
 
 		const suggestionChannel = await guild.settings.channels.suggestion();
 
@@ -71,10 +90,10 @@ export class suggestCommand extends CardinalCommand {
 							text: suggestion
 						}
 					});
-					return send(message, `${CardinalEmojis.Success} ***Submitted your suggestion***`);
+					return sendInteractionOrMessage(interactionOrMessage, `${CardinalEmojis.Success} ***Submitted your suggestion***`);
 				});
 		} catch (error) {
-			return send(message, `${CardinalEmojis.Fail} Something went wrong`);
+			return sendInteractionOrMessage(interactionOrMessage, `${CardinalEmojis.Fail} Something went wrong`);
 		} finally {
 			return;
 		}

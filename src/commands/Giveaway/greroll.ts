@@ -1,5 +1,5 @@
 import { CardinalCommand, CardinalEmbedBuilder, GiveawayManager } from '#lib/structures';
-import type { InteractionOrMessage } from '#lib/types';
+import type { GuildMessage, InteractionOrMessage } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -34,7 +34,7 @@ export class UserCommand extends CardinalCommand {
 	}
 
 	// Message command
-	public async messageRun(message: Message, args: Args) {
+	public async messageRun(message: GuildMessage, args: Args) {
 		const giveawayMessage = await args.pick('message').catch(() => null);
 		if (!giveawayMessage) {
 			return send(message, {

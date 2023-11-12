@@ -25,15 +25,15 @@ const messageCommands = new WeakMap<Message, CardinalCommand>();
 
 export function sendInteractionOrMessage(
 	interactionOrMessage: InteractionOrMessage,
-	messageOptions: MessageCreateOptions | InteractionReplyOptions
+	messageOptions: string | MessageCreateOptions | InteractionReplyOptions
 ): Promise<Message<boolean>> | Promise<InteractionResponse<true>> {
 	// Use TypeScript type checking to handle different cases
 	if (interactionOrMessage instanceof Message) {
 		// If it's a message, use send function with MessageCreateOptions
-		return send(interactionOrMessage, messageOptions as MessageCreateOptions);
+		return send(interactionOrMessage, messageOptions as MessageCreateOptions | string);
 	} else {
 		// If it's an interaction, use reply function with InteractionReplyOptions
-		return interactionOrMessage.reply(messageOptions as InteractionReplyOptions);
+		return interactionOrMessage.reply(messageOptions as InteractionReplyOptions | string);
 	}
 }
 
