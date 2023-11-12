@@ -31,7 +31,7 @@ export class WhoisCommand extends CardinalCommand {
 
 		// Register Context Menu command available from any user
 		registry.registerContextMenuCommand({
-			name: this.name,
+			name: 'Whois',
 			type: ApplicationCommandType.User
 		});
 	}
@@ -54,7 +54,8 @@ export class WhoisCommand extends CardinalCommand {
 
 	// Context Menu command
 	public async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
-		const member = interaction.member;
+		const memberId = interaction.targetId;
+		const member = await interaction.guild.members.fetch({ user: memberId, cache: true });
 		const embed = await this.whois(member);
 		interaction.reply({
 			embeds: [embed]
