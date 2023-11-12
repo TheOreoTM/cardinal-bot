@@ -25,7 +25,7 @@ export class delnoteCommand extends ModerationCommand {
 			builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.addUserOption((option) => option.setName('member').setDescription('The member you want to delete a note for'))
+				.addUserOption((option) => option.setName('member').setDescription('The member you want to delete a note for').setRequired(true))
 				.addNumberOption((option) => option.setName('note_id').setDescription('The ID of the note you want to delete').setRequired(true))
 		);
 	}

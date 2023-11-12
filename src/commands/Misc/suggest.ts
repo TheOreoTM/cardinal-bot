@@ -57,7 +57,7 @@ export class suggestCommand extends CardinalCommand {
 				message: 'This server doesnt have a suggestion channel set up'
 			});
 
-		const suggestionId = await new CardinalIndexBuilder().suggestionId(guild.id);
+		const suggestionId = await CardinalIndexBuilder.suggestionId(guild.id);
 		const manageSuggestionButton = new ButtonBuilder()
 			.setStyle(ButtonStyle.Secondary)
 			.setLabel('Respond')

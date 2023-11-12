@@ -20,7 +20,7 @@ export class notesCommand extends ModerationCommand {
 			builder
 				.setName(this.name)
 				.setDescription(this.description)
-				.addUserOption((option) => option.setName('member').setDescription('The member you want to view the notes for'))
+				.addUserOption((option) => option.setName('member').setDescription('The member you want to view the notes for').setRequired(true))
 				.addNumberOption((option) => option.setName('page').setDescription('The page you want to view'))
 		);
 	}
