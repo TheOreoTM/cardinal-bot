@@ -87,14 +87,13 @@ export class notesCommand extends ModerationCommand {
 					name: `Note: ${note.noteId} | Moderator: ${note.staffName}`,
 					value: `${note.note} - ${formatter.getLongDateTime()}`
 				});
-				console.log(embed);
 			}
 
 			embeds.push(embed);
 		}
 
 		const display = new CardinalPaginatedMessageEmbedFields();
-		display.setIndex(page);
+		display.setIndex(page - 1);
 
 		embeds.forEach((embed) => {
 			display.addPageEmbed(embed);
