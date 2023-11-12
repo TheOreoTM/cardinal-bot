@@ -66,7 +66,7 @@ export class WhoisCommand extends CardinalCommand {
 	private async whois(member: GuildMember) {
 		const memberTag = getTag(member.user);
 		const memberAvatarURL = member.displayAvatarURL();
-		const accountCreatedTimestamp = new Timestamp(member.user.createdTimestamp);
+		const accountCreatedTimestamp = new Timestamp(member.user.createdTimestamp ?? 0);
 		const memberJoinedTimestamp = new Timestamp(member.joinedTimestamp ?? 0);
 		const isBot = member.user.bot ? 'Yes' : 'No';
 		const globalName = member.user.globalName;
