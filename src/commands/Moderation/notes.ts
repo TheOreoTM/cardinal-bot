@@ -81,8 +81,8 @@ export class notesCommand extends ModerationCommand {
 				.setAuthor({ iconURL: target.displayAvatarURL(), name: `Notes for ${getTag(target.user)} (${target.id})` });
 
 			for (let j = startIndex; j < endIndex; j++) {
-				console.log(j);
 				const note = notes[j];
+				console.log(note);
 				const formatter = new Timestamp(note.createdAt.getTime());
 				embed.addFields({
 					name: `Note: ${note.noteId} | Moderator: ${note.staffName}`,
