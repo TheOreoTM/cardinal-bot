@@ -60,6 +60,8 @@ export class notesCommand extends ModerationCommand {
 				userId: target.id
 			}
 		});
+
+		console.log(notes);
 		if (!notes || notes.length === 0) {
 			return sendInteractionOrMessage(interactionOrMessage, {
 				embeds: [new CardinalEmbedBuilder().setStyle('info').setDescription('No notes')]
