@@ -61,7 +61,6 @@ export class notesCommand extends ModerationCommand {
 			}
 		});
 
-		console.log(notes);
 		if (!notes || notes.length === 0) {
 			return sendInteractionOrMessage(interactionOrMessage, {
 				embeds: [new CardinalEmbedBuilder().setStyle('info').setDescription('No notes')]
@@ -88,6 +87,7 @@ export class notesCommand extends ModerationCommand {
 					name: `Note: ${note.noteId} | Moderator: ${note.staffName}`,
 					value: `${note.note} - ${formatter.getLongDateTime()}`
 				});
+				console.log(embed);
 			}
 
 			embeds.push(embed);
