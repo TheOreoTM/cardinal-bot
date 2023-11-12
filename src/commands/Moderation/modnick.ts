@@ -38,7 +38,7 @@ export class modnickCommand extends ModerationCommand {
 		let nick = await args.rest('string').catch(() => '');
 
 		if (nick === '') {
-			nick = `Moderated Nickname ${new CardinalIndexBuilder().generateTag(8, false)}`;
+			nick = `Moderated Nickname ${CardinalIndexBuilder.generateTag(8, false)}`;
 		}
 
 		if (!target.moderatable || !target.manageable) {

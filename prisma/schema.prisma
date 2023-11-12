@@ -7,6 +7,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Note {
+  id        Int      @id @default(autoincrement())
+  noteId    Int
+  guildId   String
+  userId    String
+  staffId   String
+  staffName String
+  note      String
+  createdAt DateTime @default(now())
+
+  @@unique([noteId, userId, guildId])
+}
+
 model Giveaway {
   id           Int      @id @default(autoincrement())
   messageId    String   @unique

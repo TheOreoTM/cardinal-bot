@@ -58,7 +58,7 @@ export class UnmuteMemberTask extends ScheduledTask {
 			staff,
 			type: ModerationType.Unmute,
 			reason: 'Mute expired',
-			caseId: await new CardinalIndexBuilder().modlogId(member.guild.id)
+			caseId: await CardinalIndexBuilder.modlogId(member.guild.id)
 		});
 		await modlog.createUnmute();
 	}

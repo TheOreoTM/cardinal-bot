@@ -39,7 +39,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public async createModlog() {
 		return {
-			caseId: await new CardinalIndexBuilder().modlogId(this.guildId),
+			caseId: await CardinalIndexBuilder.modlogId(this.guildId),
 			guildId: this.guildId,
 			memberId: this.memberId,
 			memberName: this.memberName,
@@ -63,7 +63,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		const warn = await container.db.warn.create({
 			data: {
 				memberId: this.memberId,
-				warnUid: new CardinalIndexBuilder().generateUuid(),
+				warnUid: CardinalIndexBuilder.generateUuid(),
 				modlog: {
 					create: await this.createModlog()
 				}

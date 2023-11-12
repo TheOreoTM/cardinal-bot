@@ -50,7 +50,7 @@ export class UnbanMemberTask extends ScheduledTask {
 			staff,
 			type: ModerationType.Unban,
 			reason: 'Ban expired',
-			caseId: await new CardinalIndexBuilder().modlogId(ban.modlog.guildId)
+			caseId: await CardinalIndexBuilder.modlogId(ban.modlog.guildId)
 		});
 		await modlog.createUnban();
 	}

@@ -84,7 +84,7 @@ export class unmuteCommand extends ModerationCommand {
 				staff: message.member,
 				type: ModerationType.Unmute,
 				reason: reason,
-				caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+				caseId: await CardinalIndexBuilder.modlogId(message.member.guild.id)
 			});
 
 			return await modlog.createUnmute();

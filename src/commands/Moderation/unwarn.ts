@@ -51,7 +51,7 @@ export class unwarnCommand extends ModerationCommand {
 			type: ModerationType.Unwarn,
 			reason: reason,
 			member,
-			caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+			caseId: await CardinalIndexBuilder.modlogId(message.member.guild.id)
 		});
 		await modlog.createUnwarn();
 

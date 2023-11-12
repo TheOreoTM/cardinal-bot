@@ -43,7 +43,7 @@ export class unbanCommand extends ModerationCommand {
 				type: ModerationType.Unban,
 				length: null,
 				reason: reason,
-				caseId: await new CardinalIndexBuilder().modlogId(message.member.guild.id)
+				caseId: await CardinalIndexBuilder.modlogId(message.member.guild.id)
 			});
 			await modlog.createUnban();
 		}

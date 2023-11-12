@@ -7,23 +7,23 @@ import { v4 } from 'uuid';
 export class CardinalIndexBuilder {
 	constructor() {}
 
-	public generateSnowflake() {
+	public static generateSnowflake() {
 		return `${new Snowflake(CardinalEpoch).generate()}`;
 	}
 
-	public deconstructSnowflake(snowflake: string) {
+	public static deconstructSnowflake(snowflake: string) {
 		return new Snowflake(CardinalEpoch).deconstruct(snowflake);
 	}
 
-	public generateTag(length = 8, tag = true) {
+	public static generateTag(length = 8, tag = true) {
 		return tag ? '#' + randomatic('Aa0', length) : randomatic('Aa0', length);
 	}
 
-	public generateUuid() {
+	public static generateUuid() {
 		return v4();
 	}
 
-	public async suggestionId(guildId: string) {
+	public static async suggestionId(guildId: string) {
 		const suggestionAmount = await container.db.suggestion.count({
 			where: {
 				guildId
@@ -33,7 +33,7 @@ export class CardinalIndexBuilder {
 		return suggestionAmount + 1;
 	}
 
-	public async modlogId(guildId: string) {
+	public static async modlogId(guildId: string) {
 		const modlog = await container.db.modlog.count({
 			where: {
 				guildId
@@ -41,5 +41,15 @@ export class CardinalIndexBuilder {
 		});
 
 		return modlog + 1;
+	}
+
+	public static async noteId(userId: string, guildId: string) {
+		const note = await container.db.note.count({
+			where: {
+				guildId,
+				userId
+			}
+		});
+		return note + 1;
 	}
 }

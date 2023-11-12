@@ -1,0 +1,17 @@
+{
+  "category": "commands"
+}
+---
+import { ModerationCommand } from '#lib/structures';
+import { ApplyOptions } from '@sapphire/decorators';
+
+@ApplyOptions<ModerationCommand.Options>({
+	description: 'ADD',
+	name: '{{name}}'
+
+})
+export class {{name}}Command extends ModerationCommand {
+	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
+		return message.channel.send('Hello world!');
+	}
+}

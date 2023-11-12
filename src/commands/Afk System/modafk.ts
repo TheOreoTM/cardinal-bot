@@ -106,7 +106,7 @@ export class modafkCommand extends CardinalSubcommand {
 			staff: staff,
 			type: ModerationType.AfkClear,
 			reason: reason,
-			caseId: await new CardinalIndexBuilder().modlogId(staff.guild.id)
+			caseId: await CardinalIndexBuilder.modlogId(staff.guild.id)
 		});
 
 		if (target.manageable) {
@@ -171,7 +171,7 @@ export class modafkCommand extends CardinalSubcommand {
 			staff: staff,
 			type: ModerationType.AfkReset,
 			reason: reason,
-			caseId: await new CardinalIndexBuilder().modlogId(staff.guild.id)
+			caseId: await CardinalIndexBuilder.modlogId(staff.guild.id)
 		});
 
 		await modlog.createAfkReset();
