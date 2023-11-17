@@ -13,6 +13,7 @@ import type { Message, TextChannel } from 'discord.js';
 	name: 'purge',
 	cooldownScope: BucketScope.Guild,
 	cooldownDelay: seconds(8),
+	enabled: false,
 	subcommands: [
 		{
 			name: 'default',
