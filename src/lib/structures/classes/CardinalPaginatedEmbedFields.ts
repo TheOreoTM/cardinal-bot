@@ -5,6 +5,8 @@ import { ButtonStyle, ComponentType, MessageComponentInteraction } from 'discord
 export class CardinalPaginatedMessageEmbedFields extends PaginatedMessageEmbedFields {
 	public constructor(options: PaginatedMessageOptions = {}) {
 		super(options);
+		this.embedFooterSeparator = ' • ';
+		this.pageIndexPrefix = 'Page';
 		this.setActions([
 			{
 				customId: '@sapphire/paginated-messages.firstPage',

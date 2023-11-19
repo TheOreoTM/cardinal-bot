@@ -57,8 +57,6 @@ export class moderationsCommand extends ModerationCommand {
 			display.addPageEmbed(embed);
 		});
 
-		display.pageIndexPrefix = 'Page';
-
 		return display.run(message, message.author);
 	}
 }

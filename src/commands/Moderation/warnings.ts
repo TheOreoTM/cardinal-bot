@@ -65,9 +65,6 @@ export class warningsCommand extends ModerationCommand {
 			pageEmbed.addPageEmbed(embed);
 		}
 
-		pageEmbed.embedFooterSeparator = ' • ';
-		pageEmbed.pageIndexPrefix = 'Page';
-
 		return await pageEmbed.run(message);
 	}
 }

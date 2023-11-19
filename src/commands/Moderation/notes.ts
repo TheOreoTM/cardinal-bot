@@ -98,8 +98,6 @@ export class notesCommand extends ModerationCommand {
 			display.addPageEmbed(embed);
 		});
 
-		display.pageIndexPrefix = 'Page';
-
 		return display.run(interactionOrMessage);
 	}
 }

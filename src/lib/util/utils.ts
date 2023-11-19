@@ -16,10 +16,12 @@ import {
 	type ImageURLOptions,
 	type Message,
 	type User,
-	type Snowflake
+	type Snowflake,
+	EmbedBuilder,
+	type APIEmbedField
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
-import { isNullishOrEmpty } from '@sapphire/utilities';
+import { chunk, isNullishOrEmpty } from '@sapphire/utilities';
 import { CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -30,6 +32,28 @@ import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-a
 import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
+
+/**
+ * @param items The items that should be paginated
+ * @param template The base embed that you want to be copied
+ * @param addField The logic that you want to be executed for each field addition
+ * @param itemsPerPage The number of items on each page
+ * @field
+ * @returns An array of embeds to use in CardinalPaginatedMessageEmbedFields
+ */
+export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, addField: (item: T) => APIEmbedField, itemsPerPage = 10) {
+	const chunks = chunk<T>(items, itemsPerPage);
+	const embeds: EmbedBuilder[] = [];
+	for (const chunk of chunks) {
+		const embed = template;
+		for (const item of chunk) {
+			embed.addFields(addField(item));
+		}
+		embeds.push(embed);
+	}
+
+	return embeds;
+}
 
 /**
  * Returns the cached member if it is cached. If its not cached it fetches it and returns it.
