@@ -45,7 +45,7 @@ export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, a
 	const chunks = chunk<T>(items, itemsPerPage);
 	const embeds: EmbedBuilder[] = [];
 	for (const chunk of chunks) {
-		const embed = template;
+		const embed = new EmbedBuilder(template.data);
 		for (const item of chunk) {
 			embed.addFields(addField(item));
 		}
