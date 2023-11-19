@@ -90,13 +90,23 @@ export class muteCommand extends ModerationCommand {
 		});
 
 		modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
-		await sendMessageAsGuild(target.user, target.guild, {
-			embeds: [
-				new CardinalEmbedBuilder()
-					.setStyle('info')
-					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
-			]
+		const data = await this.container.db.guild.findUnique({
+			where: {
+				guildId: message.guildId
+			}
 		});
+		await sendMessageAsGuild(
+			target.user,
+			target.guild,
+			{
+				embeds: [
+					new CardinalEmbedBuilder()
+						.setStyle('info')
+						.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+				]
+			},
+			data?.appealLink
+		);
 
 		return;
 	}

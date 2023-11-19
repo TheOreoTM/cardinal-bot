@@ -127,6 +127,8 @@ model Guild {
   roleAdmin     String?
   roleMuted     String?
 
+  appealLink String?
+
   channelModlog     String?
   channelSuggestion String?
 

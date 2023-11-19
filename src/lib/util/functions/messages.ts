@@ -12,13 +12,15 @@ import {
 	ActionRowBuilder,
 	MessagePayload,
 	type InteractionReplyOptions,
-	InteractionResponse
+	InteractionResponse,
+	ButtonStyle
 } from 'discord.js';
 import { setTimeout as sleep } from 'node:timers/promises';
 import { floatPromise, minutes, resolveOnErrorCodes, seconds } from '#utils/common';
 import { CardinalCommand } from '#lib/structures';
 import { generateSendMessageAsGuildButton } from '#utils/utils';
 import type { InteractionOrMessage } from '#lib/types';
+import type { Nullish } from '@sapphire/utilities';
 
 export const deletedMessages = new WeakSet<Message>();
 const messageCommands = new WeakMap<Message, CardinalCommand>();
@@ -41,15 +43,24 @@ export function sendInteractionOrMessage(
  * Send a message to a user as from a guild, (no components allowed)
  * @param message The message you want to send
  */
-export async function sendMessageAsGuild(user: User, guild: Guild, options: string | Omit<MessagePayload, 'components'> | MessageCreateOptions) {
+export async function sendMessageAsGuild(
+	user: User,
+	guild: Guild,
+	options: string | Omit<MessagePayload, 'components'> | MessageCreateOptions,
+	appealLink?: string | Nullish
+) {
 	const sentFromButton = generateSendMessageAsGuildButton(guild);
+	const appealButton = new ButtonBuilder().setURL(appealLink ?? '').setStyle(ButtonStyle.Link);
+
+	const buttons = [sentFromButton];
+	if (appealLink) buttons.push(appealButton);
 
 	const o: string | MessagePayload | MessageCreateOptions =
 		typeof options === 'string'
 			? { content: options }
 			: {
 					...options,
-					components: [new ActionRowBuilder<ButtonBuilder>().addComponents(sentFromButton)]
+					components: [new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)]
 			  };
 	await user.send(o).catch((err) => console.error(err));
 }

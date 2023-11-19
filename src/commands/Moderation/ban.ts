@@ -64,13 +64,21 @@ export class banCommand extends ModerationCommand {
 			});
 		}
 
-		await sendMessageAsGuild(target.user, target.guild, {
-			embeds: [
-				new CardinalEmbedBuilder()
-					.setStyle('info')
-					.setDescription(`You have been banned${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
-			]
+		const data = await this.container.db.guild.findUnique({
+			where: { guildId: message.guildId }
 		});
+		await sendMessageAsGuild(
+			target.user,
+			target.guild,
+			{
+				embeds: [
+					new CardinalEmbedBuilder()
+						.setStyle('info')
+						.setDescription(`You have been banned${length ? ` for ${length}` : ' '}for the reason: ${reason ?? 'No reason'}`)
+				]
+			},
+			data?.appealLink
+		);
 
 		await target.ban({ reason: reason ?? 'No reason', deleteMessageSeconds: Math.floor(days(5) / 1000) }).catch((err: Error) => {
 			send(message, {
