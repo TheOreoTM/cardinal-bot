@@ -60,6 +60,6 @@ export const enum CardinalEmojis {
 	Idle = '<:idle:1131233326523490424> ',
 	Reply = '<:reply:1136774317993107536>',
 	Gear = '⚙️',
-	Leave = '<:leave:1175798186372255755>',
-	Join = '<:join:1175798157792260226>'
+	Leave = '<:leave:1175799873291960371>',
+	Join = '<:join:1175799892552208415>'
 }
