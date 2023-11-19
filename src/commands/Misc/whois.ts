@@ -80,7 +80,6 @@ export class WhoisCommand extends CardinalCommand {
 			})
 			.join(' ');
 		const formattedPerms = formatRoles(member.permissions.toArray().sort(), false);
-		const formattedKeyPerms = formatRoles(member.permissions.toArray().sort(), false);
 
 		const embed = new EmbedBuilder()
 			.setColor(member.displayHexColor)
@@ -111,11 +110,6 @@ export class WhoisCommand extends CardinalCommand {
 				{
 					name: 'Permissions',
 					value: formattedPerms.join(', ') || 'None',
-					inline: false
-				},
-				{
-					name: 'Key Permissions',
-					value: formattedKeyPerms.join(', ') || 'None',
 					inline: false
 				}
 			);
