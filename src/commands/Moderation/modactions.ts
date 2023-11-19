@@ -60,14 +60,18 @@ export class modactionsCommand extends ModerationCommand {
 			.setAuthor({ iconURL: target.displayAvatarURL(), name: `${modActions.length} Mod Actions for ${getTag(target)} (${target.id})` });
 
 		const addField = (action: Modlog): APIEmbedField => {
-			const formattedTime = new Timestamp(action.createdAt.getTime());
-			const values = [`**Type:** ${capitalizeWords(action.type)}`, `**User:** <@${action.memberId}> (${action.memberId})`];
-			const reason = `**Reason:** ${action.reason} - ${formattedTime.getLongDateTime()}`;
+			// const formattedTime = new Timestamp(action.createdAt.getTime());
+			// const values = [`**Type:** ${capitalizeWords(action.type)}`, `**User:** <@${action.memberId}> (${action.memberId})`];
+			// const reason = `**Reason:** ${action.reason} - ${formattedTime.getLongDateTime()}`;
 
-			action.length ? values.push(`**Length:** ${action.length}`, reason) : values.push(reason);
+			// action.length ? values.push(`**Length:** ${action.length}`, reason) : values.push(reason);
+			// return {
+			// 	name: `Case ${action.caseId}`,
+			// 	value: values.join('\n')
+			// };
 			return {
-				name: `Case ${action.caseId}`,
-				value: values.join('\n')
+				name: `${action.caseId} 0`,
+				value: 'hello'
 			};
 		};
 
