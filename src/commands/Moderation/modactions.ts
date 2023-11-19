@@ -64,7 +64,7 @@ export class modactionsCommand extends ModerationCommand {
 			const values = [`**Type:** ${capitalizeWords(action.type)}`, `**User:** <@${action.memberId}> (${action.memberId})`];
 			const reason = `**Reason:** ${action.reason} - ${formattedTime.getLongDateTime()}`;
 
-			action.length ? values.push(`**Length:** ${length}`, reason) : values.push(reason);
+			action.length ? values.push(`**Length:** ${action.length}`, reason) : values.push(reason);
 			return {
 				name: `Case ${action.caseId}`,
 				value: values.join('\n')
