@@ -41,7 +41,7 @@ import { RateLimitManager } from '@sapphire/ratelimits';
  * @field
  * @returns An array of embeds to use in CardinalPaginatedMessageEmbedFields
  */
-export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, addField: (item: T) => APIEmbedField, itemsPerPage = 8) {
+export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, addField: (item: T) => APIEmbedField, itemsPerPage = 5) {
 	const chunks = chunk<T>(items, itemsPerPage);
 	const embeds: EmbedBuilder[] = [];
 	for (const chunk of chunks) {
