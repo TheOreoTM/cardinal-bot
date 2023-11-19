@@ -53,6 +53,8 @@ export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, a
 		embeds.push(embed);
 	}
 
+	console.log(embeds.length);
+
 	return embeds;
 }
 
