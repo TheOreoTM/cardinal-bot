@@ -141,6 +141,14 @@ model Guild {
   @@index([guildId])
 }
 
+model MemberActivity {
+  id        Int               @id @default(autoincrement())
+  guildId   String
+  userId    String
+  action    MemberAcivityType
+  createdAt DateTime          @default(now())
+}
+
 model Message {
   id            Int     @id @default(autoincrement())
   messageId     String
@@ -212,4 +220,9 @@ model RestrictionNode {
   deny         String[] @default([])
   guild        Guild?   @relation(fields: [guildGuildId], references: [guildId])
   guildGuildId String?
+}
+
+enum MemberAcivityType {
+  JOIN
+  LEAVE
 }

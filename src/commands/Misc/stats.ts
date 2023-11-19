@@ -78,37 +78,61 @@ export class statsCommand extends CardinalSubcommand {
 
 	public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
+		const lookback = await this.getLookback(message.guildId);
+		const stopWatch = new Stopwatch();
+		const data = await this.getServerData(message.guildId, lookback);
+		const timeTaken = stopWatch.stop().toString();
+		const prefix = args.commandContext.commandPrefix;
+		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const messagesPerFiveSeconds = await this.container.db.message.count({
-			where: {
-				guildId: message.guildId,
-				createdAt: {
-					gte: new Date(Date.now() - seconds(5))
+		const embed = new CardinalEmbedBuilder()
+			.setStyle('default')
+			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
+			.setDescription(
+				`${message.guild.name}\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
+			)
+			.addFields(
+				{
+					name: 'Messages',
+					inline: false,
+					value: [
+						`${formattedLookback}: \`${data.messagesLookback} Messages\``,
+						`1 Minute: \`${data.messagesPerMinute} Messages\``,
+						`1 Hour: \`${data.messagesPerHour} Messages\``,
+						`24 Hours: \`${data.messagesPerDay} Messages\``,
+						`All time: \`${data.messagesAllTime} Messages\``
+					].join('\n')
+				},
+				{
+					name: 'Joins',
+					inline: true,
+					value: [
+						`${formattedLookback}: \`${data.joinsLastLookback} Members\``,
+						`24 Hour: \`${data.joinsLastDay} Members\``,
+						`All time: \`${data.joinsAllTime} Members\``
+					].join('\n')
+				},
+				{
+					name: 'Leaves',
+					inline: true,
+					value: [
+						`${formattedLookback}: \`${data.leavesLastLookback} Members\``,
+						`24 Hour: \`${data.leavesLastDay} Members\``,
+						`All time: \`${data.leavesAlltime} Members\``
+					].join('\n')
+				},
+				{
+					name: 'Member Flow',
+					inline: true,
+					value: [
+						`${formattedLookback}: \`${data.joinsLastLookback - data.leavesLastLookback} Members\``,
+						`24 Hour: \`${data.joinsLastDay - data.leavesLastDay} Members\``,
+						`All time: \`${data.joinsAllTime - data.leavesAlltime} Members\``
+					].join('\n')
 				}
-			}
-		});
+			);
 
-		const messagesPerMinute = await this.container.db.message.count({
-			where: {
-				guildId: message.guildId,
-				createdAt: {
-					gte: new Date(Date.now() - minutes(1))
-				}
-			}
-		});
-
-		const messagesPerHour = await this.container.db.message.count({
-			where: {
-				guildId: message.guildId,
-				createdAt: {
-					gte: new Date(Date.now() - hours(1))
-				}
-			}
-		});
-
-		send(message, {
-			content: `msgs/5 second: ${messagesPerFiveSeconds}, msgs/minute: ${messagesPerMinute}, msgs/hour ${messagesPerHour}`
-		});
+		send(message, { embeds: [embed] });
 	}
 
 	public async user(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
@@ -183,7 +207,7 @@ export class statsCommand extends CardinalSubcommand {
 
 		const data = await getChannelStats(channel.guild.id, channel.id, lookback, this.take);
 
-		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id);
+		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id, lookback);
 		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopMembers = topMembers.map((member, index) => {
@@ -420,12 +444,21 @@ export class statsCommand extends CardinalSubcommand {
 		}));
 	}
 
-	private async findTopMembersForChannel(channelId: string, guildId: string): Promise<{ memberId: string; messageCount: string }[]> {
+	private async findTopMembersForChannel(
+		channelId: string,
+		guildId: string,
+		lookback: number
+	): Promise<{ memberId: string; messageCount: string }[]> {
+		const now = new Date();
+		const lastLookback = new Date(now.getTime() - days(lookback));
 		const topMembers = await this.container.db.message.groupBy({
 			by: ['memberId'],
 			where: {
 				channelId: channelId,
-				guildId: guildId
+				guildId: guildId,
+				createdAt: {
+					gte: lastLookback
+				}
 			},
 			_count: {
 				memberId: true
@@ -572,6 +605,121 @@ export class statsCommand extends CardinalSubcommand {
 		};
 
 		return data;
+	}
+
+	private async getServerData(guildId: string, lookback: number) {
+		const now = new Date();
+		const lastLookback = new Date(now.getTime() - days(lookback));
+
+		const joinsLastDay = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'JOIN',
+				createdAt: {
+					gte: new Date(now.getTime() - days(1))
+				}
+			}
+		});
+
+		const joinsLastLookback = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'JOIN',
+				createdAt: {
+					gte: lastLookback
+				}
+			}
+		});
+
+		const joinsAllTime = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'JOIN'
+			}
+		});
+
+		const leavesLastDay = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'LEAVE',
+				createdAt: {
+					gte: new Date(now.getTime() - days(1))
+				}
+			}
+		});
+
+		const leavesLastLookback = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'LEAVE',
+				createdAt: {
+					gte: lastLookback
+				}
+			}
+		});
+
+		const leavesAlltime = await this.container.db.memberActivity.count({
+			where: {
+				guildId,
+				action: 'LEAVE'
+			}
+		});
+
+		const messagesAllTime = await this.container.db.message.count({
+			where: {
+				guildId
+			}
+		});
+
+		const messagesLookback = await this.container.db.message.count({
+			where: {
+				guildId,
+				createdAt: {
+					gte: lastLookback
+				}
+			}
+		});
+
+		const messagesPerDay = await this.container.db.message.count({
+			where: {
+				guildId: guildId,
+				createdAt: {
+					gte: new Date(Date.now() - days(1))
+				}
+			}
+		});
+
+		const messagesPerMinute = await this.container.db.message.count({
+			where: {
+				guildId: guildId,
+				createdAt: {
+					gte: new Date(Date.now() - minutes(1))
+				}
+			}
+		});
+
+		const messagesPerHour = await this.container.db.message.count({
+			where: {
+				guildId: guildId,
+				createdAt: {
+					gte: new Date(Date.now() - hours(1))
+				}
+			}
+		});
+
+		return {
+			messagesPerDay,
+			messagesPerHour,
+			messagesPerMinute,
+			messagesLookback,
+			messagesAllTime,
+			leavesAlltime,
+			leavesLastLookback,
+			leavesLastDay,
+			joinsAllTime,
+			joinsLastLookback,
+			joinsLastDay
+		};
 	}
 }
 
