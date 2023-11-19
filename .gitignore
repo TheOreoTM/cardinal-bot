@@ -12,8 +12,6 @@ git-filter-repo
 # Yarn files
 .yarn/install-state.gz
 .yarn/build-state.yml
-.yarnrc.yml
-.yarn.lock
 
 
 
