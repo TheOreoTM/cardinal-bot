@@ -43,6 +43,8 @@ import { RateLimitManager } from '@sapphire/ratelimits';
  */
 export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, addField: (item: T) => APIEmbedField, itemsPerPage = 10) {
 	const chunks = chunk<T>(items, itemsPerPage);
+	console.log(chunks.length);
+	console.log(chunks);
 	const embeds: EmbedBuilder[] = [];
 	for (const chunk of chunks) {
 		const embed = template;
