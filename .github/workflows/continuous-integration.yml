@@ -36,4 +36,4 @@ jobs:
             yarn install
             yarn build
             yarn prisma:push-prod
-            pm2 start yarn --interpreter bash --name cardinal-bot -- start
+            pm2 start dist/index.js --name cardinal-bot
