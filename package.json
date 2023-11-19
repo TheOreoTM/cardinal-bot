@@ -87,5 +87,6 @@
 		"prisma:push-prod": "dotenv -e .env -- npx prisma db push",
 		"prisma:generate": "npx prisma generate"
 	},
-	"prettier": "@sapphire/prettier-config"
+	"prettier": "@sapphire/prettier-config",
+	"packageManager": "yarn@3.6.1"
 }
