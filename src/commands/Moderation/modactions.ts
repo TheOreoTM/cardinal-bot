@@ -71,7 +71,7 @@ export class modactionsCommand extends ModerationCommand {
 			};
 		};
 
-		const paginatedEmbeds = generatePaginatedEmbeds(modActions, template, addField, 10);
+		const paginatedEmbeds = generatePaginatedEmbeds(modActions, template, addField, 5);
 
 		const display = new CardinalPaginatedMessageEmbedFields();
 		display.addPageEmbeds(paginatedEmbeds);
