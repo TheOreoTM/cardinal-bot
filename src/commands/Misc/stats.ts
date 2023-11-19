@@ -3,7 +3,7 @@ import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
 import { getChannelStats, getUserStats } from '#utils/caching';
 import { days, hours, minutes, seconds } from '#utils/common';
-import { CardinalColors } from '#utils/constants';
+import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
@@ -105,7 +105,7 @@ export class statsCommand extends CardinalSubcommand {
 					].join('\n')
 				},
 				{
-					name: 'Joins',
+					name: `Joins ${CardinalEmojis.Join}`,
 					inline: true,
 					value: [
 						`${formattedLookback}: \`${data.joinsLastLookback.toLocaleString()} Members\``,
@@ -114,7 +114,7 @@ export class statsCommand extends CardinalSubcommand {
 					].join('\n')
 				},
 				{
-					name: 'Leaves',
+					name: `Leaves ${CardinalEmojis.Leave}`,
 					inline: true,
 					value: [
 						`${formattedLookback}: \`${data.leavesLastLookback.toLocaleString()} Members\``,
@@ -123,7 +123,7 @@ export class statsCommand extends CardinalSubcommand {
 					].join('\n')
 				},
 				{
-					name: 'Member Flow',
+					name: 'Member Flow 📊',
 					inline: true,
 					value: [
 						`${formattedLookback}: \`${data.joinsLastLookback - data.leavesLastLookback} Members\``,

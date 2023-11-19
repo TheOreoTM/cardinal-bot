@@ -59,5 +59,7 @@ export const enum CardinalEmojis {
 	Dnd = '<:dnd:1131233360925163652>',
 	Idle = '<:idle:1131233326523490424> ',
 	Reply = '<:reply:1136774317993107536>',
-	Gear = '⚙️'
+	Gear = '⚙️',
+	Leave = '<:leave:1175798186372255755>',
+	Join = '<:join:1175798157792260226>'
 }
