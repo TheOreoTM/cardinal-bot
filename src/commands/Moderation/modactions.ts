@@ -52,6 +52,9 @@ export class modactionsCommand extends ModerationCommand {
 			where: {
 				staffId: target.id,
 				guildId: guildId
+			},
+			orderBy: {
+				caseId: 'desc'
 			}
 		});
 
