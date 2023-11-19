@@ -49,10 +49,11 @@ export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, a
 		for (const item of chunk) {
 			embed.addFields(addField(item));
 		}
-		console.log(embeds.length);
 		embeds.push(embed);
+		console.log(embed);
 	}
 
+	console.log(embeds);
 	return embeds;
 }
 
