@@ -36,7 +36,8 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 			['Lookback', 'A number between 0 and 30*'],
 			['--limit', 'Set the maximum number of positions in a leadboard to show (max: 10)']
 		],
-		reminder: 'If you want to set lookback to something greater than 30 you can check out the premium plan'
+		reminder:
+			'All data is tracked after the bot was added to the server.\nIf you want to set lookback to something greater than 30 you can check out the premium plan'
 	},
 	options: ['limit'],
 	aliases: ['stat', 's'],
@@ -89,36 +90,36 @@ export class statsCommand extends CardinalSubcommand {
 			.setStyle('default')
 			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
 			.setDescription(
-				`${message.guild.name}\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
+				`**${message.guild.name}**\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields(
 				{
 					name: 'Messages',
 					inline: false,
 					value: [
-						`${formattedLookback}: \`${data.messagesLookback} Messages\``,
-						`1 Minute: \`${data.messagesPerMinute} Messages\``,
-						`1 Hour: \`${data.messagesPerHour} Messages\``,
-						`24 Hours: \`${data.messagesPerDay} Messages\``,
-						`All time: \`${data.messagesAllTime} Messages\``
+						`${formattedLookback}: \`${data.messagesLookback.toLocaleString()} Messages\``,
+						`1 Minute: \`${data.messagesPerMinute.toLocaleString()} Messages\``,
+						`1 Hour: \`${data.messagesPerHour.toLocaleString()} Messages\``,
+						`24 Hours: \`${data.messagesPerDay.toLocaleString()} Messages\``,
+						`All time: \`${data.messagesAllTime.toLocaleString()} Messages\``
 					].join('\n')
 				},
 				{
 					name: 'Joins',
 					inline: true,
 					value: [
-						`${formattedLookback}: \`${data.joinsLastLookback} Members\``,
-						`24 Hour: \`${data.joinsLastDay} Members\``,
-						`All time: \`${data.joinsAllTime} Members\``
+						`${formattedLookback}: \`${data.joinsLastLookback.toLocaleString()} Members\``,
+						`24 Hour: \`${data.joinsLastDay.toLocaleString()} Members\``,
+						`All time: \`${data.joinsAllTime.toLocaleString()} Members\``
 					].join('\n')
 				},
 				{
 					name: 'Leaves',
 					inline: true,
 					value: [
-						`${formattedLookback}: \`${data.leavesLastLookback} Members\``,
-						`24 Hour: \`${data.leavesLastDay} Members\``,
-						`All time: \`${data.leavesAlltime} Members\``
+						`${formattedLookback}: \`${data.leavesLastLookback.toLocaleString()} Members\``,
+						`24 Hour: \`${data.leavesLastDay.toLocaleString()} Members\``,
+						`All time: \`${data.leavesAlltime.toLocaleString()} Members\``
 					].join('\n')
 				},
 				{
