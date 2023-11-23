@@ -8,12 +8,12 @@ import { send } from '@sapphire/plugin-editable-commands';
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Configure the settings for the server.',
 	name: 'config',
-	// aliases: ['conf', 'configuration'],
+	aliases: ['conf', 'configuration'],
 	permissionLevel: PermissionLevels.Administrator,
 	detailedDescription: {
-		extendedHelp: '',
-		usages: [],
-		examples: []
+		extendedHelp: 'Change certain configurations for the server of the bot',
+		usages: [''],
+		examples: ['']
 	}
 })
 export class setupCommand extends ModerationCommand {

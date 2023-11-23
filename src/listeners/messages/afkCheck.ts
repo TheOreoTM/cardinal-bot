@@ -5,6 +5,7 @@ import { CardinalEmojis } from '#utils/constants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Listener } from '@sapphire/framework';
+import { sleep } from '@sapphire/utilities';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type Interaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: CardinalEvents.MessageCreate })
@@ -88,6 +89,9 @@ export class UserEvent extends Listener {
 						components: afkPings.length ? [new ActionRowBuilder<ButtonBuilder>().addComponents(disabledButton)] : []
 					})
 					.catch(() => null);
+			} finally {
+				await sleep(seconds(7));
+				await afkReturnGreet.delete().catch(() => null);
 			}
 		}
 
