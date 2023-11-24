@@ -3,7 +3,7 @@ import type { AutomodRule, Automod } from '#lib/types/Data';
 import { isAdmin } from '#utils/functions';
 import { Listener, type Awaitable, type ListenerOptions, type PieceContext, UserError } from '@sapphire/framework';
 import type { GuildMember, Role } from 'discord.js';
-import { floatPromise } from '#utils/common';
+import { floatPromise, minutes } from '#utils/common';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { InfractionManager, Modlog } from '#lib/structures';
 import { ModerationType, type ModerationActionType } from '#utils/moderationConstants';
@@ -38,15 +38,16 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		let duration: number;
 		switch (this.rule) {
 			case 'linkCooldown':
-				duration = (setting as AutomodLinkCooldown).cooldown ?? setting.automuteAfter;
+				duration = (setting as AutomodLinkCooldown).cooldown ?? minutes(5);
 				break;
 
 			default:
-				duration = setting.automuteAfter;
+				duration = minutes(5);
 				break;
 		}
 		infractionManager.addHeat(message.author.id, this.rule, 1, duration);
 		const currentViolations = infractionManager.getHeat(message.author.id, this.rule);
+		console.log(currentViolations, setting.automuteAfter);
 		if (currentViolations >= setting.automuteAfter) {
 			if (!setting.actions) return;
 			for (const action of setting.actions) {
