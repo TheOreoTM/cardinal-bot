@@ -49,12 +49,11 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		const currentViolations = infractionManager.getHeat(message.author.id, this.rule);
 		console.log(currentViolations, setting.automuteAfter);
 		if (currentViolations >= setting.automuteAfter) {
+			infractionManager.setHeat(message.member.id, this.rule, 0);
 			if (!setting.actions) return;
 			for (const action of setting.actions) {
 				this.processHardPunishment(message, action, setting);
 				console.log('Proccessing hard punishment');
-
-				infractionManager.setHeat(message.member.id, this.rule, 0);
 			}
 		}
 	}
