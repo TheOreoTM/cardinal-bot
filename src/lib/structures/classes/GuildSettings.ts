@@ -2,7 +2,7 @@ import type { Guild } from 'discord.js';
 import { ChannelConfig, RestrictionManager, RoleConfig } from '#lib/structures';
 import type { Guild as PrismaGuild } from '@prisma/client';
 import { container } from '@sapphire/pieces';
-import { AutomodConfig } from './AutomodConfig';
+import { AutomodConfig } from '#lib/structures';
 
 export class GuildSettings {
 	public roles: RoleConfig;
