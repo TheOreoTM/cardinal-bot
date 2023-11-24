@@ -8,31 +8,25 @@ export class AutomodConfig {
 	}
 
 	public async getSetting<T extends Automod>(rule: AutomodRule): Promise<T | null> {
-		const data = await container.db.guild.findUnique({
+		const data = await container.db.guildAutomod.findUnique({
 			where: {
 				guildId: this.guild.id
 			},
 			select: {
-				automodSettings: {
-					select: {
-						bannedWords: true,
-						capitalization: true,
-						inviteLinks: true,
-						linkCooldown: true,
-						links: true,
-						massMention: true,
-						newLines: true,
-						spam: true,
-						stickers: true
-					}
-				}
+				bannedWords: true,
+				capitalization: true,
+				inviteLinks: true,
+				linkCooldown: true,
+				links: true,
+				massMention: true,
+				newLines: true,
+				spam: true,
+				stickers: true
 			}
 		});
 
 		if (!data) return null;
-		const automodSettings = data.automodSettings;
-		if (!automodSettings) return null;
-		const ruleData = automodSettings[rule];
+		const ruleData = data[rule];
 		if (!ruleData) return null;
 
 		return ruleData as T;
