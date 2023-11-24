@@ -76,7 +76,7 @@ export class automodCommand extends ModerationCommand {
 		const toggleButton = new ButtonBuilder()
 			.setLabel(`${data?.enabled ?? false ? 'Disable' : 'Enable'}`)
 			.setEmoji(`${data?.enabled ?? false ? CardinalEmojis.Invisible : CardinalEmojis.Online}`)
-			.setStyle(data?.enabled ?? false ? ButtonStyle.Danger : ButtonStyle.Success)
+			.setStyle(data?.enabled ?? false ? ButtonStyle.Secondary : ButtonStyle.Success)
 			.setCustomId(`${data?.enabled ?? false ? 'disable' : 'enable'}rule-${interactionOrMessage.member.id}-bannedWords`);
 
 		sendInteractionOrMessage(interactionOrMessage, {
