@@ -1,10 +1,14 @@
 import { ModerationCommand, CardinalEmbedBuilder, Modlog } from '#lib/structures';
+import type { GuildMessage } from '#lib/types';
 import { canManage, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
+import { container } from '@sapphire/pieces';
 import { send } from '@sapphire/plugin-editable-commands';
-import { DurationFormatter } from '@sapphire/time-utilities';
+import { Duration, DurationFormatter } from '@sapphire/time-utilities';
+import type { Nullish } from '@sapphire/utilities';
+import type { GuildMember, Role } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Mute a member so they cannot type',
@@ -46,67 +50,7 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		let modlog: Modlog;
-		let length: string | null = null;
-
-		if (duration) {
-			const timeDifference = duration.offset;
-			length = new DurationFormatter().format(timeDifference);
-
-			modlog = new Modlog({
-				member: target,
-				staff: message.member,
-				type: ModerationType.Mute,
-				length: length,
-				reason: reason
-			});
-		} else {
-			modlog = new Modlog({
-				member: target,
-				staff: message.member,
-				type: ModerationType.Mute,
-				length: null,
-				reason: reason
-			});
-		}
-
-		const removedRoles = Array.from(target.roles.cache.keys());
-		console.log('Mute command removed roles:', removedRoles);
-		const boosterRole = target.guild.roles.premiumSubscriberRole;
-		const rolesToAdd = [muteRole.id];
-
-		if (boosterRole) {
-			if (target.roles.cache.has(boosterRole.id)) rolesToAdd.push(boosterRole.id);
-		}
-
-		await target.roles.set(rolesToAdd).catch((err: Error) => {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
-			});
-		});
-
-		send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
-		});
-
-		modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
-		const data = await this.container.db.guild.findUnique({
-			where: {
-				guildId: message.guildId
-			}
-		});
-		await sendMessageAsGuild(
-			target.user,
-			target.guild,
-			{
-				embeds: [
-					new CardinalEmbedBuilder()
-						.setStyle('info')
-						.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
-				]
-			},
-			data?.appealLink
-		);
+		await muteMember(message, target, message.member, muteRole, reason, duration);
 
 		return;
 	}
@@ -120,4 +64,75 @@ export class muteCommand extends ModerationCommand {
 
 		return muteCount > 1;
 	}
+}
+
+export async function muteMember(
+	message: GuildMessage,
+	target: GuildMember,
+	staff: GuildMember,
+	muteRole: Role,
+	reason: string | null,
+	duration?: Duration | Nullish
+) {
+	let modlog;
+	let length: string | Nullish;
+
+	if (duration) {
+		const timeDifference = duration.offset;
+		length = new DurationFormatter().format(timeDifference);
+
+		modlog = new Modlog({
+			member: target,
+			staff: staff,
+			type: ModerationType.Mute,
+			length: length,
+			reason: reason
+		});
+	} else {
+		modlog = new Modlog({
+			member: target,
+			staff: staff,
+			type: ModerationType.Mute,
+			length: null,
+			reason: reason
+		});
+	}
+
+	const removedRoles = Array.from(target.roles.cache.keys());
+	console.log('Mute command removed roles:', removedRoles);
+	const boosterRole = target.guild.roles.premiumSubscriberRole;
+	const rolesToAdd = [muteRole.id];
+
+	if (boosterRole) {
+		if (target.roles.cache.has(boosterRole.id)) rolesToAdd.push(boosterRole.id);
+	}
+
+	await target.roles.set(rolesToAdd).catch((err: Error) => {
+		return send(message, {
+			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+		});
+	});
+
+	send(message, {
+		embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
+	});
+
+	modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
+	const data = await container.db.guild.findUnique({
+		where: {
+			guildId: message.guildId
+		}
+	});
+	await sendMessageAsGuild(
+		target.user,
+		target.guild,
+		{
+			embeds: [
+				new CardinalEmbedBuilder()
+					.setStyle('info')
+					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+			]
+		},
+		data?.appealLink
+	);
 }

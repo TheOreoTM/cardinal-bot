@@ -2,7 +2,7 @@ import type { Prisma } from '@prisma/client';
 import { container } from '@sapphire/pieces';
 import { GuildMember, type User } from 'discord.js';
 import { CardinalIndexBuilder, CardinalEmbedBuilder } from '#lib/structures';
-import { ModerationType } from '#utils/moderationConstants';
+import { type ModerationActionType } from '#utils/moderationConstants';
 import type { Nullish } from '@sapphire/utilities';
 import { CardinalColors } from '#utils/constants';
 import { capitalizeWords } from '#utils/formatters';
@@ -233,7 +233,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	}
 }
 
-type BanCreateInput = MuteCreateInput;
+type BanCreateInput = Omit<MuteCreateInput, 'removedRoles'>;
 
 type MuteCreateInput = {
 	expiresAt?: Date | Nullish;
@@ -243,7 +243,7 @@ type MuteCreateInput = {
 type ModlogCreateInput = {
 	member: GuildMember | User;
 	staff: GuildMember;
-	type: ModerationType;
+	type: ModerationActionType;
 	reason?: string | Nullish;
 	length?: string | Nullish;
 	caseId?: number | Nullish;

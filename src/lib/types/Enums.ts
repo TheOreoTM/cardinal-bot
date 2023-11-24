@@ -14,6 +14,7 @@ export const enum PermissionLevels {
 export const CardinalEvents = {
 	...Events,
 	...SubcommandPluginEvents,
+	GuildUserMessage: 'guildUserMessage',
 	RawReactionAdd: 'rawReactionAdd',
 	GiveawayEnd: 'giveawayEnd'
 	// TODO: Add custom events here

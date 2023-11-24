@@ -11,7 +11,7 @@ interface {{name}}TaskPaylod {
 
 @ApplyOptions<ScheduledTask.Options>({
 	name: '{{name}}Task',
-	bullJobsOptions: { removeOnComplete: true }
+	customJobOptions: { removeOnComplete: true }
 })
 export class {{name}}Task extends ScheduledTask {
 	public async run(payload: {{name}}TaskPaylod) {

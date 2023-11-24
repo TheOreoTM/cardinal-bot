@@ -33,6 +33,18 @@ import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 
+export function containsAny(arr1: string[], arr2: string[]): boolean {
+	const lowercasedMessage = arr1.map((word) => word.toLowerCase()); // Convert each word in the message to lowercase for case-insensitive comparison
+
+	for (const bannedWord of arr2) {
+		if (lowercasedMessage.includes(bannedWord.toLowerCase())) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
 /**
  * @param items The items that should be paginated
  * @param template The base embed that you want to be copied

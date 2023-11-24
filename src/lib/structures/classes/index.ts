@@ -10,3 +10,6 @@ export * from './LanguageHelp.js';
 export * from './ChannelsConfig.js';
 export * from './RestrictionManager.js';
 export * from './GiveawayManager.js';
+export * from './InfractionManager.js';
+export * from './ModerationMessageListener.js';
+export * from './AutomodConfig.js';

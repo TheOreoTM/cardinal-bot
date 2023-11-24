@@ -1,3 +1,15 @@
+import type {
+	AutomodBannedWords,
+	AutomodCapitalization,
+	AutomodInviteLinks,
+	AutomodLinkCooldown,
+	AutomodLinks,
+	AutomodMassMention,
+	AutomodNewlines,
+	AutomodSpam,
+	AutomodStickers
+} from '@prisma/client';
+
 export type FactionStatusType = 'open' | 'restricted' | 'closed';
 
 export type RestrictionNode = {
@@ -5,3 +17,25 @@ export type RestrictionNode = {
 	deny: string[]; // =
 	targetId: string; // ID of a role/user/channel
 };
+
+export type AutomodRule =
+	| 'bannedWords'
+	| 'capitalization'
+	| 'inviteLinks'
+	| 'linkCooldown'
+	| 'links'
+	| 'massMention'
+	| 'newLines'
+	| 'spam'
+	| 'stickers';
+
+export type Automod =
+	| AutomodBannedWords
+	| AutomodCapitalization
+	| AutomodInviteLinks
+	| AutomodLinkCooldown
+	| AutomodLinks
+	| AutomodMassMention
+	| AutomodNewlines
+	| AutomodSpam
+	| AutomodStickers;

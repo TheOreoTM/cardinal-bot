@@ -119,6 +119,30 @@ model Afk {
   @@index([memberId, guildId])
 }
 
+model GuildAutomod {
+  guildId        String                 @id
+  bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsId], references: [id])
+  capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationId], references: [id])
+  inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksId], references: [id])
+  linkCooldown   AutomodLinkCooldown?   @relation(fields: [automodLinkCooldownId], references: [id])
+  links          AutomodLinks?          @relation(fields: [automodLinksId], references: [id])
+  massMention    AutomodMassMention?    @relation(fields: [automodMassMentionId], references: [id])
+  newLines       AutomodNewlines?       @relation(fields: [automodNewlinesId], references: [id])
+  spam           AutomodSpam?           @relation(fields: [automodSpamId], references: [id])
+  stickers       AutomodStickers?       @relation(fields: [automodStickersId], references: [id])
+
+  guild                   Guild[]
+  automodBannedWordsId    Int
+  automodCapitalizationId Int
+  automodInviteLinksId    Int
+  automodLinkCooldownId   Int
+  automodLinksId          Int
+  automodMassMentionId    Int
+  automodNewlinesId       Int
+  automodSpamId           Int
+  automodStickersId       Int
+}
+
 model Guild {
   guildId       String  @id @unique
   roleTrainee   String?
@@ -129,6 +153,8 @@ model Guild {
 
   appealLink String?
 
+  automodSettings GuildAutomod? @relation(fields: [guildAutomodGuildId], references: [guildId])
+
   channelModlog     String?
   channelSuggestion String?
 
@@ -136,9 +162,10 @@ model Guild {
 
   restrictionNodes RestrictionNode[]
 
-  lookback Int     @default(7)
-  prefix   String  @default(">")
-  premium  Boolean @default(false)
+  lookback            Int     @default(7)
+  prefix              String  @default(">")
+  premium             Boolean @default(false)
+  guildAutomodGuildId String
 
   @@index([guildId])
 }
@@ -224,7 +251,209 @@ model RestrictionNode {
   guildGuildId String?
 }
 
+model AutomodBannedWords {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  wildcard String[] @default([""])
+  exact    String[] @default([""])
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodCapitalization {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  percentage Int // Between 40 to 100
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodInviteLinks {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  allowedInvites String[]
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodStickers {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodLinkCooldown {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  cooldown Int // Number of seconds between each link sent
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodLinks {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  allowedLinks String[]
+  deniedLink   String[]
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodMassMention {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  count Int
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodNewlines {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  rows Int
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
+model AutomodSpam {
+  id      Int     @id @default(autoincrement())
+  enabled Boolean
+
+  actions          PrismaModerationType[] // List of ModerationAction
+  automuteAfter    Int // Number of violations after automuting
+  automuteDuration Int // Number of milliseconds to mute for
+
+  messagesEveryFiveSeconds Int
+
+  ignoredRoles     String[]
+  ignoredChannels  String[]
+  affectedRoles    String[]
+  affectedChannels String[]
+
+  logChannel String
+  response   String
+
+  guildAutomod GuildAutomod[]
+}
+
 enum MemberAcivityType {
   JOIN
   LEAVE
+}
+
+enum PrismaModerationType {
+  warn
+  modnick
+  mute
+  ban
+  kick
+  unmute
+  unban
+  unwarn
+  afkreset
+  afkclear
 }

@@ -40,6 +40,19 @@ export function sendInteractionOrMessage(
 }
 
 /**
+ * Get the content from a message.
+ * @param message The Message instance to get the content from
+ */
+export function getContent(message: Message): string | null {
+	if (message.content) return message.content;
+	for (const embed of message.embeds) {
+		if (embed.description) return embed.description;
+		if (embed.fields.length) return embed.fields[0].value;
+	}
+	return null;
+}
+
+/**
  * Send a message to a user as from a guild, (no components allowed)
  * @param message The message you want to send
  */

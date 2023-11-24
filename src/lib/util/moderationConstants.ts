@@ -1,3 +1,5 @@
+import type { PrismaModerationType } from '@prisma/client';
+
 export enum ModerationType {
 	Warn = 'warn',
 	Modnick = 'modnick',
@@ -10,3 +12,5 @@ export enum ModerationType {
 	AfkReset = 'afkreset',
 	AfkClear = 'afkclear'
 }
+
+export type ModerationActionType = PrismaModerationType;
