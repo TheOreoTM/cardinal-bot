@@ -138,7 +138,6 @@ export function generatePaginatedEmbeds<T>(items: T[], template: EmbedBuilder, a
 			embed.addFields(addField(item));
 		}
 		embeds.push(embed);
-		console.log(embed);
 	}
 
 	return embeds;

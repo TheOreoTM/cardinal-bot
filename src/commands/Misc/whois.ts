@@ -39,7 +39,6 @@ export class WhoisCommand extends CardinalCommand {
 	// Message command
 	public async messageRun(message: GuildMessage, args: Args) {
 		const member = await args.pick('member').catch(() => message.member);
-		console.log(member);
 		const embed = await this.whois(member);
 		send(message, { embeds: [embed] });
 	}

@@ -29,7 +29,6 @@ export class AutomodConfig {
 		const ruleData = data[rule];
 		if (!ruleData) return null;
 
-		console.log(ruleData);
 		return ruleData as T;
 	}
 
