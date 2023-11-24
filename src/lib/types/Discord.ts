@@ -66,6 +66,7 @@ export interface GuildCommandInteractionOptionResolver extends CommandInteractio
 
 export interface GuildButtonInteraction extends ButtonInteraction {
 	readonly message: GuildMessage;
+	readonly member: GuildMember;
 	client: CardinalClient<true>;
 	readonly guild: Guild;
 	readonly guildId: string;

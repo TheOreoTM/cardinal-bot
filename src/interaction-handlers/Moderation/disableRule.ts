@@ -10,8 +10,18 @@ import type { ButtonInteraction } from 'discord.js';
 export class ButtonHandler extends InteractionHandler {
 	public async run(interaction: GuildButtonInteraction) {
 		const guild = interaction.guild;
-		const rule = interaction.customId.split('-').pop() as AutomodRule;
-		await guild.settings.automod.enableRule(rule);
+		const splits = interaction.customId.split('-');
+		const rule = splits.pop() as AutomodRule;
+		const memberId = splits.pop();
+		if (memberId !== interaction.member.id) {
+			interaction.reply({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('This embed doesnt belong to you')],
+				ephemeral: true
+			});
+
+			return;
+		}
+		await guild.settings.automod.disableRule(rule);
 
 		interaction.reply({
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Successfully disabled rule \`${rule}\``)]
@@ -19,7 +29,7 @@ export class ButtonHandler extends InteractionHandler {
 	}
 
 	public override parse(interaction: ButtonInteraction) {
-		if (interaction.customId.startsWith('disable-rule')) return this.some();
+		if (interaction.customId.startsWith('disablerule')) return this.some();
 
 		return this.none();
 	}
