@@ -7,8 +7,8 @@ import { floatPromise } from '#utils/common';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { InfractionManager, Modlog } from '#lib/structures';
 import { ModerationType, type ModerationActionType } from '#utils/moderationConstants';
-import { muteMember } from '#root/commands/Moderation/mute';
 import { DurationFormatter, Duration } from '@sapphire/time-utilities';
+import { muteMember } from '#utils/utils';
 
 export abstract class ModerationMessageListener<T = unknown> extends Listener {
 	private readonly rule: AutomodRule;

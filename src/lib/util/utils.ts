@@ -18,11 +18,13 @@ import {
 	type User,
 	type Snowflake,
 	EmbedBuilder,
-	type APIEmbedField
+	type APIEmbedField,
+	GuildMember,
+	Role
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
-import { chunk, isNullishOrEmpty } from '@sapphire/utilities';
-import { CardinalEmbedBuilder } from '#lib/structures';
+import { chunk, isNullishOrEmpty, type Nullish } from '@sapphire/utilities';
+import { CardinalEmbedBuilder, Modlog } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
@@ -32,6 +34,80 @@ import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-a
 import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
+import { Duration, DurationFormatter } from '@sapphire/time-utilities';
+import { sendMessageAsGuild } from './functions';
+import { ModerationType } from './moderationConstants';
+
+export async function muteMember(
+	message: GuildMessage,
+	target: GuildMember,
+	staff: GuildMember,
+	muteRole: Role,
+	reason: string | null,
+	duration?: Duration | Nullish
+) {
+	let modlog;
+	let length: string | Nullish;
+
+	if (duration) {
+		const timeDifference = duration.offset;
+		length = new DurationFormatter().format(timeDifference);
+
+		modlog = new Modlog({
+			member: target,
+			staff: staff,
+			type: ModerationType.Mute,
+			length: length,
+			reason: reason
+		});
+	} else {
+		modlog = new Modlog({
+			member: target,
+			staff: staff,
+			type: ModerationType.Mute,
+			length: null,
+			reason: reason
+		});
+	}
+
+	const removedRoles = Array.from(target.roles.cache.keys());
+	console.log('Mute command removed roles:', removedRoles);
+	const boosterRole = target.guild.roles.premiumSubscriberRole;
+	const rolesToAdd = [muteRole.id];
+
+	if (boosterRole) {
+		if (target.roles.cache.has(boosterRole.id)) rolesToAdd.push(boosterRole.id);
+	}
+
+	await target.roles.set(rolesToAdd).catch((err: Error) => {
+		return send(message, {
+			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+		});
+	});
+
+	send(message, {
+		embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
+	});
+
+	modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
+	const data = await container.db.guild.findUnique({
+		where: {
+			guildId: message.guildId
+		}
+	});
+	await sendMessageAsGuild(
+		target.user,
+		target.guild,
+		{
+			embeds: [
+				new CardinalEmbedBuilder()
+					.setStyle('info')
+					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+			]
+		},
+		data?.appealLink
+	);
+}
 
 export function containsAny(arr1: string[], arr2: string[]): boolean {
 	const lowercasedMessage = arr1.map((word) => word.toLowerCase()); // Convert each word in the message to lowercase for case-insensitive comparison
