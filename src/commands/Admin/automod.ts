@@ -36,21 +36,21 @@ export class automodCommand extends ModerationCommand {
 				].join('\n')
 			)
 			.setFields(
-				// {
-				// 	name: 'Exact Matches',
-				// 	value: `${data?.exact.map((w) => `\`${w}\``) ?? 'None'}` ?? 'None',
-				// 	inline: true
-				// },
-				// {
-				// 	name: 'Wildcards Matches',
-				// 	value: `${data?.wildcard.map((w) => `\`${w}\``) ?? 'None'}` ?? 'None',
-				// 	inline: true
-				// },
-				// {
-				// 	name: 'Actions',
-				// 	value: `${data?.actions.map((a) => `\`${a}\``) ?? 'None'}` ?? 'None',
-				// 	inline: true
-				// },
+				{
+					name: 'Exact Matches',
+					value: `${data?.exact ? data.exact.map((w) => `\`${w}\``) : 'None'}`,
+					inline: true
+				},
+				{
+					name: 'Wildcards Matches',
+					value: `${data?.wildcard ? data.wildcard.map((w) => `\`${w}\``) : 'None'}`,
+					inline: true
+				},
+				{
+					name: 'Actions',
+					value: `${data?.actions ? data.actions.map((w) => `\`${w}\``) : 'None'}`,
+					inline: true
+				},
 				{
 					name: 'Automute Settings',
 					value: [
