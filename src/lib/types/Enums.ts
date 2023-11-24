@@ -15,6 +15,7 @@ export const CardinalEvents = {
 	...Events,
 	...SubcommandPluginEvents,
 	GuildUserMessage: 'guildUserMessage',
+	UserMessage: 'userMessage',
 	RawReactionAdd: 'rawReactionAdd',
 	GiveawayEnd: 'giveawayEnd'
 	// TODO: Add custom events here
