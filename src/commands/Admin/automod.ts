@@ -38,38 +38,38 @@ export class automodCommand extends ModerationCommand {
 			.setFields(
 				{
 					name: 'Exact Matches',
-					value: `${data?.exact.map((w) => `\`${w}\``) ?? 'None'}`,
+					value: `${data?.exact.map((w) => `\`${w}\``) ?? 'None'}` ?? 'None',
 					inline: true
 				},
 				{
 					name: 'Wildcards Matches',
-					value: `${data?.wildcard.map((w) => `\`${w}\``) ?? 'None'}`,
+					value: `${data?.wildcard.map((w) => `\`${w}\``) ?? 'None'}` ?? 'None',
 					inline: true
 				},
 				{
 					name: 'Actions',
-					value: `${data?.actions.map((a) => `\`${a}\``) ?? 'None'}`,
+					value: `${data?.actions.map((a) => `\`${a}\``) ?? 'None'}` ?? 'None',
 					inline: true
 				},
 				{
 					name: 'Automute Settings',
 					value: [
-						`Automute After: ${data?.automuteAfter ? `${data.automuteAfter} Infractions` : '-'}`,
-						`Automute For: ${data?.automuteDuration ? `${new DurationFormatter().format(data.automuteDuration)} ` : '-'}`
+						`Automute After: ${data?.automuteAfter ? `${data.automuteAfter} Infractions` : '-'}` ?? 'None',
+						`Automute For: ${data?.automuteDuration ? `${new DurationFormatter().format(data.automuteDuration)} ` : '-'}` ?? 'None'
 					].join('\n')
 				},
 				{
 					name: 'Permissions',
 					value: [
-						`Affected Roles: ${data?.affectedRoles ? data.affectedRoles.map((r) => `<@&${r}>`) : '-'}`,
-						`Ignored Roles: ${data?.ignoredRoles ? data.ignoredRoles.map((r) => `<@&${r}>`) : '-'}`,
-						`Affected Channels: ${data?.affectedChannels ? data.affectedChannels.map((r) => `<#${r}>`) : '-'}`,
-						`Ignored Channels: ${data?.ignoredChannels ? data.ignoredChannels.map((r) => `<#${r}>`) : '-'}`
+						`Affected Roles: ${data?.affectedRoles ? data.affectedRoles.map((r) => `<@&${r}>`) : '-'}` ?? 'None',
+						`Ignored Roles: ${data?.ignoredRoles ? data.ignoredRoles.map((r) => `<@&${r}>`) : '-'}` ?? 'None',
+						`Affected Channels: ${data?.affectedChannels ? data.affectedChannels.map((r) => `<#${r}>`) : '-'}` ?? 'None',
+						`Ignored Channels: ${data?.ignoredChannels ? data.ignoredChannels.map((r) => `<#${r}>`) : '-'}` ?? 'None'
 					].join('\n')
 				},
 				{
 					name: 'Additional Options ⭐',
-					value: `Custom Reponse: ${data?.response ?? '-'}`
+					value: `Custom Reponse: ${data?.response ?? '-'}` ?? 'None'
 				}
 			);
 
