@@ -7,7 +7,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 @ApplyOptions<ModerationMessageListener.Options>({
 	name: 'userMessageBannedWords',
 	reason: 'Sending banned words',
-	rule: 'bannedWords'
+	rule: 'bannedWords',
+	enabled: false
 })
 export class bannedWordModerationListener extends ModerationMessageListener {
 	protected async preProcess(message: GuildMessage) {
