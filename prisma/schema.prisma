@@ -119,29 +119,29 @@ model Afk {
   @@index([memberId, guildId])
 }
 
-model GuildAutomod {
-  guildId        String                 @id
-  bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsId], references: [id])
-  capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationId], references: [id])
-  inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksId], references: [id])
-  linkCooldown   AutomodLinkCooldown?   @relation(fields: [automodLinkCooldownId], references: [id])
-  links          AutomodLinks?          @relation(fields: [automodLinksId], references: [id])
-  massMention    AutomodMassMention?    @relation(fields: [automodMassMentionId], references: [id])
-  newLines       AutomodNewlines?       @relation(fields: [automodNewlinesId], references: [id])
-  spam           AutomodSpam?           @relation(fields: [automodSpamId], references: [id])
-  stickers       AutomodStickers?       @relation(fields: [automodStickersId], references: [id])
+// model GuildAutomod {
+//   guildId        String                 @id
+//   bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsId], references: [id])
+//   capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationId], references: [id])
+//   inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksId], references: [id])
+//   linkCooldown   AutomodLinkCooldown?   @relation(fields: [automodLinkCooldownId], references: [id])
+//   links          AutomodLinks?          @relation(fields: [automodLinksId], references: [id])
+//   massMention    AutomodMassMention?    @relation(fields: [automodMassMentionId], references: [id])
+//   newLines       AutomodNewlines?       @relation(fields: [automodNewlinesId], references: [id])
+//   spam           AutomodSpam?           @relation(fields: [automodSpamId], references: [id])
+//   stickers       AutomodStickers?       @relation(fields: [automodStickersId], references: [id])
 
-  guild                   Guild[]
-  automodBannedWordsId    Int
-  automodCapitalizationId Int
-  automodInviteLinksId    Int
-  automodLinkCooldownId   Int
-  automodLinksId          Int
-  automodMassMentionId    Int
-  automodNewlinesId       Int
-  automodSpamId           Int
-  automodStickersId       Int
-}
+//   guild                   Guild[]
+//   automodBannedWordsId    Int
+//   automodCapitalizationId Int
+//   automodInviteLinksId    Int
+//   automodLinkCooldownId   Int
+//   automodLinksId          Int
+//   automodMassMentionId    Int
+//   automodNewlinesId       Int
+//   automodSpamId           Int
+//   automodStickersId       Int
+// }
 
 model Guild {
   guildId       String  @id @unique
@@ -153,7 +153,15 @@ model Guild {
 
   appealLink String?
 
-  automodSettings GuildAutomod? @relation(fields: [guildAutomodGuildId], references: [guildId])
+  bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsGuildId], references: [guildId])
+  capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationGuildId], references: [guildId])
+  inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksGuildId], references: [guildId])
+  linkCooldown   AutomodLinkCooldown?   @relation(fields: [automodLinkCooldownGuildId], references: [guildId])
+  links          AutomodLinks?          @relation(fields: [automodLinksGuildId], references: [guildId])
+  massMention    AutomodMassMention?    @relation(fields: [automodMassMentionGuildId], references: [guildId])
+  newLines       AutomodNewlines?       @relation(fields: [automodNewlinesGuildId], references: [guildId])
+  spam           AutomodSpam?           @relation(fields: [automodSpamGuildId], references: [guildId])
+  stickers       AutomodStickers?       @relation(fields: [automodStickersGuildId], references: [guildId])
 
   channelModlog     String?
   channelSuggestion String?
@@ -162,10 +170,19 @@ model Guild {
 
   restrictionNodes RestrictionNode[]
 
-  lookback            Int     @default(7)
-  prefix              String  @default(">")
-  premium             Boolean @default(false)
-  guildAutomodGuildId String
+  lookback Int     @default(7)
+  prefix   String  @default(">")
+  premium  Boolean @default(false)
+
+  automodBannedWordsGuildId    String?
+  automodCapitalizationGuildId String?
+  automodInviteLinksGuildId    String?
+  automodLinkCooldownGuildId   String?
+  automodLinksGuildId          String?
+  automodMassMentionGuildId    String?
+  automodNewlinesGuildId       String?
+  automodSpamGuildId           String?
+  automodStickersGuildId       String?
 
   @@index([guildId])
 }
@@ -252,7 +269,7 @@ model RestrictionNode {
 }
 
 model AutomodBannedWords {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   wildcard String[] @default([])
@@ -270,11 +287,11 @@ model AutomodBannedWords {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodCapitalization {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -291,11 +308,11 @@ model AutomodCapitalization {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodInviteLinks {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -312,11 +329,11 @@ model AutomodInviteLinks {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodStickers {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -331,11 +348,11 @@ model AutomodStickers {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodLinkCooldown {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -352,11 +369,11 @@ model AutomodLinkCooldown {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodLinks {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -374,11 +391,11 @@ model AutomodLinks {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodMassMention {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -395,11 +412,11 @@ model AutomodMassMention {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodNewlines {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -416,11 +433,11 @@ model AutomodNewlines {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 model AutomodSpam {
-  id      Int     @id @default(autoincrement())
+  guildId String  @id @unique
   enabled Boolean
 
   actions          PrismaModerationType[] @default([]) // List of ModerationAction
@@ -437,7 +454,7 @@ model AutomodSpam {
   logChannel String?
   response   String?
 
-  guildAutomod GuildAutomod[]
+  Guild Guild[]
 }
 
 enum MemberAcivityType {

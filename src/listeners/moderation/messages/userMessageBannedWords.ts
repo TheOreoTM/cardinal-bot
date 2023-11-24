@@ -15,7 +15,7 @@ export class bannedWordModerationListener extends ModerationMessageListener {
 		const content = getContent(message);
 		if (!content) return;
 		const words = content.split(' ');
-		const data = await this.container.db.guildAutomod.findUnique({
+		const data = await this.container.db.guild.findUnique({
 			where: {
 				guildId: message.guildId
 			},

@@ -8,7 +8,7 @@ export class AutomodConfig {
 	}
 
 	public async getSetting<T extends Automod>(rule: AutomodRule): Promise<T | null> {
-		const data = await container.db.guildAutomod.findUnique({
+		const data = await container.db.guild.findUnique({
 			where: {
 				guildId: this.guild.id
 			},
@@ -34,7 +34,7 @@ export class AutomodConfig {
 	}
 
 	public async enableRule(rule: AutomodRule) {
-		await container.db.guildAutomod.update({
+		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
 			},
@@ -54,7 +54,7 @@ export class AutomodConfig {
 	}
 
 	public async disableRule(rule: AutomodRule) {
-		await container.db.guildAutomod.update({
+		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
 			},
