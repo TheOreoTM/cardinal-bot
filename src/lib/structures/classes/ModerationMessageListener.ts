@@ -9,6 +9,7 @@ import { InfractionManager, Modlog } from '#lib/structures';
 import { ModerationType, type ModerationActionType } from '#utils/moderationConstants';
 import { DurationFormatter, Duration } from '@sapphire/time-utilities';
 import { muteMember } from '#utils/utils';
+import type { AutomodLinkCooldown } from '@prisma/client';
 
 export abstract class ModerationMessageListener<T = unknown> extends Listener {
 	private readonly rule: AutomodRule;
@@ -34,6 +35,17 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		await this.processSoftPunishment(message, preProcessed);
 
 		const infractionManager = InfractionManager.getInstance();
+		let duration: number;
+		switch (this.rule) {
+			case 'linkCooldown':
+				duration = (setting as AutomodLinkCooldown).cooldown ?? setting.automuteAfter;
+				break;
+
+			default:
+				duration = setting.automuteAfter;
+				break;
+		}
+		infractionManager.addHeat(message.author.id, this.rule, 1, duration);
 		const currentViolations = infractionManager.getHeat(message.author.id, this.rule);
 		if (currentViolations >= setting.automuteAfter) {
 			if (!setting.actions) return;
