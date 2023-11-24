@@ -52,6 +52,9 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 			if (!setting.actions) return;
 			for (const action of setting.actions) {
 				this.processHardPunishment(message, action, setting);
+				console.log('Proccessing hard punishment');
+
+				infractionManager.setHeat(message.member.id, this.rule, 0);
 			}
 		}
 	}
@@ -83,9 +86,6 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 				await this.onBan(message);
 				break;
 		}
-
-		const infractionManager = InfractionManager.getInstance();
-		infractionManager.setHeat(message.member.id, this.rule, 0);
 	}
 
 	protected async onWarning(message: GuildMessage) {
