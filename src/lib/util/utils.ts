@@ -35,8 +35,8 @@ import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
-import { sendMessageAsGuild } from './functions';
-import { ModerationType } from './moderationConstants';
+import { sendMessageAsGuild } from '#utils/functions';
+import { ModerationType } from '#utils/moderationConstants';
 
 export async function muteMember(
 	message: GuildMessage,
