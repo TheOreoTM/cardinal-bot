@@ -37,4 +37,44 @@ export class AutomodConfig {
 
 		return ruleData as T;
 	}
+
+	public async enableRule(rule: AutomodRule) {
+		await container.db.guildAutomod.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: true
+						},
+						update: {
+							enabled: true
+						}
+					}
+				}
+			}
+		});
+	}
+
+	public async disableRule(rule: AutomodRule) {
+		await container.db.guildAutomod.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false
+						},
+						update: {
+							enabled: false
+						}
+					}
+				}
+			}
+		});
+	}
 }

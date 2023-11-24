@@ -30,6 +30,7 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		if (preProcessed === null) return;
 		const setting = (await message.guild.settings.automod.getSetting(this.rule))!;
 
+		console.log('Proccessing soft punishment');
 		await this.processSoftPunishment(message, preProcessed);
 
 		const infractionManager = InfractionManager.getInstance();

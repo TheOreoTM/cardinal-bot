@@ -5,6 +5,7 @@ import type { CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User, Snowflake } from 'discord.js';
 import type { Duration } from '@sapphire/time-utilities';
+import type { AutomodRule } from '#lib/types';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -59,6 +60,7 @@ declare module '@sapphire/framework' {
 		duration: Duration;
 		userName: User;
 		commandName: CardinalCommand;
+		automodRule: AutomodRule;
 	}
 }
 
