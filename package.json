@@ -88,5 +88,5 @@
 		"prisma:generate": "npx prisma generate"
 	},
 	"prettier": "@sapphire/prettier-config",
-	"packageManager": "yarn@3.6.1"
+	"packageManager": "yarn@1.22.21"
 }
