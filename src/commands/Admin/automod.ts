@@ -56,44 +56,44 @@ export class automodCommand extends ModerationCommand {
 										)
 								) // remove
 					) // affected channels
-			// .addSubcommandGroup(
-			// 	(builder) =>
-			// 		builder
-			// 			.setName('affected-roles')
-			// 			.setDescription('Add/Remove a role from the affected roles list')
-			// 			.addSubcommand((builder) =>
-			// 				builder
-			// 					.setName('add')
-			// 					.setDescription('Add a role to the affected roles list')
-			// 					.addStringOption((option) =>
-			// 						option
-			// 							.setName('rule')
-			// 							.setDescription('The rule you want to change the setting for')
-			// 							.setMinLength(2)
-			// 							.setRequired(true)
-			// 							.setAutocomplete(true)
-			// 					)
-			// 					.addRoleOption((option) =>
-			// 						option.setName('role').setDescription('The role you want to add').setRequired(true)
-			// 					)
-			// 			) // add
-			// 			.addSubcommand((builder) =>
-			// 				builder
-			// 					.setName('remove')
-			// 					.setDescription('Remove a role to the affected roles list')
-			// 					.addStringOption((option) =>
-			// 						option
-			// 							.setName('rule')
-			// 							.setDescription('The rule you want to change the setting for')
-			// 							.setMinLength(2)
-			// 							.setRequired(true)
-			// 							.setAutocomplete(true)
-			// 					)
-			// 					.addRoleOption((option) =>
-			// 						option.setName('role').setDescription('The role you want to remove').setRequired(true)
-			// 					)
-			// 			) // remove
-			// ) // affected roles
+					.addSubcommandGroup(
+						(builder) =>
+							builder
+								.setName('affected-roles')
+								.setDescription('Add/Remove a role from the affected roles list')
+								.addSubcommand((builder) =>
+									builder
+										.setName('add')
+										.setDescription('Add a role to the affected roles list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addRoleOption((option) =>
+											option.setName('role').setDescription('The role you want to add').setRequired(true)
+										)
+								) // add
+								.addSubcommand((builder) =>
+									builder
+										.setName('remove')
+										.setDescription('Remove a role to the affected roles list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addRoleOption((option) =>
+											option.setName('role').setDescription('The role you want to remove').setRequired(true)
+										)
+								) // remove
+					) // affected roles
 			// .addSubcommandGroup((builder) =>
 			// 	builder
 			// 		.setName('automute')
