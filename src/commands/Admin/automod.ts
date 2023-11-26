@@ -131,85 +131,85 @@ export class automodCommand extends ModerationCommand {
 									)
 							)
 					) // automute
-			// .addSubcommandGroup((builder) =>
-			// 	builder
-			// 		.setName('action')
-			// 		.setDescription('Add/remove actions')
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('add')
-			// 				.setDescription('Add an action')
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('rule')
-			// 						.setDescription('The rule you want to change the setting for')
-			// 						.setMinLength(2)
-			// 						.setRequired(true)
-			// 						.setAutocomplete(true)
-			// 				)
-			// 				.addStringOption((option) =>
-			// 					option.setName('action').setDescription('The action you want to add').setRequired(true).addChoices(
-			// 						{
-			// 							name: 'warn',
-			// 							value: 'warn'
-			// 						},
-			// 						{
-			// 							name: 'automute',
-			// 							value: 'automute'
-			// 						},
-			// 						{
-			// 							name: 'perma-mute',
-			// 							value: 'mute'
-			// 						},
-			// 						{
-			// 							name: 'kick',
-			// 							value: 'kick'
-			// 						},
-			// 						{
-			// 							name: 'ban',
-			// 							value: 'ban'
-			// 						}
-			// 					)
-			// 				)
-			// 		)
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('remove')
-			// 				.setDescription('Remove an action')
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('rule')
-			// 						.setDescription('The rule you want to change the setting for')
-			// 						.setMinLength(2)
-			// 						.setRequired(true)
-			// 						.setAutocomplete(true)
-			// 				)
-			// 				.addStringOption((option) =>
-			// 					option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
-			// 						{
-			// 							name: 'warn',
-			// 							value: 'warn'
-			// 						},
-			// 						{
-			// 							name: 'automute',
-			// 							value: 'automute'
-			// 						},
-			// 						{
-			// 							name: 'perma-mute',
-			// 							value: 'mute'
-			// 						},
-			// 						{
-			// 							name: 'kick',
-			// 							value: 'kick'
-			// 						},
-			// 						{
-			// 							name: 'ban',
-			// 							value: 'ban'
-			// 						}
-			// 					)
-			// 				)
-			// 		)
-			// ) // actions
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('action')
+							.setDescription('Add/remove actions')
+							.addSubcommand((builder) =>
+								builder
+									.setName('add')
+									.setDescription('Add an action')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('action').setDescription('The action you want to add').setRequired(true).addChoices(
+											{
+												name: 'warn',
+												value: 'warn'
+											},
+											{
+												name: 'automute',
+												value: 'automute'
+											},
+											{
+												name: 'perma-mute',
+												value: 'mute'
+											},
+											{
+												name: 'kick',
+												value: 'kick'
+											},
+											{
+												name: 'ban',
+												value: 'ban'
+											}
+										)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('remove')
+									.setDescription('Remove an action')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
+											{
+												name: 'warn',
+												value: 'warn'
+											},
+											{
+												name: 'automute',
+												value: 'automute'
+											},
+											{
+												name: 'perma-mute',
+												value: 'mute'
+											},
+											{
+												name: 'kick',
+												value: 'kick'
+											},
+											{
+												name: 'ban',
+												value: 'ban'
+											}
+										)
+									)
+							)
+					) // actions
 			// .addSubcommandGroup((builder) =>
 			// 	builder
 			// 		.setName('banned-words')
