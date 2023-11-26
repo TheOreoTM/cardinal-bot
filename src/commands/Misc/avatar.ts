@@ -8,6 +8,7 @@ import { ApplicationCommandType, GuildMember } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View the avatar of a user',
+	aliases: ['av'],
 	detailedDescription: {
 		extendedHelp: 'Shows the display avatar of a user',
 		examples: ['', '@theoreotm'],
@@ -58,7 +59,7 @@ export class UserCommand extends CardinalCommand {
 			.setAuthor({
 				name: `Server Avatar: ${getTag(target.user)}`
 			})
-			.setThumbnail(avatar);
+			.setImage(avatar);
 
 		sendInteractionOrMessage(interactionOrMessage, {
 			embeds: [embed]
