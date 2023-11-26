@@ -94,43 +94,43 @@ export class automodCommand extends ModerationCommand {
 										)
 								) // remove
 					) // affected roles
-			// .addSubcommandGroup((builder) =>
-			// 	builder
-			// 		.setName('automute')
-			// 		.setDescription('Change the automute settings for a specific rule')
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('duration')
-			// 				.setDescription('The duration the automute should last')
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('rule')
-			// 						.setDescription('The rule you want to change the setting for')
-			// 						.setMinLength(2)
-			// 						.setRequired(true)
-			// 						.setAutocomplete(true)
-			// 				)
-			// 				.addStringOption((option) =>
-			// 					option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setMinLength(2).setRequired(true)
-			// 				)
-			// 		)
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('after')
-			// 				.setDescription('The number of infractions that is required for the automute to engage')
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('rule')
-			// 						.setDescription('The rule you want to change the setting for')
-			// 						.setMinLength(2)
-			// 						.setRequired(true)
-			// 						.setAutocomplete(true)
-			// 				)
-			// 				.addNumberOption((option) =>
-			// 					option.setName('amount').setDescription('The amount of minimum infractions required').setRequired(true)
-			// 				)
-			// 		)
-			// ) // automute
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('automute')
+							.setDescription('Change the automute settings for a specific rule')
+							.addSubcommand((builder) =>
+								builder
+									.setName('duration')
+									.setDescription('The duration the automute should last')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setMinLength(2).setRequired(true)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('after')
+									.setDescription('The number of infractions that is required for the automute to engage')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addNumberOption((option) =>
+										option.setName('amount').setDescription('The amount of minimum infractions required').setRequired(true)
+									)
+							)
+					) // automute
 			// .addSubcommandGroup((builder) =>
 			// 	builder
 			// 		.setName('action')
