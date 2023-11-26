@@ -210,47 +210,47 @@ export class automodCommand extends ModerationCommand {
 									)
 							)
 					) // actions
-			// .addSubcommandGroup((builder) =>
-			// 	builder
-			// 		.setName('banned-words')
-			// 		.setDescription('Modify the banned words specific automod rule')
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('add')
-			// 				.addStringOption((option) => option.setName('word').setDescription('The word you want to add').setRequired(true))
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('type')
-			// 						.setDescription('Whether the word is an exact match or a wildcard')
-			// 						.setMinLength(2)
-			// 						.addChoices(
-			// 							{
-			// 								name: 'wild-card',
-			// 								value: 'wildcard'
-			// 							},
-			// 							{
-			// 								name: 'exact-match',
-			// 								value: 'exact'
-			// 							}
-			// 						)
-			// 						.setRequired(true)
-			// 				)
-			// 		)
-			// 		.addSubcommand((builder) =>
-			// 			builder
-			// 				.setName('remove')
-			// 				.setDescription('Remove a word from the banned words list')
-			// 				.addStringOption((option) =>
-			// 					option
-			// 						.setName('word')
-			// 						.setDescription('The word you want to remove')
-			// 						.setRequired(true)
-			// 						.setMinLength(1)
-			// 						.setAutocomplete(true)
-			// 				)
-			// 		)
-			// 		.addSubcommand((builder) => builder.setName('list').setDescription('List all the banned words'))
-			// ) // banned words
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('banned-words')
+							.setDescription('Modify the banned words specific automod rule')
+							.addSubcommand((builder) =>
+								builder
+									.setName('add')
+									.addStringOption((option) => option.setName('word').setDescription('The word you want to add').setRequired(true))
+									.addStringOption((option) =>
+										option
+											.setName('type')
+											.setDescription('Whether the word is an exact match or a wildcard')
+											.setMinLength(2)
+											.addChoices(
+												{
+													name: 'wild-card',
+													value: 'wildcard'
+												},
+												{
+													name: 'exact-match',
+													value: 'exact'
+												}
+											)
+											.setRequired(true)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('remove')
+									.setDescription('Remove a word from the banned words list')
+									.addStringOption((option) =>
+										option
+											.setName('word')
+											.setDescription('The word you want to remove')
+											.setRequired(true)
+											.setMinLength(1)
+											.setAutocomplete(true)
+									)
+							)
+							.addSubcommand((builder) => builder.setName('list').setDescription('List all the banned words'))
+					) // banned words
 		);
 	}
 
