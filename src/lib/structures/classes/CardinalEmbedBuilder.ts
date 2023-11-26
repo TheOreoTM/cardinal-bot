@@ -10,6 +10,14 @@ export class CardinalEmbedBuilder extends EmbedBuilder {
 		super(data);
 	}
 
+	setBigImage(url: string | null) {
+		super.setImage(url);
+	}
+
+	setSmallImage(url: string | null) {
+		super.setThumbnail(url);
+	}
+
 	setStyle(style: CardinalEmbedStyle): this {
 		switch (style) {
 			case 'default':
