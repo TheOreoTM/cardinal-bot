@@ -13,7 +13,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 export class bannedWordModerationListener extends ModerationMessageListener {
 	protected async preProcess(message: GuildMessage) {
 		const content = getContent(message);
-		console.log('🚀 ~ file: userMessageBannedWords.ts:16 ~ bannedWordModerationListener ~ preProcess ~ content:', content);
 		if (!content) return null;
 		const words = content.split(' ');
 		const data = await this.container.db.guild.findUnique({

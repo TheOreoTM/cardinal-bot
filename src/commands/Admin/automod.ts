@@ -7,10 +7,253 @@ import { DurationFormatter } from '@sapphire/time-utilities';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
-	description: 'ADD',
+	description: 'Automod Settings',
 	name: 'automod'
 })
 export class automodCommand extends ModerationCommand {
+	public registerApplicationCommands(registry: ModerationCommand.Registry) {
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
+
+					.addSubcommandGroup(
+						(builder) =>
+							builder
+								.setName('affected-channels')
+								.setDescription('Add/Remove a channel from the affected channels list')
+								.addSubcommand((builder) =>
+									builder
+										.setName('add')
+										.setDescription('Add a channel to the affected channel list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addChannelOption((option) =>
+											option.setName('channel').setDescription('The channel you want to add').setRequired(true)
+										)
+								) // add
+								.addSubcommand((builder) =>
+									builder
+										.setName('remove')
+										.setDescription('Remove a channel to the affected channels list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addChannelOption((option) =>
+											option.setName('channel').setDescription('The channel you want to remove').setRequired(true)
+										)
+								) // remove
+					) // affected channels
+					.addSubcommandGroup(
+						(builder) =>
+							builder
+								.setName('affected-roles')
+								.setDescription('Add/Remove a role from the affected roles list')
+								.addSubcommand((builder) =>
+									builder
+										.setName('add')
+										.setDescription('Add a role to the affected roles list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addRoleOption((option) =>
+											option.setName('role').setDescription('The role you want to add').setRequired(true)
+										)
+								) // add
+								.addSubcommand((builder) =>
+									builder
+										.setName('remove')
+										.setDescription('Remove a role to the affected roles list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addRoleOption((option) =>
+											option.setName('role').setDescription('The role you want to remove').setRequired(true)
+										)
+								) // remove
+					) // affected roles
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('automute')
+							.setDescription('Change the automute settings for a specific rule')
+							.addSubcommand((builder) =>
+								builder
+									.setName('duration')
+									.setDescription('The duration the automute should last')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setMinLength(2).setRequired(true)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('after')
+									.setDescription('The number of infractions that is required for the automute to engage')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addNumberOption((option) =>
+										option.setName('amount').setDescription('The amount of minimum infractions required').setRequired(true)
+									)
+							)
+					) // automute
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('action')
+							.setDescription('Add/remove actions')
+							.addSubcommand((builder) =>
+								builder
+									.setName('add')
+									.setDescription('Add an action')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('action').setDescription('The action you want to add').setRequired(true).addChoices(
+											{
+												name: 'Warn',
+												value: 'warn'
+											},
+											{
+												name: 'Automute',
+												value: 'automute'
+											},
+											{
+												name: 'Perma Mute',
+												value: 'mute'
+											},
+											{
+												name: 'Kick',
+												value: 'kick'
+											},
+											{
+												name: 'Ban',
+												value: 'ban'
+											}
+										)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('remove')
+									.setDescription('Remove an action')
+									.addStringOption((option) =>
+										option
+											.setName('rule')
+											.setDescription('The rule you want to change the setting for')
+											.setMinLength(2)
+											.setRequired(true)
+											.setAutocomplete(true)
+									)
+									.addStringOption((option) =>
+										option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
+											{
+												name: 'Warn',
+												value: 'warn'
+											},
+											{
+												name: 'Automute',
+												value: 'automute'
+											},
+											{
+												name: 'Perma Mute',
+												value: 'mute'
+											},
+											{
+												name: 'Kick',
+												value: 'kick'
+											},
+											{
+												name: 'Ban',
+												value: 'ban'
+											}
+										)
+									)
+							)
+					) // actions
+					.addSubcommandGroup((builder) =>
+						builder
+							.setName('banned-words')
+							.setDescription('Modify the banned words specific automod rule')
+							.addSubcommand((builder) =>
+								builder
+									.setName('add')
+									.addStringOption((option) => option.setName('word').setDescription('The word you want to add').setRequired(true))
+									.addStringOption((option) =>
+										option
+											.setName('type')
+											.setDescription('Whether the word is an exact match or a wildcard')
+											.setMinLength(2)
+											.addChoices(
+												{
+													name: 'Wild Card',
+													value: 'wildcard'
+												},
+												{
+													name: 'Exact Match',
+													value: 'exact'
+												}
+											)
+											.setRequired(true)
+									)
+							)
+							.addSubcommand((builder) =>
+								builder
+									.setName('remove')
+									.setDescription('Remove a word from the banned words list')
+									.addStringOption((option) =>
+										option
+											.setName('word')
+											.setDescription('The word you want to remove')
+											.setRequired(true)
+											.setMinLength(1)
+											.setAutocomplete(true)
+									)
+							)
+							.addSubcommand((builder) => builder.setName('list').setDescription('List all the banned words'))
+					) // banned words
+		);
+	}
+
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const rule = await args.pick('automodRule');
 		switch (rule) {

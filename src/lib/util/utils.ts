@@ -110,10 +110,10 @@ export async function muteMember(
 }
 
 export function containsAny(arr1: string[], arr2: string[]): boolean {
-	const lowercasedMessage = arr1.map((word) => word.toLowerCase()); // Convert each word in the message to lowercase for case-insensitive comparison
+	const lowercasedArr1 = arr1.map((word) => word.toLowerCase()); // Convert each word in the message to lowercase for case-insensitive comparison
 
-	for (const bannedWord of arr2) {
-		if (lowercasedMessage.includes(bannedWord.toLowerCase())) {
+	for (const item of arr2) {
+		if (lowercasedArr1.includes(item.toLowerCase())) {
 			return true;
 		}
 	}
