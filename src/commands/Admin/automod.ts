@@ -150,23 +150,23 @@ export class automodCommand extends ModerationCommand {
 									.addStringOption((option) =>
 										option.setName('action').setDescription('The action you want to add').setRequired(true).addChoices(
 											{
-												name: 'Warn',
+												name: 'warn',
 												value: 'warn'
 											},
 											{
-												name: 'Automute',
+												name: 'automute',
 												value: 'automute'
 											},
 											{
-												name: 'Perma Mute',
+												name: 'perma-mute',
 												value: 'mute'
 											},
 											{
-												name: 'Kick',
+												name: 'kick',
 												value: 'kick'
 											},
 											{
-												name: 'Ban',
+												name: 'ban',
 												value: 'ban'
 											}
 										)
@@ -187,23 +187,23 @@ export class automodCommand extends ModerationCommand {
 									.addStringOption((option) =>
 										option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
 											{
-												name: 'Warn',
+												name: 'warn',
 												value: 'warn'
 											},
 											{
-												name: 'Automute',
+												name: 'automute',
 												value: 'automute'
 											},
 											{
-												name: 'Perma Mute',
+												name: 'perma-mute',
 												value: 'mute'
 											},
 											{
-												name: 'Kick',
+												name: 'kick',
 												value: 'kick'
 											},
 											{
-												name: 'Ban',
+												name: 'ban',
 												value: 'ban'
 											}
 										)
@@ -225,11 +225,11 @@ export class automodCommand extends ModerationCommand {
 											.setMinLength(2)
 											.addChoices(
 												{
-													name: 'Wild Card',
+													name: 'wild-card',
 													value: 'wildcard'
 												},
 												{
-													name: 'Exact Match',
+													name: 'exact-match',
 													value: 'exact'
 												}
 											)
