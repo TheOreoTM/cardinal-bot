@@ -13,46 +13,49 @@ import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 export class automodCommand extends ModerationCommand {
 	public registerApplicationCommands(registry: ModerationCommand.Registry) {
 		registry.registerChatInputCommand(
-			(builder) => builder.setName(this.name).setDescription(this.description)
+			(builder) =>
+				builder
+					.setName(this.name)
+					.setDescription(this.description)
 
-			// .addSubcommandGroup(
-			// 	(builder) =>
-			// 		builder
-			// 			.setName('affected-channels')
-			// 			.setDescription('Add/Remove a channel from the affected channels list')
-			// 			.addSubcommand((builder) =>
-			// 				builder
-			// 					.setName('add')
-			// 					.setDescription('Add a channel to the affected channel list')
-			// 					.addStringOption((option) =>
-			// 						option
-			// 							.setName('rule')
-			// 							.setDescription('The rule you want to change the setting for')
-			// 							.setMinLength(2)
-			// 							.setRequired(true)
-			// 							.setAutocomplete(true)
-			// 					)
-			// 					.addChannelOption((option) =>
-			// 						option.setName('channel').setDescription('The channel you want to add').setRequired(true)
-			// 					)
-			// 			) // add
-			// 			.addSubcommand((builder) =>
-			// 				builder
-			// 					.setName('remove')
-			// 					.setDescription('Remove a channel to the affected channels list')
-			// 					.addStringOption((option) =>
-			// 						option
-			// 							.setName('rule')
-			// 							.setDescription('The rule you want to change the setting for')
-			// 							.setMinLength(2)
-			// 							.setRequired(true)
-			// 							.setAutocomplete(true)
-			// 					)
-			// 					.addChannelOption((option) =>
-			// 						option.setName('channel').setDescription('The channel you want to remove').setRequired(true)
-			// 					)
-			// 			) // remove
-			// ) // affected channels
+					.addSubcommandGroup(
+						(builder) =>
+							builder
+								.setName('affected-channels')
+								.setDescription('Add/Remove a channel from the affected channels list')
+								.addSubcommand((builder) =>
+									builder
+										.setName('add')
+										.setDescription('Add a channel to the affected channel list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addChannelOption((option) =>
+											option.setName('channel').setDescription('The channel you want to add').setRequired(true)
+										)
+								) // add
+								.addSubcommand((builder) =>
+									builder
+										.setName('remove')
+										.setDescription('Remove a channel to the affected channels list')
+										.addStringOption((option) =>
+											option
+												.setName('rule')
+												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.setRequired(true)
+												.setAutocomplete(true)
+										)
+										.addChannelOption((option) =>
+											option.setName('channel').setDescription('The channel you want to remove').setRequired(true)
+										)
+								) // remove
+					) // affected channels
 			// .addSubcommandGroup(
 			// 	(builder) =>
 			// 		builder
