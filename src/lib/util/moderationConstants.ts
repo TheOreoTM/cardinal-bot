@@ -1,4 +1,3 @@
-import type { AutomodRule } from '#lib/types';
 import type { PrismaModerationType } from '@prisma/client';
 
 export enum ModerationType {
@@ -16,7 +15,7 @@ export enum ModerationType {
 
 export type ModerationActionType = PrismaModerationType;
 
-export const AutomodRules: ReadonlyArray<{ readableName: string; dbValue: AutomodRule }> = [
+export const AutomodRules = [
 	{
 		dbValue: 'bannedWords',
 		readableName: 'Banned Words'
