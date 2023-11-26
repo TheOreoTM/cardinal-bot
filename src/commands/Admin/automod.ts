@@ -31,7 +31,6 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
-												.setMinLength(2)
 												.setRequired(true)
 												.setAutocomplete(true)
 										)
@@ -47,7 +46,6 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
-												.setMinLength(2)
 												.setRequired(true)
 												.setAutocomplete(true)
 										)
@@ -69,7 +67,6 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
-												.setMinLength(2)
 												.setRequired(true)
 												.setAutocomplete(true)
 										)
@@ -85,7 +82,6 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
-												.setMinLength(2)
 												.setRequired(true)
 												.setAutocomplete(true)
 										)
