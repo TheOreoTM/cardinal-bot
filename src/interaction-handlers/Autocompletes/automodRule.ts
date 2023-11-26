@@ -15,10 +15,9 @@ export class AutocompleteHandler extends InteractionHandler {
 	public override async parse(interaction: AutocompleteInteraction) {
 		// Get the focussed (current) option
 		const focusedOption = interaction.options.getFocused(true);
-		console.log(focusedOption.name, focusedOption.value);
 		// Ensure that the option name is one that can be autocompleted, or return none if not.
 		if (focusedOption.name === 'rule') {
-			const filteredRules = fuzzysort.go(focusedOption.value, AutomodRules, { key: 'readableName', limit: 5, threshold: Infinity, all: true });
+			const filteredRules = fuzzysort.go(focusedOption.value, AutomodRules, { key: 'readableName', limit: 5, threshold: -Infinity, all: true });
 			let formattedRules = filteredRules.map((rule) => ({
 				name: rule.obj.readableName,
 				value: rule.obj.dbValue
