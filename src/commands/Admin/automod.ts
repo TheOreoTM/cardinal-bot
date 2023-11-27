@@ -1,10 +1,16 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { CardinalEmojis } from '#utils/constants';
 import { sendInteractionOrMessage } from '#utils/functions';
+import { AutomodRules } from '#utils/moderationConstants';
 import type { AutomodBannedWords } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { DurationFormatter } from '@sapphire/time-utilities';
 import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+
+const AutomodRuleChoices = AutomodRules.map((rule) => ({
+	name: rule.readableName,
+	value: rule.dbValue
+}));
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Automod Settings',
@@ -32,7 +38,8 @@ export class automodCommand extends ModerationCommand {
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
 												.setRequired(true)
-												.setAutocomplete(true)
+												.setMinLength(2)
+												.addChoices(...AutomodRuleChoices)
 										)
 										.addChannelOption((option) =>
 											option.setName('channel').setDescription('The channel you want to add').setRequired(true)
@@ -46,8 +53,9 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
+												.setMinLength(2)
+												.addChoices(...AutomodRuleChoices)
 												.setRequired(true)
-												.setAutocomplete(true)
 										)
 										.addChannelOption((option) =>
 											option.setName('channel').setDescription('The channel you want to remove').setRequired(true)
@@ -68,7 +76,8 @@ export class automodCommand extends ModerationCommand {
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
 												.setRequired(true)
-												.setAutocomplete(true)
+												.setMinLength(2)
+												.addChoices(...AutomodRuleChoices)
 										)
 										.addRoleOption((option) =>
 											option.setName('role').setDescription('The role you want to add').setRequired(true)
@@ -82,8 +91,9 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
+												.addChoices(...AutomodRuleChoices)
+												.setMinLength(2)
 												.setRequired(true)
-												.setAutocomplete(true)
 										)
 										.addRoleOption((option) =>
 											option.setName('role').setDescription('The role you want to remove').setRequired(true)
@@ -103,8 +113,8 @@ export class automodCommand extends ModerationCommand {
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
 											.setMinLength(2)
+											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
-											.setAutocomplete(true)
 									)
 									.addStringOption((option) =>
 										option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setMinLength(2).setRequired(true)
@@ -119,8 +129,8 @@ export class automodCommand extends ModerationCommand {
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
 											.setMinLength(2)
+											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
-											.setAutocomplete(true)
 									)
 									.addNumberOption((option) =>
 										option.setName('amount').setDescription('The amount of minimum infractions required').setRequired(true)
@@ -140,8 +150,8 @@ export class automodCommand extends ModerationCommand {
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
 											.setMinLength(2)
+											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
-											.setAutocomplete(true)
 									)
 									.addStringOption((option) =>
 										option.setName('action').setDescription('The action you want to add').setRequired(true).addChoices(
@@ -177,8 +187,8 @@ export class automodCommand extends ModerationCommand {
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
 											.setMinLength(2)
+											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
-											.setAutocomplete(true)
 									)
 									.addStringOption((option) =>
 										option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
