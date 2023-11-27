@@ -26,8 +26,7 @@ export class AutomodConfig {
 					upsert: {
 						create: {
 							enabled: false,
-							guildId: this.guild.id,
-							actions: [action]
+							guildId: this.guild.id
 						},
 						update: {
 							actions: newActions
