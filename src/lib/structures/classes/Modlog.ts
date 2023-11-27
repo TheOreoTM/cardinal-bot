@@ -184,9 +184,18 @@ export class Modlog implements Prisma.ModlogCreateInput {
 		const modlogChannel = await guild.settings.channels.modlog();
 		if (!modlogChannel) return;
 
+		const modlog = await container.db.modlog.findUnique({
+			where: {
+				guildId: this.guildId,
+				id: modlogId
+			}
+		});
+
+		const modlogDisplayId = modlog ? modlog.caseId : modlogId;
+
 		const modlogEmbed = new CardinalEmbedBuilder()
 			.setColor(CardinalColors.Warn)
-			.setAuthor({ name: `Case ${modlogId} | ${capitalizeWords(this.type)} | ${this.memberName}` })
+			.setAuthor({ name: `Case ${modlogDisplayId} | ${capitalizeWords(this.type)} | ${this.memberName}` })
 			.addFields(
 				{
 					name: 'User',
