@@ -194,23 +194,23 @@ export class automodCommand extends ModerationCommand {
 									.addStringOption((option) =>
 										option.setName('action').setDescription('The action you want to remove').setRequired(true).addChoices(
 											{
-												name: 'warn',
+												name: 'Warn',
 												value: 'warn'
 											},
 											{
-												name: 'automute',
+												name: 'Auto Mute',
 												value: 'automute'
 											},
 											{
-												name: 'perma-mute',
+												name: 'Perma Mute',
 												value: 'mute'
 											},
 											{
-												name: 'kick',
+												name: 'Kick',
 												value: 'kick'
 											},
 											{
-												name: 'ban',
+												name: 'Instant Ban',
 												value: 'ban'
 											}
 										)
