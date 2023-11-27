@@ -1,11 +1,12 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
+import type { AutomodRule } from '#lib/types';
 import { CardinalEmojis } from '#utils/constants';
 import { sendInteractionOrMessage } from '#utils/functions';
-import { AutomodRules } from '#utils/moderationConstants';
+import { AutomodRules, type ModerationActionType } from '#utils/moderationConstants';
 import type { AutomodBannedWords } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Guild } from 'discord.js';
 
 const AutomodRuleChoices = AutomodRules.map((rule) => ({
 	name: rule.readableName,
@@ -261,6 +262,34 @@ export class automodCommand extends ModerationCommand {
 		);
 	}
 
+	public async chatInputRun(interaction: ModerationCommand.ChatInputCommandInteraction) {
+		const guild = interaction.guild;
+		const subcommandGroup = interaction.options.getSubcommandGroup(true) as SubcommandGroupType;
+		const subcommand = interaction.options.getSubcommand(true) as SubcommandType;
+
+		const rule = interaction.options.getString('rule', true) as AutomodRule;
+		switch (subcommandGroup) {
+			case 'action':
+				const action = interaction.options.getString('action', true) as ModerationActionType;
+				if (subcommand === 'add') await this.addAction(guild, rule, action);
+				if (subcommand === 'remove') await this.removeAction(guild, rule, action);
+				interaction.reply({
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('success')
+							.setDescription(`Successfully ${subcommand}ed \`${action}\` as an action for \`${rule}\``)
+					]
+				});
+				break;
+			case 'affected-channels':
+				const channel = interaction.options.getChannel('channel', true);
+				channel;
+				break;
+			default:
+				break;
+		}
+	}
+
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const rule = await args.pick('automodRule');
 		switch (rule) {
@@ -271,6 +300,14 @@ export class automodCommand extends ModerationCommand {
 			default:
 				break;
 		}
+	}
+
+	private async removeAction(guild: Guild, rule: AutomodRule, action: ModerationActionType) {
+		await guild.settings.automod.removeAction(rule, action);
+	}
+
+	private async addAction(guild: Guild, rule: AutomodRule, action: ModerationActionType) {
+		await guild.settings.automod.addAction(rule, action);
 	}
 
 	private async sendBannedWordsRule(interactionOrMessage: ModerationCommand.Message | ModerationCommand.ChatInputCommandInteraction) {
@@ -335,3 +372,6 @@ export class automodCommand extends ModerationCommand {
 		});
 	}
 }
+
+type SubcommandGroupType = 'affected-channels' | 'affected-roles' | 'automute' | 'action' | AutomodRule;
+type SubcommandType = 'add' | 'remove' | 'duration' | 'after';

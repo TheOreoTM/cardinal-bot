@@ -1,10 +1,75 @@
 import type { AutomodRule, Automod } from '#lib/types/Data';
+import type { ModerationActionType } from '#utils/moderationConstants';
+import { removeFromArray } from '#utils/utils';
 import { container } from '@sapphire/pieces';
 import type { Guild } from 'discord.js';
 
 export class AutomodConfig {
 	public constructor(private readonly guild: Guild) {
 		this.guild = guild;
+	}
+
+	public async removeAction(rule: AutomodRule, action: ModerationActionType) {
+		const currentData = await this.getSetting(rule);
+		if (!currentData) return this;
+		const currentActions = currentData.actions;
+		if (!currentActions) return this;
+
+		const newActions = removeFromArray(currentActions, action);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id,
+							actions: [action]
+						},
+						update: {
+							actions: newActions
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async addAction(rule: AutomodRule, action: ModerationActionType) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id,
+							actions: [action]
+						},
+						update: {
+							actions: {
+								push: action
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
 	}
 
 	public async getSetting<T extends Automod>(rule: AutomodRule): Promise<T | null> {
@@ -51,6 +116,7 @@ export class AutomodConfig {
 				}
 			}
 		});
+		return this;
 	}
 
 	public async disableRule(rule: AutomodRule) {
@@ -71,5 +137,7 @@ export class AutomodConfig {
 				}
 			}
 		});
+
+		return this;
 	}
 }

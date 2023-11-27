@@ -38,6 +38,14 @@ import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 
+export function removeFromArray<T>(array: T[], value: T): T[] {
+	const index = array.indexOf(value);
+	if (index !== -1) {
+		array.splice(index, 1);
+	}
+	return array;
+}
+
 export async function muteMember(
 	message: GuildMessage,
 	target: GuildMember,
