@@ -283,7 +283,9 @@ export class automodCommand extends ModerationCommand {
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('success')
-							.setDescription(`Successfully ${subcommand}ed \`${action}\` as an action for \`${rule}\``)
+							.setDescription(
+								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} \`${action}\` as an action for \`${rule}\``
+							)
 					]
 				});
 				break;
@@ -295,7 +297,9 @@ export class automodCommand extends ModerationCommand {
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('success')
-							.setDescription(`Successfully ${subcommand}ed \`${channel}\` as an affected channel for \`${rule}\``)
+							.setDescription(
+								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} \`${channel}\` as an affected channel for \`${rule}\``
+							)
 					]
 				});
 				break;
@@ -307,7 +311,9 @@ export class automodCommand extends ModerationCommand {
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('success')
-							.setDescription(`Successfully ${subcommand}ed \`${role}\` as an affected role for \`${rule}\``)
+							.setDescription(
+								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} \`${role}\` as an affected role for \`${rule}\``
+							)
 					]
 				});
 				break;
