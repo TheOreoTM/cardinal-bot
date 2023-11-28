@@ -415,17 +415,17 @@ export class automodCommand extends ModerationCommand {
 			.setFields(
 				{
 					name: 'Exact Matches',
-					value: `${data?.exact.length !== 0 && data !== null ? data.exact.map((w) => `\`${w}\``) : 'None'}`,
+					value: `${data?.exact.length !== 0 && data !== null ? data.exact.map((w) => `\`${w}\``).join(' ') : 'None'}`,
 					inline: true
 				},
 				{
 					name: 'Wildcards Matches',
-					value: `${data?.wildcard.length !== 0 && data ? data.wildcard.map((w) => `\`${w}\``) : 'None'}`,
+					value: `${data?.wildcard.length !== 0 && data ? data.wildcard.map((w) => `\`${w}\``).join(' ') : 'None'}`,
 					inline: true
 				},
 				{
 					name: 'Actions',
-					value: `${data?.actions.length !== 0 && data ? data.actions.map((w) => `\`${w}\``) : 'None'}`,
+					value: `${data?.actions.length !== 0 && data ? data.actions.map((w) => `\`${w}\``).join(' ') : 'None'}`,
 					inline: true
 				},
 				{
