@@ -61,10 +61,10 @@ export class AutomodConfig {
 		let toAdd: string[] = [];
 		const currentData = await this.getSetting(rule);
 		if (!currentData) toAdd = [channel];
-		const currentActions = currentData?.actions;
-		if (!currentActions) toAdd = [channel];
-		if (toAdd.length === 0 && currentActions) {
-			toAdd = addUniqueToArray(toAdd, channel);
+		const currentChannels = currentData?.actions;
+		if (!currentChannels) toAdd = [channel];
+		if (toAdd.length === 0 && currentChannels) {
+			toAdd = addUniqueToArray(currentChannels, channel);
 		}
 
 		await container.db.guild.update({
@@ -80,7 +80,7 @@ export class AutomodConfig {
 						},
 						update: {
 							ignoredChannels: {
-								push: channel
+								set: channel
 							}
 						},
 						where: {
@@ -131,10 +131,10 @@ export class AutomodConfig {
 		let toAdd: string[] = [];
 		const currentData = await this.getSetting(rule);
 		if (!currentData) toAdd = [role];
-		const currentActions = currentData?.ignoredRoles;
-		if (!currentActions) toAdd = [role];
-		if (toAdd.length === 0 && currentActions) {
-			toAdd = addUniqueToArray(toAdd, role);
+		const currentRoles = currentData?.ignoredRoles;
+		if (!currentRoles) toAdd = [role];
+		if (toAdd.length === 0 && currentRoles) {
+			toAdd = addUniqueToArray(currentRoles, role);
 		}
 
 		await container.db.guild.update({
@@ -150,7 +150,7 @@ export class AutomodConfig {
 						},
 						update: {
 							ignoredRoles: {
-								push: role
+								set: role
 							}
 						},
 						where: {
@@ -201,10 +201,10 @@ export class AutomodConfig {
 		let toAdd: string[] = [];
 		const currentData = await this.getSetting(rule);
 		if (!currentData) toAdd = [channel];
-		const currentActions = currentData?.affectedChannels;
-		if (!currentActions) toAdd = [channel];
-		if (toAdd.length === 0 && currentActions) {
-			toAdd = addUniqueToArray(toAdd, channel);
+		const currentChannel = currentData?.affectedChannels;
+		if (!currentChannel) toAdd = [channel];
+		if (toAdd.length === 0 && currentChannel) {
+			toAdd = addUniqueToArray(currentChannel, channel);
 		}
 
 		await container.db.guild.update({
@@ -220,7 +220,7 @@ export class AutomodConfig {
 						},
 						update: {
 							affectedChannels: {
-								push: channel
+								set: channel
 							}
 						},
 						where: {
@@ -274,7 +274,7 @@ export class AutomodConfig {
 		const currentRoles = currentData?.affectedRoles;
 		if (!currentRoles) toAdd = [role];
 		if (toAdd.length === 0 && currentRoles) {
-			toAdd = addUniqueToArray(toAdd, role);
+			toAdd = addUniqueToArray(currentRoles, role);
 		}
 
 		await container.db.guild.update({
@@ -290,7 +290,7 @@ export class AutomodConfig {
 						},
 						update: {
 							affectedRoles: {
-								push: role
+								set: role
 							}
 						},
 						where: {
@@ -377,7 +377,7 @@ export class AutomodConfig {
 		const currentActions = currentData?.actions;
 		if (!currentActions) toAdd = [action];
 		if (toAdd.length === 0 && currentActions) {
-			toAdd = addUniqueToArray(toAdd, action);
+			toAdd = addUniqueToArray(currentActions, action);
 		}
 
 		await container.db.guild.update({
@@ -394,7 +394,7 @@ export class AutomodConfig {
 						},
 						update: {
 							actions: {
-								push: toAdd
+								set: toAdd
 							}
 						},
 						where: {
