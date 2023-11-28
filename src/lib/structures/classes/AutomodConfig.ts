@@ -2,11 +2,303 @@ import type { AutomodRule, Automod } from '#lib/types/Data';
 import type { ModerationActionType } from '#utils/moderationConstants';
 import { removeFromArray } from '#utils/utils';
 import { container } from '@sapphire/pieces';
-import type { Guild } from 'discord.js';
+import type { Guild, Snowflake } from 'discord.js';
 
 export class AutomodConfig {
 	public constructor(private readonly guild: Guild) {
 		this.guild = guild;
+	}
+
+	public async setAutomuteDuration(rule: AutomodRule, amountMs: number) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							automuteDuration: amountMs
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+	}
+
+	public async setAutomuteAfter(rule: AutomodRule, amount: number) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							automuteAfter: amount
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+	}
+
+	public async addIgnoredChannel(rule: AutomodRule, channel: Snowflake) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							ignoredChannels: {
+								push: channel
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async removeIgnoredChannel(rule: AutomodRule, channel: Snowflake) {
+		const currentData = await this.getSetting(rule);
+		if (!currentData) return this;
+		const currentChannels = currentData.ignoredChannels;
+		if (!currentChannels) return this;
+
+		const newRoles = removeFromArray(currentChannels, channel);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							ignoredChannels: newRoles
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async addIgnoredRole(rule: AutomodRule, role: Snowflake) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							ignoredRoles: {
+								push: role
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async removeIgnoredRole(rule: AutomodRule, role: Snowflake) {
+		const currentData = await this.getSetting(rule);
+		if (!currentData) return this;
+		const currentRoles = currentData.ignoredRoles;
+		if (!currentRoles) return this;
+
+		const newRoles = removeFromArray(currentRoles, role);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							ignoredRoles: newRoles
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async addAffectedChannel(rule: AutomodRule, channel: Snowflake) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							affectedChannels: {
+								push: channel
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async removeAffectedChannel(rule: AutomodRule, channel: Snowflake) {
+		const currentData = await this.getSetting(rule);
+		if (!currentData) return this;
+		const currentChannels = currentData.affectedChannels;
+		if (!currentChannels) return this;
+
+		const newRoles = removeFromArray(currentChannels, channel);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							affectedChannels: newRoles
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async addAffectedRole(rule: AutomodRule, role: Snowflake) {
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							affectedRoles: {
+								push: role
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async removeAffectedRole(rule: AutomodRule, role: Snowflake) {
+		const currentData = await this.getSetting(rule);
+		if (!currentData) return this;
+		const currentRoles = currentData.affectedRoles;
+		if (!currentRoles) return this;
+
+		const newRoles = removeFromArray(currentRoles, role);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				[rule]: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							affectedRoles: newRoles
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
 	}
 
 	public async removeAction(rule: AutomodRule, action: ModerationActionType) {

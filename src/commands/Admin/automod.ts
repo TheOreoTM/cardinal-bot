@@ -1,12 +1,13 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import type { AutomodRule } from '#lib/types';
+import { days, minutes } from '#utils/common';
 import { CardinalEmojis } from '#utils/constants';
 import { sendInteractionOrMessage } from '#utils/functions';
 import { AutomodRules, type ModerationActionType } from '#utils/moderationConstants';
 import type { AutomodBannedWords } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
-import { DurationFormatter } from '@sapphire/time-utilities';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, Guild } from 'discord.js';
+import { Duration, DurationFormatter } from '@sapphire/time-utilities';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
 
 const AutomodRuleChoices = AutomodRules.map((rule) => ({
 	name: rule.readableName,
@@ -134,7 +135,12 @@ export class automodCommand extends ModerationCommand {
 											.setRequired(true)
 									)
 									.addNumberOption((option) =>
-										option.setName('amount').setDescription('The amount of minimum infractions required').setRequired(true)
+										option
+											.setName('amount')
+											.setDescription('The amount of minimum infractions required')
+											.setRequired(true)
+											.setMaxValue(5)
+											.setMinValue(1)
 									)
 							)
 					) // automute
@@ -271,8 +277,8 @@ export class automodCommand extends ModerationCommand {
 		switch (subcommandGroup) {
 			case 'action':
 				const action = interaction.options.getString('action', true) as ModerationActionType;
-				if (subcommand === 'add') await this.addAction(guild, rule, action);
-				if (subcommand === 'remove') await this.removeAction(guild, rule, action);
+				if (subcommand === 'add') await guild.settings.automod.addAction(rule, action);
+				if (subcommand === 'remove') await guild.settings.automod.removeAction(rule, action);
 				interaction.reply({
 					embeds: [
 						new CardinalEmbedBuilder()
@@ -283,7 +289,55 @@ export class automodCommand extends ModerationCommand {
 				break;
 			case 'affected-channels':
 				const channel = interaction.options.getChannel('channel', true);
-				channel;
+				if (subcommand === 'add') await guild.settings.automod.addAffectedChannel(rule, channel.id);
+				if (subcommand === 'remove') await guild.settings.automod.removeAffectedChannel(rule, channel.id);
+				interaction.reply({
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('success')
+							.setDescription(`Successfully ${subcommand}ed \`${channel}\` as an affected channel for \`${rule}\``)
+					]
+				});
+				break;
+			case 'affected-roles':
+				const role = interaction.options.getRole('role', true);
+				if (subcommand === 'add') await guild.settings.automod.addAffectedRole(rule, role.id);
+				if (subcommand === 'remove') await guild.settings.automod.removeAffectedRole(rule, role.id);
+				interaction.reply({
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('success')
+							.setDescription(`Successfully ${subcommand}ed \`${role}\` as an affected role for \`${rule}\``)
+					]
+				});
+				break;
+			case 'automute':
+				const amount = interaction.options.getNumber('amount', true);
+				const durationInput = interaction.options.getString('duration', true);
+				const duration = new Duration(durationInput);
+				if (subcommand === 'after') await guild.settings.automod.setAutomuteAfter(rule, amount);
+				if (subcommand === 'duration') {
+					if (!duration || duration.offset > days(7) || duration.offset < minutes(1)) {
+						await interaction.reply({
+							embeds: [
+								new CardinalEmbedBuilder()
+									.setStyle('fail')
+									.setDescription('Duration should be greater than 1 minute and less than 7 days')
+							]
+						});
+						return;
+					}
+
+					await guild.settings.automod.setAutomuteDuration(rule, duration.offset);
+				}
+
+				interaction.reply({
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('success')
+							.setDescription(`Successfully set ${subcommand} for ${rule} as ${amount ? amount : duration}`)
+					]
+				});
 				break;
 			default:
 				break;
@@ -300,14 +354,6 @@ export class automodCommand extends ModerationCommand {
 			default:
 				break;
 		}
-	}
-
-	private async removeAction(guild: Guild, rule: AutomodRule, action: ModerationActionType) {
-		await guild.settings.automod.removeAction(rule, action);
-	}
-
-	private async addAction(guild: Guild, rule: AutomodRule, action: ModerationActionType) {
-		await guild.settings.automod.addAction(rule, action);
 	}
 
 	private async sendBannedWordsRule(interactionOrMessage: ModerationCommand.Message | ModerationCommand.ChatInputCommandInteraction) {

@@ -38,12 +38,17 @@ import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 
+/**
+ * Remove all matching values from the array
+ * @param array
+ * @param value
+ * @returns
+ */
 export function removeFromArray<T>(array: T[], value: T): T[] {
-	const index = array.indexOf(value);
-	if (index !== -1) {
-		array.splice(index, 1);
-	}
-	return array;
+	const set = new Set(array);
+	set.delete(value);
+	const newArr = Array.from(set);
+	return newArr;
 }
 
 export async function muteMember(
@@ -54,7 +59,7 @@ export async function muteMember(
 	reason: string | null,
 	duration?: Duration | Nullish
 ) {
-	let modlog;
+	let modlog: Modlog;
 	let length: string | Nullish;
 
 	if (duration) {
