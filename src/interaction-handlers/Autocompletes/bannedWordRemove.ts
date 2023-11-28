@@ -17,17 +17,21 @@ export class AutocompleteHandler extends InteractionHandler {
 		// Get the focussed (current) option
 		const focusedOption = interaction.options.getFocused(true);
 		const data = await interaction.guild.settings.automod.getSetting<AutomodBannedWords>('bannedWords');
-		const bannedWords = [...(data?.exact ?? []), ...(data?.wildcard ?? [])];
+		const bannedWords = [
+			...(data?.exact ?? []).map((w) => ({ word: w, type: 'exact' })),
+			...(data?.wildcard ?? []).map((w) => ({ word: w, type: 'wildcard' }))
+		];
 		// Ensure that the option name is one that can be autocompleted, or return none if not.
 		if (focusedOption.name === 'word') {
 			const filteredRules = fuzzysort.go(focusedOption.value, bannedWords, {
+				key: 'word',
 				limit: 10,
 				threshold: -Infinity,
 				all: true
 			});
 			let formattedRules = filteredRules.map((word) => ({
-				name: word.target,
-				value: word.target
+				name: `${word.obj.word} - ${word.obj.type}`,
+				value: JSON.stringify({ word: word.obj.word, type: word.obj.type })
 			}));
 
 			return this.some(formattedRules);

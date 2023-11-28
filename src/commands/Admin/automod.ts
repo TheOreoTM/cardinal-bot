@@ -360,7 +360,10 @@ export class automodCommand extends ModerationCommand {
 				const word = interaction.options.getString('word', true);
 				const type = interaction.options.getString('type', true) as 'exact' | 'wildcard';
 				if (subcommand === 'add') await guild.settings.automod.addBannedWord(word, type);
-				if (subcommand === 'remove') await guild.settings.automod.removeBannedWord(word, type);
+				if (subcommand === 'remove') {
+					const data = JSON.parse(word) as { word: string; type: 'exact' | 'wildcard' };
+					await guild.settings.automod.removeBannedWord(data.word, data.type);
+				}
 
 				interaction.reply({
 					embeds: [
