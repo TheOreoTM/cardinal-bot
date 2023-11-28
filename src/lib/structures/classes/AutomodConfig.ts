@@ -1,12 +1,85 @@
 import type { AutomodRule, Automod } from '#lib/types/Data';
 import type { ModerationActionType } from '#utils/moderationConstants';
 import { addUniqueToArray, removeFromArray } from '#utils/utils';
+import type { AutomodBannedWords } from '@prisma/client';
 import { container } from '@sapphire/pieces';
 import type { Guild, Snowflake } from 'discord.js';
 
 export class AutomodConfig {
 	public constructor(private readonly guild: Guild) {
 		this.guild = guild;
+	}
+
+	public async removeBannedWord(word: string, type: 'exact' | 'wildcard') {
+		const currentData = await this.getSetting<AutomodBannedWords>('bannedWords');
+		if (!currentData) return this;
+		const currentWords = currentData[type];
+		if (!currentWords) return this;
+
+		const newWords = removeFromArray(currentWords, word);
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				bannedWords: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							[type]: {
+								set: newWords
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
+	}
+
+	public async addBannedWord(word: string, type: 'exact' | 'wildcard') {
+		let toAdd: string[] = [];
+		const currentData = await this.getSetting<AutomodBannedWords>('bannedWords');
+		if (!currentData) toAdd = [word];
+		const currentWords = currentData?.[type];
+		if (!currentWords) toAdd = [word];
+		if (toAdd.length === 0 && currentWords) {
+			toAdd = addUniqueToArray(currentWords, word);
+		}
+
+		await container.db.guild.update({
+			where: {
+				guildId: this.guild.id
+			},
+			data: {
+				bannedWords: {
+					upsert: {
+						create: {
+							enabled: false,
+							guildId: this.guild.id
+						},
+						update: {
+							[type]: {
+								set: toAdd
+							}
+						},
+						where: {
+							guildId: this.guild.id
+						}
+					}
+				}
+			}
+		});
+
+		return this;
 	}
 
 	public async setAutomuteDuration(rule: AutomodRule, amountMs: number) {
@@ -80,7 +153,7 @@ export class AutomodConfig {
 						},
 						update: {
 							ignoredChannels: {
-								set: channel
+								set: toAdd
 							}
 						},
 						where: {
@@ -150,7 +223,7 @@ export class AutomodConfig {
 						},
 						update: {
 							ignoredRoles: {
-								set: role
+								set: toAdd
 							}
 						},
 						where: {
@@ -220,7 +293,7 @@ export class AutomodConfig {
 						},
 						update: {
 							affectedChannels: {
-								set: channel
+								set: toAdd
 							}
 						},
 						where: {
@@ -290,7 +363,7 @@ export class AutomodConfig {
 						},
 						update: {
 							affectedRoles: {
-								set: role
+								set: toAdd
 							}
 						},
 						where: {

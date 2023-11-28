@@ -466,6 +466,7 @@ enum PrismaModerationType {
   warn
   modnick
   mute
+  automute
   ban
   kick
   unmute
