@@ -312,9 +312,13 @@ export class automodCommand extends ModerationCommand {
 				});
 				break;
 			case 'automute':
-				const amount = interaction.options.getNumber('amount', true);
 				let durationText: string | null = null;
-				if (subcommand === 'after') await guild.settings.automod.setAutomuteAfter(rule, amount);
+				let amountText: string | null = null;
+				if (subcommand === 'after') {
+					const amount = interaction.options.getNumber('amount', true);
+					await guild.settings.automod.setAutomuteAfter(rule, amount);
+					amountText = amount.toString();
+				}
 				if (subcommand === 'duration') {
 					const durationInput = interaction.options.getString('duration', true);
 					const duration = new Duration(durationInput);
@@ -338,7 +342,11 @@ export class automodCommand extends ModerationCommand {
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('success')
-							.setDescription(`Successfully set ${subcommand} for ${rule} as ${durationText ? durationText : amount}`)
+							.setDescription(
+								`Successfully set \`automute ${subcommand}\` for \`${rule}\` as \`${
+									durationText ? durationText : amountText ? amountText : '_'
+								}\``
+							)
 					]
 				});
 				break;
