@@ -313,10 +313,11 @@ export class automodCommand extends ModerationCommand {
 				break;
 			case 'automute':
 				const amount = interaction.options.getNumber('amount', true);
-				const durationInput = interaction.options.getString('duration', true);
-				const duration = new Duration(durationInput);
+				let durationText: string | null = null;
 				if (subcommand === 'after') await guild.settings.automod.setAutomuteAfter(rule, amount);
 				if (subcommand === 'duration') {
+					const durationInput = interaction.options.getString('duration', true);
+					const duration = new Duration(durationInput);
 					if (!duration || duration.offset > days(7) || duration.offset < minutes(1)) {
 						await interaction.reply({
 							embeds: [
@@ -329,13 +330,15 @@ export class automodCommand extends ModerationCommand {
 					}
 
 					await guild.settings.automod.setAutomuteDuration(rule, duration.offset);
+					const formatter = new DurationFormatter();
+					durationText = formatter.format(duration.offset).toString();
 				}
 
 				interaction.reply({
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('success')
-							.setDescription(`Successfully set ${subcommand} for ${rule} as ${amount ? amount : duration}`)
+							.setDescription(`Successfully set ${subcommand} for ${rule} as ${durationText ? durationText : amount}`)
 					]
 				});
 				break;
