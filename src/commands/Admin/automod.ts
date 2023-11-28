@@ -273,7 +273,7 @@ export class automodCommand extends ModerationCommand {
 		const subcommandGroup = interaction.options.getSubcommandGroup(true) as SubcommandGroupType;
 		const subcommand = interaction.options.getSubcommand(true) as SubcommandType;
 
-		const rule = interaction.options.getString('rule', true) as AutomodRule;
+		const rule = interaction.options.getString('rule', false) as AutomodRule;
 		switch (subcommandGroup) {
 			case 'action':
 				const action = interaction.options.getString('action', true) as ModerationActionType;
@@ -356,6 +356,33 @@ export class automodCommand extends ModerationCommand {
 					]
 				});
 				break;
+			case 'bannedWords':
+				const word = interaction.options.getString('word', true);
+				const type = interaction.options.getString('type', true) as 'exact' | 'wildcard';
+				if (subcommand === 'add') await guild.settings.automod.addBannedWord(word, type);
+				if (subcommand === 'remove') await guild.settings.automod.removeBannedWord(word, type);
+
+				interaction.reply({
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('success')
+							.setDescription(
+								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} ||\`${word}\`|| as ${
+									type === 'exact' ? 'an' : 'a'
+								} ${type} match`
+							)
+					]
+				});
+
+				break;
+			case 'capitalization':
+			case 'inviteLinks':
+			case 'linkCooldown':
+			case 'links':
+			case 'massMention':
+			case 'newLines':
+			case 'spam':
+			case 'stickers':
 			default:
 				break;
 		}
