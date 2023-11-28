@@ -358,7 +358,7 @@ export class automodCommand extends ModerationCommand {
 				break;
 			case 'banned-words':
 				const word = interaction.options.getString('word', true);
-				const type = interaction.options.getString('type', true) as 'exact' | 'wildcard';
+				const type = interaction.options.getString('type', false) as 'exact' | 'wildcard';
 				if (subcommand === 'add') await guild.settings.automod.addBannedWord(word, type);
 				if (subcommand === 'remove') {
 					const data = JSON.parse(word) as { word: string; type: 'exact' | 'wildcard' };
