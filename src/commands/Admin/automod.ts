@@ -356,7 +356,7 @@ export class automodCommand extends ModerationCommand {
 					]
 				});
 				break;
-			case 'bannedWords':
+			case 'banned-words':
 				const word = interaction.options.getString('word', true);
 				const type = interaction.options.getString('type', true) as 'exact' | 'wildcard';
 				if (subcommand === 'add') await guild.settings.automod.addBannedWord(word, type);
@@ -376,11 +376,11 @@ export class automodCommand extends ModerationCommand {
 
 				break;
 			case 'capitalization':
-			case 'inviteLinks':
-			case 'linkCooldown':
+			case 'invite-links':
+			case 'link-cooldown':
 			case 'links':
-			case 'massMention':
-			case 'newLines':
+			case 'mass-mention':
+			case 'new-lines':
 			case 'spam':
 			case 'stickers':
 			default:
@@ -463,5 +463,18 @@ export class automodCommand extends ModerationCommand {
 	}
 }
 
-type SubcommandGroupType = 'affected-channels' | 'affected-roles' | 'automute' | 'action' | AutomodRule;
+type SubcommandGroupType =
+	| 'affected-channels'
+	| 'affected-roles'
+	| 'automute'
+	| 'action'
+	| 'banned-words'
+	| 'capitalization'
+	| 'invite-links'
+	| 'link-cooldown'
+	| 'links'
+	| 'mass-mention'
+	| 'new-lines'
+	| 'spam'
+	| 'stickers';
 type SubcommandType = 'add' | 'remove' | 'duration' | 'after';
