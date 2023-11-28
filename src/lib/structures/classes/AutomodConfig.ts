@@ -537,6 +537,7 @@ export class AutomodConfig {
 				[rule]: {
 					upsert: {
 						create: {
+							guildId: this.guild.id,
 							enabled: false
 						},
 						update: {
