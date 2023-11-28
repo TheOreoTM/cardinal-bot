@@ -359,10 +359,14 @@ export class automodCommand extends ModerationCommand {
 			case 'banned-words':
 				const word = interaction.options.getString('word', true);
 				const type = interaction.options.getString('type', false) as 'exact' | 'wildcard';
+				let wordText: string | null = null;
+				let typeText: string | null = type;
 				if (subcommand === 'add') await guild.settings.automod.addBannedWord(word, type);
 				if (subcommand === 'remove') {
 					const data = JSON.parse(word) as { word: string; type: 'exact' | 'wildcard' };
 					await guild.settings.automod.removeBannedWord(data.word, data.type);
+					wordText = data.word;
+					typeText = data.type;
 				}
 
 				interaction.reply({
@@ -370,9 +374,9 @@ export class automodCommand extends ModerationCommand {
 						new CardinalEmbedBuilder()
 							.setStyle('success')
 							.setDescription(
-								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} ||\`${word}\`|| as ${
-									type === 'exact' ? 'an' : 'a'
-								} ${type} match`
+								`Successfully ${subcommand === 'remove' ? 'removed' : 'added'} ||\`${wordText}\`|| as ${
+									typeText === 'exact' ? 'an' : 'a'
+								} ${typeText} match`
 							)
 					]
 				});
