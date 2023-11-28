@@ -404,8 +404,8 @@ export class automodCommand extends ModerationCommand {
 				{
 					name: 'Automute Settings',
 					value: [
-						`Automute After: ${data?.automuteAfter ? `${data.automuteAfter} Infractions` : '-'}` ?? 'None',
-						`Automute For: ${data?.automuteDuration ? `${new DurationFormatter().format(data.automuteDuration)} ` : '-'}` ?? 'None'
+						`Automute After: \`${data?.automuteAfter ? `${data.automuteAfter} Infractions` : '-'}\`` ?? 'None',
+						`Automute For: __${data?.automuteDuration ? `${new DurationFormatter().format(data.automuteDuration)}__` : '-'}` ?? 'None'
 					].join('\n')
 				},
 				{
