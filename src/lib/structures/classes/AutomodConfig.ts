@@ -1,6 +1,6 @@
 import type { AutomodRule, Automod } from '#lib/types/Data';
 import type { ModerationActionType } from '#utils/moderationConstants';
-import { removeFromArray } from '#utils/utils';
+import { addUniqueToArray, removeFromArray } from '#utils/utils';
 import { container } from '@sapphire/pieces';
 import type { Guild, Snowflake } from 'discord.js';
 
@@ -58,6 +58,15 @@ export class AutomodConfig {
 	}
 
 	public async addIgnoredChannel(rule: AutomodRule, channel: Snowflake) {
+		let toAdd: string[] = [];
+		const currentData = await this.getSetting(rule);
+		if (!currentData) toAdd = [channel];
+		const currentActions = currentData?.actions;
+		if (!currentActions) toAdd = [channel];
+		if (toAdd.length === 0 && currentActions) {
+			toAdd = addUniqueToArray(toAdd, channel);
+		}
+
 		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
@@ -119,6 +128,15 @@ export class AutomodConfig {
 	}
 
 	public async addIgnoredRole(rule: AutomodRule, role: Snowflake) {
+		let toAdd: string[] = [];
+		const currentData = await this.getSetting(rule);
+		if (!currentData) toAdd = [role];
+		const currentActions = currentData?.ignoredRoles;
+		if (!currentActions) toAdd = [role];
+		if (toAdd.length === 0 && currentActions) {
+			toAdd = addUniqueToArray(toAdd, role);
+		}
+
 		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
@@ -180,6 +198,15 @@ export class AutomodConfig {
 	}
 
 	public async addAffectedChannel(rule: AutomodRule, channel: Snowflake) {
+		let toAdd: string[] = [];
+		const currentData = await this.getSetting(rule);
+		if (!currentData) toAdd = [channel];
+		const currentActions = currentData?.affectedChannels;
+		if (!currentActions) toAdd = [channel];
+		if (toAdd.length === 0 && currentActions) {
+			toAdd = addUniqueToArray(toAdd, channel);
+		}
+
 		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
@@ -241,6 +268,15 @@ export class AutomodConfig {
 	}
 
 	public async addAffectedRole(rule: AutomodRule, role: Snowflake) {
+		let toAdd: string[] = [];
+		const currentData = await this.getSetting(rule);
+		if (!currentData) toAdd = [role];
+		const currentRoles = currentData?.affectedRoles;
+		if (!currentRoles) toAdd = [role];
+		if (toAdd.length === 0 && currentRoles) {
+			toAdd = addUniqueToArray(toAdd, role);
+		}
+
 		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
@@ -335,6 +371,15 @@ export class AutomodConfig {
 	}
 
 	public async addAction(rule: AutomodRule, action: ModerationActionType) {
+		let toAdd: ModerationActionType[] = [];
+		const currentData = await this.getSetting(rule);
+		if (!currentData) toAdd = [action];
+		const currentActions = currentData?.actions;
+		if (!currentActions) toAdd = [action];
+		if (toAdd.length === 0 && currentActions) {
+			toAdd = addUniqueToArray(toAdd, action);
+		}
+
 		await container.db.guild.update({
 			where: {
 				guildId: this.guild.id
@@ -349,7 +394,7 @@ export class AutomodConfig {
 						},
 						update: {
 							actions: {
-								push: action
+								push: toAdd
 							}
 						},
 						where: {

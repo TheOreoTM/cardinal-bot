@@ -38,6 +38,13 @@ import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 
+export function addUniqueToArray<T>(array: T[], value: T): T[] {
+	const set = new Set(array);
+	set.add(value);
+	const newArr = Array.from(set);
+	return newArr;
+}
+
 /**
  * Remove all matching values from the array
  * @param array
