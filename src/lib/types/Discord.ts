@@ -9,6 +9,7 @@ import type {
 	MessageCommandContext
 } from '@sapphire/framework';
 import type {
+	AutocompleteInteraction,
 	ButtonInteraction,
 	CommandInteraction,
 	CommandInteractionOptionResolver,
@@ -70,6 +71,10 @@ export interface GuildButtonInteraction extends ButtonInteraction {
 	client: CardinalClient<true>;
 	readonly guild: Guild;
 	readonly guildId: string;
+}
+
+export interface GuildAutocompleteInteraction extends AutocompleteInteraction {
+	readonly guild: Guild;
 }
 
 export type InteractionOrMessage =
