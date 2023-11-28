@@ -27,7 +27,7 @@ export class bannedWordModerationListener extends ModerationMessageListener {
 		const exactBannedWords = [...rule.exact];
 		const wildcardBannedWords = [...rule.wildcard];
 
-		const hasBannedWord = containsAny(words, exactBannedWords) || wildcardBannedWords.some((word) => words.includes(word));
+		const hasBannedWord = containsAny(words, exactBannedWords) || wildcardBannedWords.some((word) => content.includes(word));
 
 		return hasBannedWord ? true : null;
 	}
