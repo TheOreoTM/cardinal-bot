@@ -24,9 +24,10 @@ export class bannedWordModerationListener extends ModerationMessageListener {
 			}
 		});
 		const rule = data?.bannedWords!;
-		const bannedWords = [...rule.exact, 'nigga'];
+		const exactBannedWords = [...rule.exact];
+		const wildcardBannedWords = [...rule.wildcard];
 
-		const hasBannedWord = containsAny(words, bannedWords);
+		const hasBannedWord = containsAny(words, exactBannedWords) || wildcardBannedWords.some((word) => words.includes(word));
 
 		return hasBannedWord ? true : null;
 	}
