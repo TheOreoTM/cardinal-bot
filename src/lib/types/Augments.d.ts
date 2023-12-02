@@ -10,6 +10,7 @@ import type { AutomodRule } from '#lib/types';
 declare module '@skyra/env-utilities' {
 	interface Env {
 		DISCORD_TOKEN: string;
+		CLIENT_SECRET: string;
 
 		BOT_OWNER: string;
 		BOT_PRIVILEGED_USERS?: ArrayString;
@@ -19,7 +20,12 @@ declare module '@skyra/env-utilities' {
 		REDIS_HOST: string;
 		REDIS_PASSWORD: string;
 
+		API_PORT: NumberString;
+
 		CARDINAL_API_KEY: string;
+
+		OAUTH_REDIRECT_URI: string;
+		OAUTH_DOMAIN_OVERWRITE: string;
 	}
 }
 

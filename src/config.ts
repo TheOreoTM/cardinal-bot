@@ -1,8 +1,16 @@
 import { BucketScope, LogLevel, type ClientLoggerOptions, type CooldownOptions, type SapphirePrefix } from '@sapphire/framework';
 import type { ScheduledTaskHandlerOptions } from '@sapphire/plugin-scheduled-tasks';
 import type { RedisOptions } from 'bullmq';
-import { ActivityType, GatewayIntentBits, Partials, type ClientOptions, type MessageMentionOptions, type PresenceData } from 'discord.js';
-import { BotPrefix, CooldownFiltered } from '#constants';
+import {
+	ActivityType,
+	GatewayIntentBits,
+	Partials,
+	type ClientOptions,
+	type MessageMentionOptions,
+	type PresenceData,
+	OAuth2Scopes
+} from 'discord.js';
+import { BotClientID, BotPrefix, CooldownFiltered } from '#constants';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
 import { seconds } from '#utils/common';
 import type { ServerOptions } from '@sapphire/plugin-api';
@@ -61,8 +69,16 @@ export const config: Config = {
 	api: {
 		origin: '*',
 		prefix: '',
+		auth: {
+			id: BotClientID,
+			secret: envParseString('CLIENT_SECRET'),
+			cookie: 'CARDINAL_AUTH',
+			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
+			redirect: envParseString('OAUTH_REDIRECT_URI')
+			// domainOverwrite: envParseString('OAUTH_DOMAIN_OVERWRITE')
+		},
 		listenOptions: {
-			port: 4000
+			port: envParseNumber('API_PORT')
 		}
 	}
 };
