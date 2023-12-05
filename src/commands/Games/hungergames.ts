@@ -18,7 +18,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['hunger-games', 'hg'],
 	description: 'Play Hunger Games with your friends!',
-	enabled: false,
+	enabled: true,
 	detailedDescription: {
 		usages: ['User1 User2 User3...', '--autofill'],
 		extendedHelp: 'Enough discussion, let the games begin!',
@@ -27,6 +27,7 @@ import { setTimeout as sleep } from 'node:timers/promises';
 	},
 	flags: ['autofill', 'autoskip'],
 	requiredClientPermissions: [PermissionFlagsBits.AddReactions, PermissionFlagsBits.ReadMessageHistory],
+	requiredUserPermissions: ['Administrator'],
 	runIn: [CommandOptionsRunTypeEnum.GuildAny]
 })
 export class UserCommand extends CardinalCommand {
