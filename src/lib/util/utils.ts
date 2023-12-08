@@ -34,7 +34,6 @@ import { lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { HttpCodes, type ApiRequest, type ApiResponse, type LoginData } from '@sapphire/plugin-api';
 import { createFunctionPrecondition } from '@sapphire/decorators';
-import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { isAdmin, sendMessageAsGuild } from '#utils/functions';
