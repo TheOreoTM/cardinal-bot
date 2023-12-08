@@ -107,7 +107,7 @@ async function transformGuild(client: Client, userId: string, data: RESTAPIParti
 		...serialized,
 		permissions: data.permissions,
 		manageable: await getManageable(userId, data, guild),
-		skyraIsIn: typeof guild !== 'undefined'
+		cardinalIsIn: typeof guild !== 'undefined'
 	};
 }
 

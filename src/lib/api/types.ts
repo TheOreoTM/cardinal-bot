@@ -9,7 +9,7 @@ export interface PartialOauthFlattenedGuild extends Omit<FlattenedGuild, 'joined
 export interface OauthFlattenedGuild extends PartialOauthFlattenedGuild {
 	permissions: string;
 	manageable: boolean;
-	skyraIsIn: boolean;
+	cardinalIsIn: boolean;
 }
 
 export interface OauthFlattenedUser {
