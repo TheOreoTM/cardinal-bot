@@ -4,7 +4,7 @@ import { ApiRequest, ApiResponse, HttpCodes, type LoginData } from '@sapphire/pl
 import { RateLimitManager } from '@sapphire/ratelimits';
 import type { RESTAPIPartialCurrentUserGuild } from 'discord-api-types/v9';
 import { Client, Guild, GuildExplicitContentFilter, GuildMFALevel, GuildMember, GuildVerificationLevel, Locale } from 'discord.js';
-import { flattenGuild } from './ApiTransformers';
+import { flattenGuild } from '#lib/api/ApiTransformers';
 import type { OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginData } from './types';
 import { isAdmin } from '#utils/functions';
 import { GuildDefaultMessageNotifications } from 'discord.js';
