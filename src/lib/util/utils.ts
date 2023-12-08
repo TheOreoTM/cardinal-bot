@@ -37,7 +37,7 @@ import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
-import { sendMessageAsGuild } from '#utils/functions';
+import { isAdmin, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
 import type { FormattedGuild, TransformedLoginData } from '#lib/types/Api';
 
@@ -218,7 +218,7 @@ export function pickRandoms<T>(array: ReadonlyArray<T>, amount = 1) {
 
 export const authenticated = () =>
 	createFunctionPrecondition(
-		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`) || Boolean(request.auth?.token),
+		(request: ApiRequest) => Boolean(request.auth?.token),
 		(_request: ApiRequest, response: ApiResponse) => response.error(HttpCodes.Unauthorized)
 	);
 
@@ -556,6 +556,8 @@ export async function canManageGuild(guild: Guild, member: GuildMember | null): 
 	if (guild.ownerId === member.id) return true;
 
 	try {
+		const hasAdmin = await isAdmin(member);
+		if (hasAdmin) return true;
 		return member.permissions.has(PermissionFlagsBits.ManageGuild);
 	} catch (error: unknown) {
 		container.logger.error(error);
