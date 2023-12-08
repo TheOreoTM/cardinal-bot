@@ -14,6 +14,7 @@ import { BotClientID, BotPrefix, CooldownFiltered } from '#constants';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
 import { seconds } from '#utils/common';
 import type { ServerOptions } from '@sapphire/plugin-api';
+import { transformOauthGuildsAndUser } from '#lib/api/util';
 
 export const Presence = {
 	activities: [{ name: `for ${BotPrefix}help`, type: ActivityType.Watching }],
@@ -74,8 +75,8 @@ export const config: Config = {
 			secret: envParseString('CLIENT_SECRET'),
 			cookie: 'CARDINAL_AUTH',
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			domainOverwrite: envParseString('API_AUTH_DOMAIN')
-			// transformers: [transformLoginData]
+			domainOverwrite: envParseString('API_AUTH_DOMAIN'),
+			transformers: [transformOauthGuildsAndUser]
 			// redirect: envParseString('OAUTH_REDIRECT_URI')
 		},
 		listenOptions: {

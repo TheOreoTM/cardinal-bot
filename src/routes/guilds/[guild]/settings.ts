@@ -1,4 +1,4 @@
-import { authenticated } from '#utils/utils';
+import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 

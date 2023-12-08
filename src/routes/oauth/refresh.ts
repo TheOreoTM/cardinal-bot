@@ -1,4 +1,4 @@
-import { authenticated } from '#utils/utils';
+import { authenticated } from '#lib/api/util';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { methods, MimeTypes, Route, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
 import { Time } from '@sapphire/time-utilities';

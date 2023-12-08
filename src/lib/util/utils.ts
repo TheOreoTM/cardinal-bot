@@ -32,13 +32,9 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
 import { lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { HttpCodes, type ApiRequest, type ApiResponse, type LoginData } from '@sapphire/plugin-api';
-import { createFunctionPrecondition } from '@sapphire/decorators';
-import { RateLimitManager } from '@sapphire/ratelimits';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { isAdmin, sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
-import type { FormattedGuild, TransformedLoginData } from '#lib/types/Api';
 
 export function addUniqueToArray<T>(array: T[], value: T): T[] {
 	const set = new Set(array);
@@ -214,48 +210,6 @@ export function pickRandoms<T>(array: ReadonlyArray<T>, amount = 1) {
 
 	return Array.from({ length: Math.min(amount, arr.length) }, () => arr.splice(Math.floor(Math.random() * arr.length), 1)[0]);
 }
-
-export const authenticated = () =>
-	createFunctionPrecondition(
-		(request: ApiRequest) => Boolean(request.auth?.token),
-		(_request: ApiRequest, response: ApiResponse) => response.error(HttpCodes.Unauthorized)
-	);
-
-/**
- * @param time The amount of milliseconds for the ratelimits from this manager to expire.
- * @param limit The amount of times a {@link RateLimit} can drip before it's limited.
- * @param auth Whether or not this should be auth-limited
- */
-export function ratelimit(time: number, limit = 1, auth = false) {
-	const manager = new RateLimitManager(time, limit);
-	const xRateLimitLimit = time;
-	return createFunctionPrecondition(
-		(request: ApiRequest, response: ApiResponse) => {
-			const id = (auth ? request.auth!.id : request.headers['x-forwarded-for'] || request.socket.remoteAddress) as string;
-			const bucket = manager.acquire(id);
-
-			response.setHeader('Date', new Date().toUTCString());
-			if (bucket.limited) {
-				response.setHeader('Retry-After', bucket.remainingTime.toString());
-				return false;
-			}
-
-			try {
-				bucket.consume();
-			} catch {}
-
-			response.setHeader('X-RateLimit-Limit', xRateLimitLimit);
-			response.setHeader('X-RateLimit-Remaining', bucket.remaining.toString());
-			response.setHeader('X-RateLimit-Reset', bucket.remainingTime.toString());
-
-			return true;
-		},
-		(_request: ApiRequest, response: ApiResponse) => {
-			response.error(HttpCodes.TooManyRequests);
-		}
-	);
-}
-
 /**
  *
  * @param command The name of the slash command you want to get the id of
@@ -484,34 +438,6 @@ export function countlines(path: string) {
 		linesOfCode,
 		numOfFiles
 	};
-}
-
-export async function transformLoginData(data: LoginData): Promise<TransformedLoginData> {
-	const { user, guilds } = data;
-	if (!user) return { user, guilds: [] };
-
-	const formattedUser = {
-		id: user.id,
-		global_name: user.global_name,
-		username: user.username,
-		discriminator: user.discriminator,
-		avatar: getUserAvatarUrl(user)
-	};
-
-	if (!guilds) return { user: formattedUser, guilds: [] };
-
-	const formattedGuilds: FormattedGuild[] = await Promise.all(
-		guilds.length > 0
-			? guilds
-					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-					.filter(async (guild) => canManageGuildFilter(guild, user.id)) //
-					.map(({ id, name, icon, owner, permissions, features }) => {
-						return { id, name, icon: icon ?? '', owner, permissions, features };
-					})
-			: []
-	);
-
-	return { user: formattedUser, guilds: formattedGuilds };
 }
 
 /**
