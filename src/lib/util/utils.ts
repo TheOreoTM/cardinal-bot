@@ -15,12 +15,14 @@ import {
 	type Guild,
 	type ImageURLOptions,
 	type Message,
-	type User,
+	User,
 	type Snowflake,
 	EmbedBuilder,
 	type APIEmbedField,
 	GuildMember,
-	Role
+	Role,
+	PermissionFlagsBits,
+	type RESTAPIPartialCurrentUserGuild
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { chunk, isNullishOrEmpty, type Nullish } from '@sapphire/utilities';
@@ -30,13 +32,14 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ButtonLimits } from '@sapphire/discord.js-utilities';
 import { lstatSync, readdirSync, readFileSync } from 'fs';
 import { join } from 'path';
-import { HttpCodes, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
+import { HttpCodes, type ApiRequest, type ApiResponse, type LoginData } from '@sapphire/plugin-api';
 import { createFunctionPrecondition } from '@sapphire/decorators';
 import { envParseString } from '@skyra/env-utilities';
 import { RateLimitManager } from '@sapphire/ratelimits';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
 import { sendMessageAsGuild } from '#utils/functions';
 import { ModerationType } from '#utils/moderationConstants';
+import type { FormattedGuild, TransformedLoginData } from '#lib/types/Api';
 
 export function addUniqueToArray<T>(array: T[], value: T): T[] {
 	const set = new Set(array);
@@ -482,4 +485,80 @@ export function countlines(path: string) {
 		linesOfCode,
 		numOfFiles
 	};
+}
+
+export async function transformLoginData(data: LoginData): Promise<TransformedLoginData> {
+	const { user, guilds } = data;
+	if (!user) return { user, guilds: [] };
+
+	const formattedUser = {
+		id: user.id,
+		global_name: user.global_name,
+		username: user.username,
+		discriminator: user.discriminator,
+		avatar: getUserAvatarUrl(user)
+	};
+
+	if (!guilds) return { user: formattedUser, guilds: [] };
+
+	const formattedGuilds: FormattedGuild[] = await Promise.all(
+		guilds.length > 0
+			? guilds
+					// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+					.filter(async (guild) => canManageGuildFilter(guild, user.id)) //
+					.map(({ id, name, icon, owner, permissions, features }) => {
+						return { id, name, icon: icon ?? '', owner, permissions, features };
+					})
+			: []
+	);
+
+	return { user: formattedUser, guilds: formattedGuilds };
+}
+
+/**
+ * Get the URL of a user's avatar
+ * @param user - The user
+ * @param options - The image options for the avatar
+ */
+export function getUserAvatarUrl(user: APIUser | User, options: ImageURLOptions = {}): string {
+	const { forceStatic = false, size = 512 } = options;
+
+	if (user instanceof User) {
+		return user.avatar //
+			? user.avatarURL({ forceStatic, size, extension: 'png' })!
+			: user.defaultAvatarURL;
+	}
+	return user.avatar ?? createDefaultAvatar();
+}
+
+/**
+ * Create a default avatar.
+ */
+export function createDefaultAvatar(): string {
+	return `https://cdn.discordapp.com/embed/avatars/${Math.floor(Math.random() * 5)}.png`;
+}
+
+export async function canManageGuildFilter(guild: Guild | RESTAPIPartialCurrentUserGuild, userId: string): Promise<boolean> {
+	const fetchedGuild = container.client.guilds.cache.get(guild.id);
+	if (!fetchedGuild) return false;
+
+	const member = await fetchedGuild.members.fetch(userId).catch(() => null);
+	return canManageGuild(fetchedGuild, member);
+}
+
+/**
+ * Checks if a member has `Manager Server` permissions in a guild.
+ * @param guild - The guild to check
+ * @param member - The member to check
+ */
+export async function canManageGuild(guild: Guild, member: GuildMember | null): Promise<boolean> {
+	if (!member) return false;
+	if (guild.ownerId === member.id) return true;
+
+	try {
+		return member.permissions.has(PermissionFlagsBits.ManageGuild);
+	} catch (error: unknown) {
+		container.logger.error(error);
+		return false;
+	}
 }

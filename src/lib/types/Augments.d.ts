@@ -21,6 +21,11 @@ declare module '@skyra/env-utilities' {
 		REDIS_PASSWORD: string;
 
 		API_PORT: NumberString;
+		API_HOST: string;
+		API_AUTH_COOKIE: string;
+		API_AUTH_DOMAIN: string;
+
+		WEB_URL: string;
 
 		CARDINAL_API_KEY: string;
 
