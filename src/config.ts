@@ -72,13 +72,13 @@ export const config: Config = {
 			id: BotClientID,
 			secret: envParseString('OAUTH_SECRET'),
 			cookie: 'CARDINAL_AUTH', //envParseString('OAUTH_COOKIE'),
+			redirect: 'https://oreotm.xyz/oauth/discord/callback', // envParseString('OAUTH_REDIRECT_URI') // included in the api req from dashboard
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
 			transformers: [transformOauthGuildsAndUser],
 			domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
-			// redirect: envParseString('OAUTH_REDIRECT_URI') // included in the api req from dashboard
 		},
-		origin: 'https://cardinal.oreotm.xyz', //envParseString('API_ORIGIN'),
 		prefix: '/', //envParseString('API_PREFIX'),
+		origin: 'https://oreotm.xyz', //envParseString('API_ORIGIN'),
 		listenOptions: {
 			port: 4000
 		}
