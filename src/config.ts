@@ -68,16 +68,16 @@ export const config: Config = {
 		}
 	},
 	api: {
-		origin: '*',
-		prefix: '',
+		origin: envParseString('API_ORIGIN'),
+		prefix: envParseString('API_PREFIX'),
 		auth: {
 			id: BotClientID,
-			secret: envParseString('CLIENT_SECRET'),
-			cookie: 'CARDINAL_AUTH',
+			secret: envParseString('OAUTH_SECRET'),
+			cookie: envParseString('OAUTH_COOKIE'),
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			transformers: [transformOauthGuildsAndUser]
-			// domainOverwrite: envParseString('API_AUTH_DOMAIN'), Only in Dev
-			// redirect: envParseString('OAUTH_REDIRECT_URI')
+			transformers: [transformOauthGuildsAndUser],
+			domainOverwrite: envParseString('OAUTH_DOMAIN_OVERWRITE')
+			// redirect: envParseString('OAUTH_REDIRECT_URI') // included in the api req from dashboard
 		},
 		listenOptions: {
 			port: envParseNumber('API_PORT')
