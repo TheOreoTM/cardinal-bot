@@ -75,8 +75,8 @@ export const config: Config = {
 			secret: envParseString('CLIENT_SECRET'),
 			cookie: 'CARDINAL_AUTH',
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			domainOverwrite: envParseString('API_AUTH_DOMAIN'),
 			transformers: [transformOauthGuildsAndUser]
+			// domainOverwrite: envParseString('API_AUTH_DOMAIN'), Only in Dev
 			// redirect: envParseString('OAUTH_REDIRECT_URI')
 		},
 		listenOptions: {
