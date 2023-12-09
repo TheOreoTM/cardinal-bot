@@ -24,8 +24,6 @@ import type {
 	VoiceChannel
 } from 'discord.js';
 
-// #region Guild
-
 export function flattenGuild(guild: Guild): FlattenedGuild {
 	return {
 		afkChannelId: guild.afkChannelId,

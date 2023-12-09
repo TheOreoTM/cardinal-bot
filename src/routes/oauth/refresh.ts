@@ -1,6 +1,6 @@
 import { authenticated } from '#lib/api/util';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
-import { methods, MimeTypes, Route, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
+import { methods, MimeTypes, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 import { Time } from '@sapphire/time-utilities';
 import { OAuth2Routes, type RESTPostOAuth2AccessTokenResult } from 'discord.js';
 import { stringify } from 'node:querystring';
@@ -27,6 +27,14 @@ export class RefreshRoute extends Route {
 				response.cookies.add(serverAuth.cookie, authentication, { maxAge: body.expires_in });
 				authToken = body.access_token;
 			}
+		}
+
+		// Refresh the user's data
+		try {
+			return response.json(await serverAuth.fetchData(authToken));
+		} catch (error) {
+			this.container.logger.fatal(error);
+			return response.error(HttpCodes.InternalServerError);
 		}
 	}
 
