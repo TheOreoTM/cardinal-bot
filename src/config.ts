@@ -68,19 +68,19 @@ export const config: Config = {
 		}
 	},
 	api: {
-		origin: envParseString('API_ORIGIN'),
-		prefix: envParseString('API_PREFIX'),
 		auth: {
 			id: BotClientID,
 			secret: envParseString('OAUTH_SECRET'),
-			cookie: envParseString('OAUTH_COOKIE'),
+			cookie: 'CARDINAL_AUTH', //envParseString('OAUTH_COOKIE'),
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
 			transformers: [transformOauthGuildsAndUser],
-			domainOverwrite: envParseString('OAUTH_DOMAIN_OVERWRITE')
+			domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
 			// redirect: envParseString('OAUTH_REDIRECT_URI') // included in the api req from dashboard
 		},
+		origin: 'https://cardinal.oreotm.xyz', //envParseString('API_ORIGIN'),
+		prefix: '/', //envParseString('API_PREFIX'),
 		listenOptions: {
-			port: envParseNumber('API_PORT')
+			port: 4000
 		}
 	}
 };
