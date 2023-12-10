@@ -72,9 +72,9 @@ export const config: Config = {
 			id: BotClientID,
 			secret: envParseString('OAUTH_SECRET'),
 			cookie: 'CARDINAL_AUTH', //envParseString('OAUTH_COOKIE'),
-			// redirect: 'https://oreotm.xyz/oauth/discord/callback', // envParseString('OAUTH_REDIRECT_URI')
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			transformers: [transformOauthGuildsAndUser]
+			transformers: [transformOauthGuildsAndUser],
+			redirect: 'https://oreotm.xyz/oauth/callback' // envParseString('OAUTH_REDIRECT_URI')
 			// domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
 		},
 		prefix: '/', //envParseString('API_PREFIX'),
