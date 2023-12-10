@@ -74,11 +74,11 @@ export const config: Config = {
 			cookie: 'CARDINAL_AUTH', //envParseString('OAUTH_COOKIE'),
 			redirect: 'https://cardinal.oreotm.xyz/oauth/discord/callback', // envParseString('OAUTH_REDIRECT_URI')
 			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			transformers: [transformOauthGuildsAndUser],
-			domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
+			transformers: [transformOauthGuildsAndUser]
+			// domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
 		},
 		prefix: '/', //envParseString('API_PREFIX'),
-		origin: 'https://cardinal.oreotm.xyz', //envParseString('API_ORIGIN'),
+		origin: '*', //envParseString('API_ORIGIN'),
 		listenOptions: {
 			port: 4000
 		}
