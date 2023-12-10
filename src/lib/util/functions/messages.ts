@@ -63,7 +63,10 @@ export async function sendMessageAsGuild(
 	appealLink?: string | Nullish
 ) {
 	const sentFromButton = generateSendMessageAsGuildButton(guild);
-	const appealButton = new ButtonBuilder().setURL(appealLink ?? '').setStyle(ButtonStyle.Link);
+	const appealButton = new ButtonBuilder()
+		.setLabel('Appeal')
+		.setURL(appealLink ?? '')
+		.setStyle(ButtonStyle.Link);
 
 	const buttons = [sentFromButton];
 	if (appealLink) buttons.push(appealButton);
