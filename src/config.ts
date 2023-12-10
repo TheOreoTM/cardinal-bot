@@ -80,7 +80,7 @@ export const config: Config = {
 		prefix: '/', //envParseString('API_PREFIX'),
 		origin: '*', //envParseString('API_ORIGIN'),
 		listenOptions: {
-			port: 4000
+			port: 3000
 		}
 	}
 };
