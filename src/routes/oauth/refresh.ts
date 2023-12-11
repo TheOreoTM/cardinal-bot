@@ -1,10 +1,14 @@
 import { authenticated } from '#lib/api/util';
+import { ApplyOptions } from '@sapphire/decorators';
 import { fetch, FetchResultTypes } from '@sapphire/fetch';
 import { methods, MimeTypes, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 import { Time } from '@sapphire/time-utilities';
 import { OAuth2Routes, type RESTPostOAuth2AccessTokenResult } from 'discord.js';
 import { stringify } from 'node:querystring';
 
+@ApplyOptions<Route.Options>({
+	route: 'oauth/refresh'
+})
 export class RefreshRoute extends Route {
 	@authenticated()
 	public async [methods.POST](request: ApiRequest, response: ApiResponse) {
