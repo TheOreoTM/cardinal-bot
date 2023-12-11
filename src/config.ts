@@ -72,13 +72,13 @@ export const config: Config = {
 			id: BotClientID,
 			secret: envParseString('OAUTH_SECRET'),
 			cookie: 'CARDINAL_AUTH', //envParseString('OAUTH_COOKIE'),
-			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
-			transformers: [transformOauthGuildsAndUser],
 			redirect: 'https://oreotm.xyz/oauth/callback', // envParseString('OAUTH_REDIRECT_URI')
-			domainOverwrite: '.oreotm.xyz' //envParseString('OAUTH_DOMAIN_OVERWRITE')
+			scopes: [OAuth2Scopes.Identify, OAuth2Scopes.Guilds],
+			domainOverwrite: '.oreotm.xyz', //envParseString('OAUTH_DOMAIN_OVERWRITE')
+			transformers: [transformOauthGuildsAndUser]
 		},
 		prefix: '/', //envParseString('API_PREFIX'),
-		origin: '*', //envParseString('API_ORIGIN'),
+		origin: 'https://oreotm.xyz', //envParseString('API_ORIGIN'),
 		listenOptions: {
 			port: 4000
 		}
