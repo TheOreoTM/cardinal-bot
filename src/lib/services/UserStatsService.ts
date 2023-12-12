@@ -1,13 +1,10 @@
-import { StatsService } from '#services';
 import type { MessageData } from '#services/types';
 import { days } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import type { Guild, Snowflake } from 'discord.js';
 
-export class UserStatsService extends StatsService {
-	public constructor(guild: Guild) {
-		super(guild);
-	}
+export class UserStatsService {
+	public constructor(private readonly guild: Guild) {}
 
 	public async getLookbackMessageData(memberId: Snowflake): Promise<MessageData> {
 		const lookback = await this.getLookback();
@@ -118,5 +115,15 @@ export class UserStatsService extends StatsService {
 			messageAmount,
 			minutesAmount
 		};
+	}
+
+	private async getLookback(): Promise<number> {
+		const data = await container.db.guild.findUnique({
+			where: {
+				guildId: this.guild.id
+			}
+		});
+
+		return data ? data.lookback : 7;
 	}
 }
