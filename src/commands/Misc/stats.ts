@@ -1,8 +1,7 @@
 import { PermissionLevel } from '#lib/decorators';
-import { UserStatsService } from '#lib/services';
+import { ChannelStatsService, UserStatsService } from '#lib/services';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
-import { getChannelStats } from '#utils/caching';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -176,10 +175,10 @@ export class statsCommand extends CardinalSubcommand {
 					inline: true,
 					name: 'Messages',
 					value: [
-						`${formattedLookback}: \`${lookbackData.messageAmount} Messages\``,
-						`24 Hours: \`${dailyData.messageAmount} Messages\``,
-						`7 Days: \`${weeklyData.messageAmount} Messages\``,
-						`All time: \`${alltimeData.messageAmount} Messages\``
+						`${formattedLookback}: \`${lookbackData.messageAmount}\``,
+						`24 Hours: \`${dailyData.messageAmount}\``,
+						`7 Days: \`${weeklyData.messageAmount}\``,
+						`All time: \`${alltimeData.messageAmount}\``
 					].join('\n')
 				},
 				{
@@ -212,9 +211,16 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const data = await getChannelStats(channel.guild.id, channel.id, lookback, this.take);
+		const channelStatsService = new ChannelStatsService(message.guild, channel.id);
 
-		const topMembers = await this.findTopMembersForChannel(channel.id, channel.guild.id, lookback);
+		const [dailyData, weeklyData, lookbackData, alltimeData, topMembers] = await Promise.all([
+			channelStatsService.getAllMessageData(),
+			channelStatsService.getWeeklyMessageData(),
+			channelStatsService.getLookbackMessageData(),
+			channelStatsService.getAllMessageData(),
+			channelStatsService.getTopMembers(this.take)
+		]);
+
 		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopMembers = topMembers.map((member, index) => {
@@ -234,20 +240,20 @@ export class statsCommand extends CardinalSubcommand {
 					inline: true,
 					name: 'Messages',
 					value: [
-						`${formattedLookback}: \`${data.messageCountLookback}\``,
-						`24 Hours: \`${data.messageCountLastDay}\``,
-						`7 Days: \`${data.messageCountLastWeek}\``,
-						`All time: \`${data.messageCountAllTime}\``
+						`${formattedLookback}: \`${lookbackData.messageAmount}\``,
+						`24 Hours: \`${dailyData.messageAmount}\``,
+						`7 Days: \`${weeklyData.messageAmount}\``,
+						`All time: \`${alltimeData.messageAmount}\``
 					].join('\n')
 				},
 				{
 					inline: true,
 					name: 'Time Spent',
 					value: [
-						`${formattedLookback}: \`${data.messageTimeLookback}\``,
-						`24 Hours: \`${data.messageTimeLastDay}\``,
-						`7 Days: \`${data.messageTimeLastWeek}\``,
-						`All time: \`${data.messageTimeAllTime}\``
+						`${formattedLookback}: \`${lookbackData.messageAmount}\``,
+						`24 Hours: \`${dailyData.messageAmount}\``,
+						`7 Days: \`${weeklyData.messageAmount}\``,
+						`All time: \`${alltimeData.messageAmount}\``
 					].join('\n')
 				}
 			);
@@ -442,39 +448,6 @@ export class statsCommand extends CardinalSubcommand {
 			},
 			_count: { memberId: true },
 			orderBy: { _count: { memberId: 'desc' } },
-			take: this.take
-		});
-
-		return topMembers.map((member) => ({
-			memberId: member.memberId,
-			messageCount: member._count.memberId.toLocaleString()
-		}));
-	}
-
-	private async findTopMembersForChannel(
-		channelId: string,
-		guildId: string,
-		lookback: number
-	): Promise<{ memberId: string; messageCount: string }[]> {
-		const now = new Date();
-		const lastLookback = new Date(now.getTime() - days(lookback));
-		const topMembers = await this.container.db.message.groupBy({
-			by: ['memberId'],
-			where: {
-				channelId: channelId,
-				guildId: guildId,
-				createdAt: {
-					gte: lastLookback
-				}
-			},
-			_count: {
-				memberId: true
-			},
-			orderBy: {
-				_count: {
-					memberId: 'desc'
-				}
-			},
 			take: this.take
 		});
 

@@ -1,9 +1,14 @@
 export type MessageData = {
-	messageAmount: string;
+	messageAmount: `${string} Messages`;
 	minutesAmount: string;
 };
 
 export type TopChannelsData = {
 	channelId: string;
+	messageCount: string;
+}[];
+
+export type TopMembersData = {
+	memberId: string;
 	messageCount: string;
 }[];

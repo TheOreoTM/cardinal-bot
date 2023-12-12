@@ -47,7 +47,7 @@ export class UserStatsService extends StatsService {
 		const durationFormatter = new DurationFormatter();
 
 		return {
-			messageAmount: messageAmount.toLocaleString(),
+			messageAmount: `${messageAmount.toLocaleString()} Messages`,
 			minutesAmount: durationFormatter.format(minutes(minutesAmount))
 		};
 	}
@@ -109,7 +109,7 @@ export class UserStatsService extends StatsService {
 		const durationFormatter = new DurationFormatter();
 
 		return {
-			messageAmount: messageAmount.toLocaleString(),
+			messageAmount: `${messageAmount.toLocaleString()} Messages`,
 			minutesAmount: durationFormatter.format(minutes(minutesAmount))
 		};
 	}
