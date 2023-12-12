@@ -148,7 +148,7 @@ export class statsCommand extends CardinalSubcommand {
 		const userStatsService = new UserStatsService(message.guild, user.id);
 
 		const [dailyData, weeklyData, lookbackData, alltimeData, topChannels] = await Promise.all([
-			userStatsService.getAllMessageData(),
+			userStatsService.getDailyMessageData(),
 			userStatsService.getWeeklyMessageData(),
 			userStatsService.getLookbackMessageData(),
 			userStatsService.getAllMessageData(),
@@ -214,7 +214,7 @@ export class statsCommand extends CardinalSubcommand {
 		const channelStatsService = new ChannelStatsService(message.guild, channel.id);
 
 		const [dailyData, weeklyData, lookbackData, alltimeData, topMembers] = await Promise.all([
-			channelStatsService.getAllMessageData(),
+			channelStatsService.getDailyMessageData(),
 			channelStatsService.getWeeklyMessageData(),
 			channelStatsService.getLookbackMessageData(),
 			channelStatsService.getAllMessageData(),

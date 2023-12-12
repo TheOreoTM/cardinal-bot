@@ -54,35 +54,35 @@ export class ChannelStatsService extends StatsService {
 
 	public async getTopMembers(limit: number): Promise<TopMembersData> {
 		const topMembers = await container.db.message.groupBy({
-			by: ['memberId'],
+			by: ['channelId'],
 			where: {
 				channelId: this.channelId,
 				guildId: this.guild.id
 			},
 			_count: {
-				memberId: true
+				channelId: true
 			},
 			orderBy: {
 				_count: {
-					memberId: 'desc'
+					channelId: 'desc'
 				}
 			},
 			take: limit
 		});
 
 		return topMembers.map((member) => ({
-			memberId: member.memberId,
-			messageCount: member._count.memberId.toLocaleString()
+			memberId: member.channelId,
+			messageCount: member._count.channelId.toLocaleString()
 		}));
 	}
 
 	private async getMessageDataForXDays(dayAmount: number): Promise<MessageData> {
 		const daysAgo = new Date(Date.now() - days(dayAmount));
-		const memberId = this.channelId;
+		const channelId = this.channelId;
 
 		const messageAmount = await container.db.message.count({
 			where: {
-				memberId,
+				channelId,
 				guildId: this.guild.id,
 				createdAt: {
 					gte: daysAgo
@@ -92,7 +92,7 @@ export class ChannelStatsService extends StatsService {
 
 		const minutesAmount = await container.db.message.count({
 			where: {
-				memberId,
+				channelId,
 				guildId: this.guild.id,
 				minuteMessage: true,
 				createdAt: {
