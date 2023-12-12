@@ -176,20 +176,20 @@ export class statsCommand extends CardinalSubcommand {
 					inline: true,
 					name: 'Messages',
 					value: [
-						`${formattedLookback}: \`${lookbackData.messageAmount.toLocaleString()} Messages\``,
-						`24 Hours: \`${dailyData.messageAmount.toLocaleString()} Messages\``,
-						`7 Days: \`${weeklyData.messageAmount.toLocaleString()} Messages\``,
-						`All time: \`${alltimeData.messageAmount.toLocaleString()} Messages\``
+						`${formattedLookback}: \`${lookbackData.messageAmount} Messages\``,
+						`24 Hours: \`${dailyData.messageAmount} Messages\``,
+						`7 Days: \`${weeklyData.messageAmount} Messages\``,
+						`All time: \`${alltimeData.messageAmount} Messages\``
 					].join('\n')
 				},
 				{
 					inline: true,
 					name: 'Time Spent',
 					value: [
-						`${formattedLookback}: \`${lookbackData.minutesAmount.toLocaleString()} Minutes\``,
-						`24 Hours: \`${dailyData.messageAmount.toLocaleString()} Minutes\``,
-						`7 Days: \`${weeklyData.minutesAmount.toLocaleString()} Minutes\``,
-						`All time: \`${alltimeData.minutesAmount.toLocaleString()} Minutes\``
+						`${formattedLookback}: \`${lookbackData.minutesAmount}\``,
+						`24 Hours: \`${dailyData.messageAmount}\``,
+						`7 Days: \`${weeklyData.minutesAmount}\``,
+						`All time: \`${alltimeData.minutesAmount}\``
 					].join('\n')
 				}
 			)

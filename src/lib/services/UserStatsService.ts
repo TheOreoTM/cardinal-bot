@@ -1,7 +1,8 @@
 import { StatsService } from '#lib/services/StatsService';
 import type { MessageData, TopChannelsData } from '#lib/services/types';
-import { days } from '#utils/common';
+import { days, minutes } from '#utils/common';
 import { container } from '@sapphire/pieces';
+import { DurationFormatter } from '@sapphire/time-utilities';
 import type { Guild, Snowflake } from 'discord.js';
 
 export class UserStatsService extends StatsService {
@@ -43,9 +44,11 @@ export class UserStatsService extends StatsService {
 			}
 		});
 
+		const durationFormatter = new DurationFormatter();
+
 		return {
-			messageAmount,
-			minutesAmount
+			messageAmount: messageAmount.toLocaleString(),
+			minutesAmount: durationFormatter.format(minutes(minutesAmount))
 		};
 	}
 
@@ -103,9 +106,11 @@ export class UserStatsService extends StatsService {
 			}
 		});
 
+		const durationFormatter = new DurationFormatter();
+
 		return {
-			messageAmount,
-			minutesAmount
+			messageAmount: messageAmount.toLocaleString(),
+			minutesAmount: durationFormatter.format(minutes(minutesAmount))
 		};
 	}
 }

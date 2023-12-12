@@ -1,6 +1,6 @@
 export type MessageData = {
-	messageAmount: number;
-	minutesAmount: number;
+	messageAmount: string;
+	minutesAmount: string;
 };
 
 export type TopChannelsData = {
