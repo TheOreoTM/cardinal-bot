@@ -2,7 +2,7 @@ import { PermissionLevel } from '#lib/decorators';
 import { UserStatsService } from '#lib/services';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
-import { getChannelStats, getUserStats } from '#utils/caching';
+import { getChannelStats } from '#utils/caching';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -148,18 +148,14 @@ export class statsCommand extends CardinalSubcommand {
 
 		const userStatsService = new UserStatsService(message.guild, user.id);
 
-		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
+		const [dailyData, weeklyData, lookbackData, alltimeData, topChannels] = await Promise.all([
 			userStatsService.getAllMessageData(),
 			userStatsService.getWeeklyMessageData(),
 			userStatsService.getLookbackMessageData(),
-			userStatsService.getAllMessageData()
+			userStatsService.getAllMessageData(),
+			userStatsService.getTopChannels(this.take)
 		]);
 
-		const allData = await getUserStats(user.guild.id, user.id, lookback, this.take);
-		// const data = allData.data;
-		const extraData = allData.extra;
-
-		const topChannels = extraData;
 		const timeTaken = stopWatch.stop().toString();
 
 		const formattedTopChannels = topChannels.map((channel, index) => {

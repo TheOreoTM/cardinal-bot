@@ -1,5 +1,5 @@
 import { StatsService } from '#lib/services/StatsService';
-import type { MessageData } from '#lib/services/types';
+import type { MessageData, TopChannelsData } from '#lib/services/types';
 import { days } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import type { Guild, Snowflake } from 'discord.js';
@@ -47,6 +47,35 @@ export class UserStatsService extends StatsService {
 			messageAmount,
 			minutesAmount
 		};
+	}
+
+	public async getTopChannels(limit: number): Promise<TopChannelsData> {
+		const lookback = await this.getLookback();
+		const lookbackAgo = new Date(Date.now() - days(lookback));
+		const topChannels = await container.db.message.groupBy({
+			by: ['channelId'],
+			where: {
+				memberId: this.memberId,
+				guildId: this.guild.id,
+				createdAt: {
+					gte: lookbackAgo
+				}
+			},
+			_count: {
+				channelId: true
+			},
+			orderBy: {
+				_count: {
+					channelId: 'desc'
+				}
+			},
+			take: limit
+		});
+
+		return topChannels.map((channel) => ({
+			channelId: channel.channelId,
+			messageCount: channel._count.channelId.toLocaleString()
+		}));
 	}
 
 	private async getMessageDataForXDays(dayAmount: number): Promise<MessageData> {
