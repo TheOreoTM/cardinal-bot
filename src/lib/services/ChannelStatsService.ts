@@ -54,25 +54,25 @@ export class ChannelStatsService extends StatsService {
 
 	public async getTopMembers(limit: number): Promise<TopMembersData> {
 		const topMembers = await container.db.message.groupBy({
-			by: ['channelId'],
+			by: ['memberId'],
 			where: {
 				channelId: this.channelId,
 				guildId: this.guild.id
 			},
 			_count: {
-				channelId: true
+				memberId: true
 			},
 			orderBy: {
 				_count: {
-					channelId: 'desc'
+					memberId: 'desc'
 				}
 			},
 			take: limit
 		});
 
 		return topMembers.map((member) => ({
-			memberId: member.channelId,
-			messageCount: member._count.channelId.toLocaleString()
+			memberId: member.memberId,
+			messageCount: member._count.memberId.toLocaleString()
 		}));
 	}
 
