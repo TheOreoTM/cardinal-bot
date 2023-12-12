@@ -18,7 +18,7 @@
 		"#lib/database/entities": "./dist/lib/database/entities/index.js",
 		"#lib/database/keys": "./dist/lib/database/keys/index.js",
 		"#lib/database/settings": "./dist/lib/database/settings/index.js",
-		"#services": "./dist/lib/services/index.js",
+		"#lib/services": "./dist/lib/services/index.js",
 		"#utils/*": "./dist/lib/util/*.js",
 		"#utils/common": "./dist/lib/util/common/index.js",
 		"#utils/functions": "./dist/lib/util/functions/index.js",
