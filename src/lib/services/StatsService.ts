@@ -2,7 +2,10 @@ import { container } from '@sapphire/pieces';
 import type { Guild } from 'discord.js';
 
 export abstract class StatsService {
-	public constructor(protected readonly guild: Guild) {}
+	public readonly guild: Guild;
+	public constructor(guild: Guild) {
+		this.guild = guild;
+	}
 
 	protected async getLookback(): Promise<number> {
 		const data = await container.db.guild.findUnique({

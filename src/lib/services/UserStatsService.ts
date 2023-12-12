@@ -1,26 +1,33 @@
-import type { MessageData } from '#services/types';
+import { StatsService } from '#lib/services/StatsService';
+import type { MessageData } from '#lib/services/types';
 import { days } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import type { Guild, Snowflake } from 'discord.js';
 
-export class UserStatsService {
-	public constructor(private readonly guild: Guild) {}
+export class UserStatsService extends StatsService {
+	private readonly memberId: Snowflake;
 
-	public async getLookbackMessageData(memberId: Snowflake): Promise<MessageData> {
+	public constructor(guild: Guild, memberid: Snowflake) {
+		super(guild);
+		this.memberId = memberid;
+	}
+
+	public async getLookbackMessageData(): Promise<MessageData> {
 		const lookback = await this.getLookback();
 
-		return await this.getMessageDataForXDays(memberId, lookback);
+		return await this.getMessageDataForXDays(lookback);
 	}
 
-	public async getDailyMessageData(memberId: Snowflake): Promise<MessageData> {
-		return await this.getMessageDataForXDays(memberId, 1);
+	public async getDailyMessageData(): Promise<MessageData> {
+		return await this.getMessageDataForXDays(1);
 	}
 
-	public async getWeeklyMessageData(memberId: Snowflake): Promise<MessageData> {
-		return await this.getMessageDataForXDays(memberId, 7);
+	public async getWeeklyMessageData(): Promise<MessageData> {
+		return await this.getMessageDataForXDays(7);
 	}
 
-	public async getAllMessageData(memberId: Snowflake): Promise<MessageData> {
+	public async getAllMessageData(): Promise<MessageData> {
+		const memberId = this.memberId;
 		const messageAmount = await container.db.message.count({
 			where: {
 				memberId,
@@ -42,53 +49,9 @@ export class UserStatsService {
 		};
 	}
 
-	public async getAllMessageData2(memberId: Snowflake) {
-		const messageData = await container.db.message.findMany({
-			where: {
-				memberId,
-				guildId: this.guild.id
-			}
-		});
-
-		const lookback = await this.getLookback();
-		const lookbackAgo = new Date(Date.now() - days(lookback));
-		const dayAgo = new Date(Date.now() - days(1));
-		const weekAgo = new Date(Date.now() - days(7));
-
-		return {
-			daily: {
-				messageAmount: messageData.filter((m) => {
-					m.createdAt >= dayAgo;
-				}).length,
-				minutesAmount: messageData.filter((m) => {
-					m.createdAt >= dayAgo && m.minuteMessage;
-				}).length
-			},
-			weekly: {
-				messageAmount: messageData.filter((m) => {
-					m.createdAt >= weekAgo;
-				}).length,
-				minutesAmount: messageData.filter((m) => {
-					m.createdAt >= weekAgo && m.minuteMessage;
-				}).length
-			},
-			alltime: {
-				messageAmount: messageData.length,
-				minutesAmount: messageData.length
-			},
-			lookback: {
-				messageAmount: messageData.filter((m) => {
-					m.createdAt >= lookbackAgo;
-				}).length,
-				minutesAmount: messageData.filter((m) => {
-					m.createdAt >= lookbackAgo && m.minuteMessage;
-				}).length
-			}
-		};
-	}
-
-	private async getMessageDataForXDays(memberId: Snowflake, dayAmount: number): Promise<MessageData> {
+	private async getMessageDataForXDays(dayAmount: number): Promise<MessageData> {
 		const daysAgo = new Date(Date.now() - days(dayAmount));
+		const memberId = this.memberId;
 
 		const messageAmount = await container.db.message.count({
 			where: {
@@ -115,15 +78,5 @@ export class UserStatsService {
 			messageAmount,
 			minutesAmount
 		};
-	}
-
-	private async getLookback(): Promise<number> {
-		const data = await container.db.guild.findUnique({
-			where: {
-				guildId: this.guild.id
-			}
-		});
-
-		return data ? data.lookback : 7;
 	}
 }

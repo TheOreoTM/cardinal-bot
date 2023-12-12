@@ -7,8 +7,6 @@
 		"allowJs": true,
 		"paths": {
 			"#utils/*": ["lib/util/*"],
-			"#services": ["lib/services/index.ts"],
-			"#services/*": ["lib/services/*"],
 			"#lib/*": ["lib/*"],
 			"#constants": ["lib/util/constants.ts"],
 			"#config": ["config.ts"],
