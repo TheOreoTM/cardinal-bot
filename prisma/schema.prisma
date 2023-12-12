@@ -170,6 +170,8 @@ model Guild {
 
   restrictionNodes RestrictionNode[]
 
+  useCachedStats Boolean @default(true)
+
   lookback Int     @default(7)
   prefix   String  @default(">")
   premium  Boolean @default(false)

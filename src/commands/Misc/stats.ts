@@ -1,7 +1,8 @@
 import { PermissionLevel } from '#lib/decorators';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { redis } from '#root/index';
-import { getChannelStats, getUserStats } from '#utils/caching';
+import { UserStatsService } from '#services';
+import { getChannelStats } from '#utils/caching';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -145,16 +146,17 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const allData = await getUserStats(user.guild.id, user.id, lookback, this.take);
-		const data = allData.data;
-		const extraData = allData.extra;
+		// const allData = await getUserStats(user.guild.id, user.id, lookback, this.take);
+		// const data = allData.data;
+		// const extraData = allData.extra;
 
-		const topChannels = extraData;
+		// const topChannels = extraData;
+		const data = await new UserStatsService(message.guild).getAllMessageData2(user.id);
 		const timeTaken = stopWatch.stop().toString();
 
-		const formattedTopChannels = topChannels.map((channel, index) => {
-			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
-		});
+		// const formattedTopChannels = topChannels.map((channel, index) => {
+		// 	return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
+		// });
 
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
@@ -162,28 +164,48 @@ export class statsCommand extends CardinalSubcommand {
 				`${user} (${getTag(user.user)})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields(
-				{
-					name: 'Most active channels',
-					value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
-				},
+				// {
+				// 	name: 'Most active channels',
+				// 	value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
+				// },
+				// {
+				// 	inline: true,
+				// 	name: 'Messages',
+				// 	value: [
+				// 		`${formattedLookback}: \`${data.messageCountLookback} Messages\``,
+				// 		`24 Hours: \`${data.messageCountLastDay} Messages\``,
+				// 		`7 Days: \`${data.messageCountLastWeek} Messages\``,
+				// 		`All time: \`${data.messageCountAllTime} Messages\``
+				// 	].join('\n')
+				// },
+				// {
+				// 	inline: true,
+				// 	name: 'Time Spent',
+				// 	value: [
+				// 		`${formattedLookback}: \`${data.messageTimeLookback}\``,
+				// 		`24 Hours: \`${data.messageTimeLastDay}\``,
+				// 		`7 Days: \`${data.messageTimeLastWeek}\``,
+				// 		`All time: \`${data.messageTimeAllTime}\``
+				// 	].join('\n')
+				// }
 				{
 					inline: true,
 					name: 'Messages',
 					value: [
-						`${formattedLookback}: \`${data.messageCountLookback} Messages\``,
-						`24 Hours: \`${data.messageCountLastDay} Messages\``,
-						`7 Days: \`${data.messageCountLastWeek} Messages\``,
-						`All time: \`${data.messageCountAllTime} Messages\``
+						`${formattedLookback}: \`${data.lookback.messageAmount} Messages\``,
+						`24 Hours: \`${data.daily.messageAmount} Messages\``,
+						`7 Days: \`${data.weekly.messageAmount} Messages\``,
+						`All time: \`${data.alltime.messageAmount} Messages\``
 					].join('\n')
 				},
 				{
 					inline: true,
 					name: 'Time Spent',
 					value: [
-						`${formattedLookback}: \`${data.messageTimeLookback}\``,
-						`24 Hours: \`${data.messageTimeLastDay}\``,
-						`7 Days: \`${data.messageTimeLastWeek}\``,
-						`All time: \`${data.messageTimeAllTime}\``
+						`${formattedLookback}: \`${data.lookback.minutesAmount}\``,
+						`24 Hours: \`${data.daily.minutesAmount}\``,
+						`7 Days: \`${data.weekly.minutesAmount}\``,
+						`All time: \`${data.alltime.minutesAmount}\``
 					].join('\n')
 				}
 			)

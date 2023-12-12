@@ -1,10 +1,11 @@
 import { type FlattenedGuild, flattenGuild, flattenUser } from '#lib/api/ApiTransformers';
+import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
 import { ApiRequest, ApiResponse, HttpCodes, methods, Route, type RouteOptions } from '@sapphire/plugin-api';
 
 @ApplyOptions<RouteOptions>({ route: 'users/@me' })
 export class UserRoute extends Route {
-	// @authenticated()
+	@authenticated()
 	// @ratelimit(seconds(5), 2, true)
 	public async [methods.GET](request: ApiRequest, response: ApiResponse) {
 		console.log('User Fetched');
