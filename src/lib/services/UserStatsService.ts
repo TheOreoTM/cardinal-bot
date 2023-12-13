@@ -45,9 +45,9 @@ export class UserStatsService extends StatsService {
 		return data;
 	}
 
-	public async getAllMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
+	public async getAlltimeMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
 		if (options?.cached) {
-			return this.cachingService.getAllUserMessageData(this.memberId);
+			return this.cachingService.getAlltimeUserMessageData(this.memberId);
 		}
 
 		const memberId = this.memberId;

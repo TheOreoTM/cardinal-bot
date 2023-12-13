@@ -14,6 +14,23 @@ export class StatsCachingService {
 		this.cache = container.cache;
 	}
 
+	public async getAllUserMessageData(memberId: string) {
+		const service = new UserStatsService(this.guildId, memberId);
+		const key = userStatsCacheKey(this.guildId, memberId);
+		const cachedData = await this.cache.hGetAll(key);
+		if (cachedData) {
+			const data = Object.fromEntries(Object.entries(cachedData)) as GetAllUserMessageData;
+			return data;
+		}
+
+		return {
+			lookback: await service.getLookbackMessageData(),
+			daily: await service.getDailyMessageData(),
+			weekly: await service.getWeeklyMessageData(),
+			all: await service.getAlltimeMessageData()
+		};
+	}
+
 	public async getLookbackUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const field = StatsCacheFields.Lookback as Key;
@@ -41,12 +58,12 @@ export class StatsCachingService {
 		return data;
 	}
 
-	public async getAllUserMessageData(memberId: string) {
+	public async getAlltimeUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const field = StatsCacheFields.All as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, () => service.getAllMessageData({ cached: false }));
+		const data = await this.getCachedUserMessageData({ key, field }, async () => service.getAlltimeMessageData({ cached: false }));
 		return data;
 	}
 
@@ -64,3 +81,10 @@ export class StatsCachingService {
 		return data;
 	}
 }
+
+type GetAllUserMessageData = {
+	lookback: MessageData;
+	daily: MessageData;
+	weekly: MessageData;
+	all: MessageData;
+};
