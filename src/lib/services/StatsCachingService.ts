@@ -46,14 +46,15 @@ export class StatsCachingService {
 		const field = StatsCacheFields.All as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, () => service.getAllMessageData());
+		const data = await this.getCachedUserMessageData({ key, field }, () => service.getAllMessageData({ cached: false }));
 		return data;
 	}
 
 	private async getCachedUserMessageData({ key, field }: { key: Key; field: Key }, getDataFunction: () => Promise<MessageData>) {
 		const cacheResult = await this.cache.hget(key, field);
 		if (!isNullish(cacheResult)) {
-			return JSON.parse(cacheResult) as MessageData;
+			const data = JSON.parse(cacheResult);
+			if (!isNullish(data)) return data;
 		}
 
 		const data = await getDataFunction();
