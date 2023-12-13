@@ -33,7 +33,7 @@ export class StatsCachingService {
 
 	public async getWeeklyUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
-		const field = StatsCacheFields.Daily as Key;
+		const field = StatsCacheFields.Weekly as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, service.getWeeklyMessageData);
@@ -42,7 +42,7 @@ export class StatsCachingService {
 
 	public async getAllUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
-		const field = StatsCacheFields.Daily as Key;
+		const field = StatsCacheFields.All as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, service.getAllMessageData);
