@@ -205,7 +205,7 @@ export class statsCommand extends CardinalSubcommand {
 		const newEmbed = new EmbedBuilder(embed.data).setFields(
 			{
 				name: 'Most active channels',
-				value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
+				value: formattedTopChannels.join('\n') ?? 'None'
 			},
 			...oldFields
 		);
