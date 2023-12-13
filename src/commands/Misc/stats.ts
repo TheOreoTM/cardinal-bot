@@ -199,7 +199,7 @@ export class statsCommand extends CardinalSubcommand {
 			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
 		});
 
-		const newFields = embed.data.fields?.map((f) => {
+		const oldFields = embed.data.fields?.map((f) => {
 			return { name: f.name, value: f.value, inline: f.inline };
 		})!;
 		const newEmbed = new EmbedBuilder(embed.data).setFields(
@@ -207,7 +207,7 @@ export class statsCommand extends CardinalSubcommand {
 				name: 'Most active channels',
 				value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
 			},
-			...newFields
+			...oldFields
 		);
 
 		await send(message, {
