@@ -50,8 +50,8 @@ export class StatsCachingService {
 	}
 
 	private async getCachedUserMessageData({ key, field }: { key: Key; field: Key }, getDataFunction: () => Promise<MessageData>) {
-		const cacheResult = this.cache.hget(key, field);
-		if (isNullish(cacheResult)) {
+		const cacheResult = await this.cache.hget(key, field);
+		if (!isNullish(cacheResult)) {
 			return JSON.parse(cacheResult) as MessageData;
 		}
 
