@@ -13,18 +13,51 @@ export class StatsCachingService {
 		this.cache = container.cache;
 	}
 
-	public async getLookbackMessageData(memberId: string) {
+	public async getLookbackUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
+		const field = StatsCacheFields.Daily as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const cacheResult = this.cache.hget(key, StatsCacheFields.Lookback);
+		const data = await this.getCachedUserMessageData({ key, field }, service.getLookbackMessageData);
+		return data;
+	}
+
+	public async getDailyUserMessageData(memberId: string) {
+		const key = userStatsCacheKey(this.guildId, memberId);
+		const field = StatsCacheFields.Daily as Key;
+		const service = new UserStatsService(this.guildId, memberId);
+
+		const data = await this.getCachedUserMessageData({ key, field }, service.getDailyMessageData);
+		return data;
+	}
+
+	public async getWeeklyUserMessageData(memberId: string) {
+		const key = userStatsCacheKey(this.guildId, memberId);
+		const field = StatsCacheFields.Daily as Key;
+		const service = new UserStatsService(this.guildId, memberId);
+
+		const data = await this.getCachedUserMessageData({ key, field }, service.getWeeklyMessageData);
+		return data;
+	}
+
+	public async getAllUserMessageData(memberId: string) {
+		const key = userStatsCacheKey(this.guildId, memberId);
+		const field = StatsCacheFields.Daily as Key;
+		const service = new UserStatsService(this.guildId, memberId);
+
+		const data = await this.getCachedUserMessageData({ key, field }, service.getAllMessageData);
+		return data;
+	}
+
+	private async getCachedUserMessageData({ key, field }: { key: Key; field: Key }, getDataFunction: () => Promise<MessageData>) {
+		const cacheResult = this.cache.hget(key, field);
 		if (isNullish(cacheResult)) {
 			return JSON.parse(cacheResult) as MessageData;
 		}
 
-		const lookbackData = await service.getLookbackMessageData();
-		this.cache.hSet(key, StatsCacheFields.Lookback as Key, JSON.stringify(lookbackData));
+		const data = await getDataFunction();
+		this.cache.hSet(key, field, JSON.stringify(data));
 
-		return lookbackData;
+		return data;
 	}
 }

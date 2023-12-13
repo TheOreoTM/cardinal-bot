@@ -18,7 +18,7 @@ export class UserStatsService extends StatsService {
 
 	public async getLookbackMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
 		if (options?.cached) {
-			return this.cachingService.getLookbackMessageData(this.memberId);
+			return this.cachingService.getLookbackUserMessageData(this.memberId);
 		}
 
 		const lookback = await this.getLookback();
@@ -26,15 +26,27 @@ export class UserStatsService extends StatsService {
 		return await this.getMessageDataForXDays(lookback);
 	}
 
-	public async getDailyMessageData(): Promise<MessageData> {
+	public async getDailyMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
+		if (options?.cached) {
+			return this.cachingService.getDailyUserMessageData(this.memberId);
+		}
+
 		return await this.getMessageDataForXDays(1);
 	}
 
-	public async getWeeklyMessageData(): Promise<MessageData> {
+	public async getWeeklyMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
+		if (options?.cached) {
+			return this.cachingService.getWeeklyUserMessageData(this.memberId);
+		}
+
 		return await this.getMessageDataForXDays(7);
 	}
 
-	public async getAllMessageData(): Promise<MessageData> {
+	public async getAllMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
+		if (options?.cached) {
+			return this.cachingService.getAllUserMessageData(this.memberId);
+		}
+
 		const memberId = this.memberId;
 		const messageAmount = await container.db.message.count({
 			where: {

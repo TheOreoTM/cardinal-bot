@@ -40,6 +40,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 			'All data is tracked after the bot was added to the server.\nIf you want to set lookback to something greater than 30 you can check out the premium plan'
 	},
 	options: ['limit'],
+	flags: ['cached'],
 	aliases: ['stat', 's'],
 	cooldownDelay: seconds(6),
 	subcommands: [
@@ -76,6 +77,7 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 })
 export class statsCommand extends CardinalSubcommand {
 	public take: number = 5;
+	private cached: { cached: boolean } = { cached: false };
 
 	public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
@@ -148,10 +150,10 @@ export class statsCommand extends CardinalSubcommand {
 		const userStatsService = new UserStatsService(message.guild.id, user.id);
 
 		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
-			userStatsService.getDailyMessageData(),
-			userStatsService.getWeeklyMessageData(),
-			userStatsService.getLookbackMessageData({ cached: true }),
-			userStatsService.getAllMessageData()
+			userStatsService.getDailyMessageData(this.cached),
+			userStatsService.getWeeklyMessageData(this.cached),
+			userStatsService.getLookbackMessageData(this.cached),
+			userStatsService.getAllMessageData(this.cached)
 		]);
 
 		const timeTaken = stopWatch.stop().toString();
@@ -472,6 +474,8 @@ export class statsCommand extends CardinalSubcommand {
 	private initOptions(args: CardinalSubcommand.Args) {
 		const take = parseInt(args.getOption('limit') ?? '');
 		this.take = isNaN(take) ? 5 : take;
+		const cached = args.getFlags('cached');
+		this.cached = cached ? { cached: true } : { cached: false };
 
 		if (this.take > 10) this.take = 5;
 	}

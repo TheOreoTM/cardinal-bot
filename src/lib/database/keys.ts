@@ -18,5 +18,6 @@ export const topStatsCacheKey = (guildId: string): Key => `${statsCacheKey(guild
 // # Field Values
 
 export const enum StatsCacheFields {
-	Lookback = 'lookback'
+	Lookback = 'lookback',
+	Daily = 'daily'
 }
