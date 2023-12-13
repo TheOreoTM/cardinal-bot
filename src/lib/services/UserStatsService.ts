@@ -1,3 +1,4 @@
+import { StatsCachingService } from '#lib/services/StatsCachingService';
 import { StatsService } from '#lib/services/StatsService';
 import type { GetMessageDataOptions, MessageData, TopChannelsData } from '#lib/services/types';
 import { days, minutes } from '#utils/common';
@@ -7,10 +8,12 @@ import type { Snowflake } from 'discord.js';
 
 export class UserStatsService extends StatsService {
 	private readonly memberId: Snowflake;
+	protected readonly cachingService: StatsCachingService;
 
 	public constructor(guildId: string, memberid: Snowflake) {
 		super(guildId);
 		this.memberId = memberid;
+		this.cachingService = new StatsCachingService(guildId);
 	}
 
 	public async getLookbackMessageData(options?: GetMessageDataOptions): Promise<MessageData> {

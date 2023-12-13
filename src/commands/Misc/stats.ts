@@ -145,15 +145,15 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const userStatsService = new UserStatsService(message.guild, user.id);
+		const userStatsService = new UserStatsService(message.guild.id, user.id);
 
-		const [dailyData, weeklyData, lookbackData, alltimeData, topChannels] = await Promise.all([
+		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
 			userStatsService.getDailyMessageData(),
 			userStatsService.getWeeklyMessageData(),
 			userStatsService.getLookbackMessageData(),
-			userStatsService.getAllMessageData(),
-			userStatsService.getTopChannels(this.take)
+			userStatsService.getAllMessageData()
 		]);
+		const topChannels = await userStatsService.getTopChannels(this.take);
 
 		const timeTaken = stopWatch.stop().toString();
 
@@ -211,15 +211,15 @@ export class statsCommand extends CardinalSubcommand {
 		const prefix = args.commandContext.commandPrefix;
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const channelStatsService = new ChannelStatsService(message.guild, channel.id);
+		const channelStatsService = new ChannelStatsService(message.guild.id, channel.id);
 
-		const [dailyData, weeklyData, lookbackData, alltimeData, topMembers] = await Promise.all([
+		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
 			channelStatsService.getDailyMessageData(),
 			channelStatsService.getWeeklyMessageData(),
 			channelStatsService.getLookbackMessageData(),
-			channelStatsService.getAllMessageData(),
-			channelStatsService.getTopMembers(this.take)
+			channelStatsService.getAllMessageData()
 		]);
+		const topMembers = await channelStatsService.getTopMembers(this.take);
 
 		const timeTaken = stopWatch.stop().toString();
 
