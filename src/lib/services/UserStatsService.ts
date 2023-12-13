@@ -23,7 +23,8 @@ export class UserStatsService extends StatsService {
 
 		const lookback = await this.getLookback();
 
-		return await this.getMessageDataForXDays(lookback);
+		const data = await this.getMessageDataForXDays(lookback);
+		return data;
 	}
 
 	public async getDailyMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
@@ -31,7 +32,8 @@ export class UserStatsService extends StatsService {
 			return this.cachingService.getDailyUserMessageData(this.memberId);
 		}
 
-		return await this.getMessageDataForXDays(1);
+		const data = await this.getMessageDataForXDays(1);
+		return data;
 	}
 
 	public async getWeeklyMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
@@ -39,7 +41,8 @@ export class UserStatsService extends StatsService {
 			return this.cachingService.getWeeklyUserMessageData(this.memberId);
 		}
 
-		return await this.getMessageDataForXDays(7);
+		const data = await this.getMessageDataForXDays(7);
+		return data;
 	}
 
 	public async getAllMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
