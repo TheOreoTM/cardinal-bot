@@ -2,6 +2,7 @@ import { RedisClient, StatsCacheFields, userStatsCacheKey } from '#lib/database'
 import { UserStatsService } from '#lib/services/UserStatsService';
 import type { MessageData } from '#lib/services/types';
 import type { Key } from '#lib/types';
+import { minutes } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import { isNullish } from '@sapphire/utilities';
 
@@ -57,6 +58,7 @@ export class StatsCachingService {
 
 		const data = await getDataFunction();
 		this.cache.hSet(key, field, JSON.stringify(data));
+		this.cache.expire(key, minutes(3) / 1000);
 
 		return data;
 	}
