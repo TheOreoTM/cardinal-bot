@@ -189,14 +189,14 @@ export class statsCommand extends CardinalSubcommand {
 				text: `⏲️ Time taken: ${timeTaken}`
 			});
 
-		const topChannels = await userStatsService.getTopChannels(this.take);
-
-		const formattedTopChannels = topChannels.map((channel, index) => {
-			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
-		});
-
 		await send(message, {
 			embeds: [embed]
+		});
+
+		const topChannels = await userStatsService.getTopChannels(this.take);
+		console.log(this.take, topChannels);
+		const formattedTopChannels = topChannels.map((channel, index) => {
+			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
 		});
 
 		const newFields = embed.data.fields?.map((f) => {
