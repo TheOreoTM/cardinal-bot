@@ -1,15 +1,8 @@
 // Setup
 import '#lib/setup';
 import { CardinalClient } from '#lib/CardinalClient';
-import Redis from 'ioredis';
-import { envParseNumber, envParseString } from '@skyra/env-utilities';
 
 const client = new CardinalClient();
-export const redis = new Redis({
-	port: envParseNumber('REDIS_PORT'),
-	password: envParseString('REDIS_PASSWORD'),
-	host: envParseString('REDIS_HOST')
-});
 
 const main = async () => {
 	try {
