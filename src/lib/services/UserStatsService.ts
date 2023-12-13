@@ -103,7 +103,7 @@ export class UserStatsService extends StatsService {
 		}));
 	}
 
-	private async getMessageDataForXDays(dayAmount: number): Promise<MessageData> {
+	public async getMessageDataForXDays(dayAmount: number): Promise<MessageData> {
 		const daysAgo = new Date(Date.now() - days(dayAmount));
 		const memberId = this.memberId;
 

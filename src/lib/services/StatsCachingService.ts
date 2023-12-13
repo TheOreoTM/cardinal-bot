@@ -18,7 +18,7 @@ export class StatsCachingService {
 		const field = StatsCacheFields.Lookback as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, service.getLookbackMessageData);
+		const data = await this.getCachedUserMessageData({ key, field }, () => service.getLookbackMessageData());
 		return data;
 	}
 
@@ -27,7 +27,7 @@ export class StatsCachingService {
 		const field = StatsCacheFields.Daily as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, service.getDailyMessageData);
+		const data = await this.getCachedUserMessageData({ key, field }, () => service.getDailyMessageData());
 		return data;
 	}
 
@@ -36,7 +36,7 @@ export class StatsCachingService {
 		const field = StatsCacheFields.Weekly as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, service.getWeeklyMessageData);
+		const data = await this.getCachedUserMessageData({ key, field }, () => service.getWeeklyMessageData());
 		return data;
 	}
 
@@ -45,7 +45,7 @@ export class StatsCachingService {
 		const field = StatsCacheFields.All as Key;
 		const service = new UserStatsService(this.guildId, memberId);
 
-		const data = await this.getCachedUserMessageData({ key, field }, service.getAllMessageData);
+		const data = await this.getCachedUserMessageData({ key, field }, () => service.getAllMessageData());
 		return data;
 	}
 
