@@ -150,16 +150,11 @@ export class statsCommand extends CardinalSubcommand {
 		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
 			userStatsService.getDailyMessageData(),
 			userStatsService.getWeeklyMessageData(),
-			userStatsService.getLookbackMessageData(),
+			userStatsService.getLookbackMessageData({ cached: true }),
 			userStatsService.getAllMessageData()
 		]);
-		const topChannels = await userStatsService.getTopChannels(this.take);
 
 		const timeTaken = stopWatch.stop().toString();
-
-		const formattedTopChannels = topChannels.map((channel, index) => {
-			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
-		});
 
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
@@ -167,10 +162,6 @@ export class statsCommand extends CardinalSubcommand {
 				`${user} (${getTag(user.user)})\nUser stats in the past ${formattedLookback} (Change with the \`${prefix}stats lookback\` command)`
 			)
 			.addFields(
-				{
-					name: 'Most active channels',
-					value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
-				},
 				{
 					inline: true,
 					name: 'Messages',
@@ -196,8 +187,28 @@ export class statsCommand extends CardinalSubcommand {
 				text: `⏲️ Time taken: ${timeTaken}`
 			});
 
+		const topChannels = await userStatsService.getTopChannels(this.take);
+
+		const formattedTopChannels = topChannels.map((channel, index) => {
+			return `\`${index + 1}.\` <#${channel.channelId}>: \`${channel.messageCount} Messages\``;
+		});
+
 		send(message, {
 			embeds: [embed]
+		});
+		const newFields = embed.data.fields?.map((f) => {
+			return { name: f.name, value: f.value, inline: f.inline };
+		})!;
+		const newEmbed = new EmbedBuilder(embed.data).setFields(
+			{
+				name: 'Most active channels',
+				value: formattedTopChannels.join('\n') ? formattedTopChannels.join('\n') : 'None'
+			},
+			...newFields
+		);
+
+		send(message, {
+			embeds: [newEmbed]
 		});
 	}
 
