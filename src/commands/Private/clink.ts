@@ -4,8 +4,8 @@ import { FetchResultTypes, fetch } from '@sapphire/fetch';
 import { reply, send } from '@sapphire/plugin-editable-commands';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: 'Clink is a...',
-	name: 'clink',
+	description: 'Jenny is a...',
+	name: 'jenny',
 	hidden: true,
 	detailedDescription: {
 		extendedHelp: '',
@@ -18,7 +18,7 @@ export class clinkCommand extends CardinalCommand {
 		const randomCompliment = compliments[Math.floor(Math.random() * compliments.length)];
 		const praiseMessage = `${randomCompliment.replace('${user}', `<@${message.member.id}>`)}`;
 
-		if (message.author.id === '717578903312531476') {
+		if (message.author.id === '881470776639897671') {
 			return send(message, praiseMessage);
 		}
 
