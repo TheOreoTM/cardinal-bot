@@ -1,19 +1,23 @@
 import { StatsService } from '#lib/services/StatsService';
-import type { MessageData, TopChannelsData } from '#lib/services/types';
+import type { GetMessageDataOptions, MessageData, TopChannelsData } from '#lib/services/types';
 import { days, minutes } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import type { Guild, Snowflake } from 'discord.js';
+import type { Snowflake } from 'discord.js';
 
 export class UserStatsService extends StatsService {
 	private readonly memberId: Snowflake;
 
-	public constructor(guild: Guild, memberid: Snowflake) {
-		super(guild);
+	public constructor(guildId: string, memberid: Snowflake) {
+		super(guildId);
 		this.memberId = memberid;
 	}
 
-	public async getLookbackMessageData(): Promise<MessageData> {
+	public async getLookbackMessageData(options?: GetMessageDataOptions): Promise<MessageData> {
+		if (options?.cached) {
+			return this.cachingService.getLookbackMessageData(this.memberId);
+		}
+
 		const lookback = await this.getLookback();
 
 		return await this.getMessageDataForXDays(lookback);
@@ -32,14 +36,14 @@ export class UserStatsService extends StatsService {
 		const messageAmount = await container.db.message.count({
 			where: {
 				memberId,
-				guildId: this.guild.id
+				guildId: this.guildId
 			}
 		});
 
 		const minutesAmount = await container.db.message.count({
 			where: {
 				memberId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				minuteMessage: true
 			}
 		});
@@ -59,7 +63,7 @@ export class UserStatsService extends StatsService {
 			by: ['channelId'],
 			where: {
 				memberId: this.memberId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				createdAt: {
 					gte: lookbackAgo
 				}
@@ -88,7 +92,7 @@ export class UserStatsService extends StatsService {
 		const messageAmount = await container.db.message.count({
 			where: {
 				memberId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				createdAt: {
 					gte: daysAgo
 				}
@@ -98,7 +102,7 @@ export class UserStatsService extends StatsService {
 		const minutesAmount = await container.db.message.count({
 			where: {
 				memberId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				minuteMessage: true,
 				createdAt: {
 					gte: daysAgo

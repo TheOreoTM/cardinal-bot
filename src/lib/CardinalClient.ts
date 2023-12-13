@@ -5,6 +5,8 @@ import type { Message } from 'discord.js';
 import { ClientConfig } from '#config';
 import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import { BotPrefix } from '#constants';
+import { RedisClient } from '#lib/database';
+import { envParseNumber, envParseString } from '@skyra/env-utilities';
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)
@@ -16,6 +18,11 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 
 	public override async login(token?: string): Promise<string> {
 		container.db = new PrismaClient();
+		container.cache = new RedisClient({
+			host: envParseString('REDIS_HOST'),
+			password: envParseString('REDIS_PASSWORD'),
+			port: envParseNumber('REDIS_PORT')
+		});
 		return super.login(token);
 	}
 	public override destroy() {

@@ -1,3 +1,3 @@
-import type { StatsService } from './StatsService';
+import { StatsService } from '#lib/services';
 
-export class ServerStatsService implements StatsService {}
+export class ServerStatsService extends StatsService {}

@@ -3,13 +3,13 @@ import type { MessageData, TopMembersData } from '#lib/services/types';
 import { days, minutes } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import type { Guild, Snowflake } from 'discord.js';
+import type { Snowflake } from 'discord.js';
 
 export class ChannelStatsService extends StatsService {
 	private readonly channelId: Snowflake;
 
-	public constructor(guild: Guild, channelId: Snowflake) {
-		super(guild);
+	public constructor(guildId: string, channelId: Snowflake) {
+		super(guildId);
 		this.channelId = channelId;
 	}
 
@@ -32,14 +32,14 @@ export class ChannelStatsService extends StatsService {
 		const messageAmount = await container.db.message.count({
 			where: {
 				channelId,
-				guildId: this.guild.id
+				guildId: this.guildId
 			}
 		});
 
 		const minutesAmount = await container.db.message.count({
 			where: {
 				channelId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				minuteMessage: true
 			}
 		});
@@ -57,7 +57,7 @@ export class ChannelStatsService extends StatsService {
 			by: ['memberId'],
 			where: {
 				channelId: this.channelId,
-				guildId: this.guild.id
+				guildId: this.guildId
 			},
 			_count: {
 				memberId: true
@@ -83,7 +83,7 @@ export class ChannelStatsService extends StatsService {
 		const messageAmount = await container.db.message.count({
 			where: {
 				channelId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				createdAt: {
 					gte: daysAgo
 				}
@@ -93,7 +93,7 @@ export class ChannelStatsService extends StatsService {
 		const minutesAmount = await container.db.message.count({
 			where: {
 				channelId,
-				guildId: this.guild.id,
+				guildId: this.guildId,
 				minuteMessage: true,
 				createdAt: {
 					gte: daysAgo

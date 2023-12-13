@@ -10,6 +10,11 @@ import type {
 	AutomodStickers
 } from '@prisma/client';
 
+/**
+ * Redis Key
+ */
+export type Key = string & { _: never };
+
 export type FactionStatusType = 'open' | 'restricted' | 'closed';
 
 export type RestrictionNode = {

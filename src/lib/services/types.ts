@@ -13,9 +13,11 @@ export type TopMembersData = {
 	messageCount: string;
 }[];
 
+export type GetMessageDataOptions = {
+	cached: boolean;
+};
+
 /**
  * TODO: {ServerStatsService}
  * TODO: {Role & Top Service}
- *
- * TODO: {StatsCachingService}
  */
