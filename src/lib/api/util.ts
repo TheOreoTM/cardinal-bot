@@ -118,5 +118,5 @@ export async function transformOauthGuildsAndUser({ user, guilds }: LoginData): 
 	const userId = user.id;
 
 	const transformedGuilds = await Promise.all(guilds.map((guild) => transformGuild(client, userId, guild)));
-	return { user: user, transformedGuilds };
+	return { user: user, transformedGuilds: transformedGuilds };
 }
