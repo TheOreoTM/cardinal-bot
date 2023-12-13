@@ -1,7 +1,6 @@
 import { PermissionLevel } from '#lib/decorators';
 import { ChannelStatsService, UserStatsService } from '#lib/services';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
-import { redis } from '#root/index';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
@@ -495,12 +494,6 @@ export class statsCommand extends CardinalSubcommand {
 		// 	take: this.take
 		// });
 
-		const cachedData = await redis.get(`${guildId}-topData`);
-		if (cachedData) {
-			const data = JSON.parse(cachedData) as TopData;
-			return data;
-		}
-
 		const topMembersTimeLookback = await this.container.db.message.groupBy({
 			by: ['memberId'],
 			where: {
@@ -717,22 +710,3 @@ export class statsCommand extends CardinalSubcommand {
 		};
 	}
 }
-
-type TopDataItem = {
-	_count: {
-		memberId: number;
-	};
-	memberId: string;
-} & {
-	_count: {
-		channelId: number;
-	};
-	channelId: string;
-};
-
-type TopData = {
-	topMembersMessagesLookback: TopDataItem[];
-	topMembersTimeLookback: TopDataItem[];
-	topChannelsMessagesLookback: TopDataItem[];
-	topChannelsTimeLookback: TopDataItem[];
-};
