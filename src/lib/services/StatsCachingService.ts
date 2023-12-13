@@ -57,8 +57,8 @@ export class StatsCachingService {
 		}
 
 		const data = await getDataFunction();
-		this.cache.hSet(key, field, JSON.stringify(data));
-		this.cache.expire(key, minutes(3) / 1000);
+		await this.cache.hSet(key, field, JSON.stringify(data));
+		await this.cache.expire(key, minutes(3) / 1000);
 
 		return data;
 	}
