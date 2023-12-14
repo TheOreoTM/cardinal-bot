@@ -179,7 +179,7 @@ export class statsCommand extends CardinalSubcommand {
 					name: 'Time Spent',
 					value: [
 						`${formattedLookback}: \`${lookbackData.minutesAmount}\``,
-						`24 Hours: \`${dailyData.messageAmount}\``,
+						`24 Hours: \`${dailyData.minutesAmount}\``,
 						`7 Days: \`${weeklyData.minutesAmount}\``,
 						`All time: \`${alltimeData.minutesAmount}\``
 					].join('\n')

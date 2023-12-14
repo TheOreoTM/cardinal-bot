@@ -74,6 +74,7 @@ export class StatsCachingService {
 			console.log('data', data);
 			if (!isNullish(data)) {
 				console.log('isNullish', data);
+				return data;
 			}
 		}
 
