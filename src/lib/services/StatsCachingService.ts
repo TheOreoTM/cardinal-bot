@@ -71,6 +71,7 @@ export class StatsCachingService {
 		const cacheResult = await this.cache.hget(key, field);
 		if (!isNullish(cacheResult)) {
 			const data = JSON.parse(cacheResult);
+			console.log('data', data);
 			if (!isNullish(data)) return data;
 		}
 
