@@ -154,6 +154,7 @@ export class statsCommand extends CardinalSubcommand {
 			userStatsService.getLookbackMessageData(this.cached),
 			userStatsService.getAlltimeMessageData(this.cached)
 		]);
+		console.log(dailyData, weeklyData, lookbackData, alltimeData);
 
 		const timeTaken = stopWatch.stop().toString();
 

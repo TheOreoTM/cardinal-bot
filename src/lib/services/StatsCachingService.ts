@@ -72,7 +72,9 @@ export class StatsCachingService {
 		if (!isNullish(cacheResult)) {
 			const data = JSON.parse(cacheResult);
 			console.log('data', data);
-			if (!isNullish(data)) return data;
+			if (!isNullish(data)) {
+				console.log('isNullish', data);
+			}
 		}
 
 		const data = await getDataFunction();
