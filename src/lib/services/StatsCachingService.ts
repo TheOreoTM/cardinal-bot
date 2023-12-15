@@ -27,7 +27,11 @@ export class StatsCachingService {
 				all: await service.getAlltimeMessageData()
 			};
 			console.log('realtime', JSON.stringify(realtimeData));
-			await this.cache.hmset(key, JSON.stringify(realtimeData));
+			await this.cache.hSet(key, StatsCacheFields.Daily as Key, JSON.stringify(realtimeData.daily));
+			await this.cache.hSet(key, StatsCacheFields.Lookback as Key, JSON.stringify(realtimeData.lookback));
+			await this.cache.hSet(key, StatsCacheFields.Weekly as Key, JSON.stringify(realtimeData.weekly));
+			await this.cache.hSet(key, StatsCacheFields.All as Key, JSON.stringify(realtimeData.all));
+			await this.cache.expire(key, 180);
 			return realtimeData;
 		}
 		console.log('data', data);
