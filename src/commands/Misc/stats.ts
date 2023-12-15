@@ -160,7 +160,7 @@ export class statsCommand extends CardinalSubcommand {
 		// 	userStatsService.getLookbackMessageData(this.cached),
 		// 	userStatsService.getAlltimeMessageData(this.cached)
 		// ]);
-		
+
 		console.log(dailyData, weeklyData, lookbackData, alltimeData);
 		const timeTaken = stopWatch.stop().toString();
 
@@ -174,7 +174,7 @@ export class statsCommand extends CardinalSubcommand {
 					inline: true,
 					name: 'Messages',
 					value: [
-						`${formattedLookback}: \`${lookbackData.messageAmount}\``,
+						`${formattedLookback}: \`${lookbackData['messageAmount']}\``,
 						`24 Hours: \`${dailyData.messageAmount}\``,
 						`7 Days: \`${weeklyData.messageAmount}\``,
 						`All time: \`${alltimeData.messageAmount}\``
@@ -184,7 +184,7 @@ export class statsCommand extends CardinalSubcommand {
 					inline: true,
 					name: 'Time Spent',
 					value: [
-						`${formattedLookback}: \`${lookbackData.minutesAmount}\``,
+						`${formattedLookback}: \`${lookbackData['minutesAmount']}\``,
 						`24 Hours: \`${dailyData.minutesAmount}\``,
 						`7 Days: \`${weeklyData.minutesAmount}\``,
 						`All time: \`${alltimeData.minutesAmount}\``
