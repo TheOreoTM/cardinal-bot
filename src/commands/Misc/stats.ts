@@ -1,6 +1,5 @@
 import { PermissionLevel } from '#lib/decorators';
 import { ChannelStatsService, UserStatsService } from '#lib/services';
-import { StatsCachingService } from '#lib/services/StatsCachingService';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
@@ -148,18 +147,18 @@ export class statsCommand extends CardinalSubcommand {
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
 		const userStatsService = new UserStatsService(message.guild.id, user.id);
-		const cachingService = new StatsCachingService(message.guild.id);
+		// const cachingService = new StatsCachingService(message.guild.id);
 
-		const cachedAllData = await cachingService.getAllUserMessageData(user.id);
+		// const cachedAllData = await cachingService.getAllUserMessageData(user.id);
 
-		const { all: alltimeData, daily: dailyData, lookback: lookbackData, weekly: weeklyData } = cachedAllData;
+		// const { all: alltimeData, daily: dailyData, lookback: lookbackData, weekly: weeklyData } = cachedAllData;
 		this.cached;
-		// const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
-		// 	userStatsService.getDailyMessageData(this.cached),
-		// 	userStatsService.getWeeklyMessageData(this.cached),
-		// 	userStatsService.getLookbackMessageData(this.cached),
-		// 	userStatsService.getAlltimeMessageData(this.cached)
-		// ]);
+		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
+			userStatsService.getDailyMessageData(this.cached),
+			userStatsService.getWeeklyMessageData(this.cached),
+			userStatsService.getLookbackMessageData(this.cached),
+			userStatsService.getAlltimeMessageData(this.cached)
+		]);
 
 		console.log(dailyData, weeklyData, lookbackData, alltimeData);
 		const timeTaken = stopWatch.stop().toString();
