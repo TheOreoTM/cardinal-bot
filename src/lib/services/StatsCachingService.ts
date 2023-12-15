@@ -27,7 +27,7 @@ export class StatsCachingService {
 				all: await service.getAlltimeMessageData()
 			};
 			console.log('realtime', realtimeData);
-			await this.cache.hset(key, realtimeData);
+			await this.cache.hset(key, JSON.stringify(realtimeData));
 			return realtimeData;
 		}
 		console.log('data', data);
