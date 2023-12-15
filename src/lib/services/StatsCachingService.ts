@@ -13,7 +13,7 @@ export class StatsCachingService {
 		this.cache = container.cache;
 	}
 
-	public async getAllUserMessageData(memberId: string) {
+	public async getAllUserMessageData(memberId: string): Promise<GetAllUserMessageData> {
 		const service = new UserStatsService(this.guildId, memberId);
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const cachedData = await this.cache.hGetAll(key);
@@ -37,7 +37,7 @@ export class StatsCachingService {
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, () => service.getLookbackMessageData());
-		return data;
+		return data as MessageData;
 	}
 
 	public async getDailyUserMessageData(memberId: string) {
@@ -46,7 +46,7 @@ export class StatsCachingService {
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, () => service.getMessageDataForXDays(1));
-		return data;
+		return data as MessageData;
 	}
 
 	public async getWeeklyUserMessageData(memberId: string) {
@@ -55,7 +55,7 @@ export class StatsCachingService {
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, () => service.getMessageDataForXDays(7));
-		return data;
+		return data as MessageData;
 	}
 
 	public async getAlltimeUserMessageData(memberId: string) {
@@ -64,7 +64,7 @@ export class StatsCachingService {
 		const service = new UserStatsService(this.guildId, memberId);
 
 		const data = await this.getCachedUserMessageData({ key, field }, async () => service.getAlltimeMessageData({ cached: false }));
-		return data;
+		return data as MessageData;
 	}
 
 	private async getCachedUserMessageData({ key, field }: { key: Key; field: Key }, getDataFunction: () => Promise<MessageData>) {
