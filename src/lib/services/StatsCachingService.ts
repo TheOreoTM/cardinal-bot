@@ -19,7 +19,7 @@ export class StatsCachingService {
 		const cachedData = await this.cache.hGetAll(key);
 		console.log('cachedData', cachedData);
 		const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
-		if (isNullish(data) || Object.keys(data).length === 0) {
+		if (isNullish(data) || Object.keys(data).length === 0 || cachedData.size === 0) {
 			const realtimeData = {
 				lookback: await service.getLookbackMessageData(),
 				daily: await service.getDailyMessageData(),
