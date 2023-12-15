@@ -26,7 +26,9 @@ export class StatsCachingService {
 				weekly: await service.getWeeklyMessageData(),
 				all: await service.getAlltimeMessageData()
 			};
+			console.log('realtime', realtimeData);
 			await this.cache.hset(key, realtimeData);
+			return realtimeData;
 		}
 		console.log('data', data);
 		return data;
