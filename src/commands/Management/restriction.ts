@@ -20,7 +20,7 @@ import { Role, GuildMember, TextChannel, PermissionFlagsBits } from 'discord.js'
 		explainedUsage: [
 			['Target', 'Either a role, member or channel. Can be a mention, name or id'],
 			['Command', 'The name of the command'],
-			['Action', 'Eithr `add`, `remove`, `reset` or `show`'],
+			['Action', 'Either `add`, `remove`, `reset` or `show`'],
 			['Type', 'Either `allow` or `deny`']
 		]
 	},
