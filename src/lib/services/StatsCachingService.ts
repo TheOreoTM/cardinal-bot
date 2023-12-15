@@ -19,7 +19,7 @@ export class StatsCachingService {
 		const cachedData = await this.cache.hGetAll(key);
 		if (cachedData) {
 			console.log(cachedData);
-			const data = Object.fromEntries(Object.entries(cachedData)) as GetAllUserMessageData;
+			const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
 			return data;
 		}
 
@@ -73,9 +73,9 @@ export class StatsCachingService {
 			const data = JSON.parse(cacheResult);
 			console.log('data', data);
 			if (!isNullish(data)) {
-				console.log('isNullish', data);
 				return data;
 			}
+			console.log('isNullish', data);
 		}
 		console.log('wasnt cached');
 		const data = await getDataFunction();
