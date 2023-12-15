@@ -17,7 +17,7 @@ export class StatsCachingService {
 		const service = new UserStatsService(this.guildId, memberId);
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const cachedData = await this.cache.hGetAll(key);
-		if (cachedData) {
+		if (!isNullish(cachedData)) {
 			console.log(cachedData);
 			const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
 			return data;
