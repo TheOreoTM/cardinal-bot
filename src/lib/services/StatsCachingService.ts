@@ -20,7 +20,7 @@ export class StatsCachingService {
 		if (!isNullish(cachedData)) {
 			const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
 			console.log('data', data);
-			return data;
+			if (!isNullish(data)) return data;
 		}
 
 		return {

@@ -151,15 +151,16 @@ export class statsCommand extends CardinalSubcommand {
 		const cachingService = new StatsCachingService(message.guild.id);
 
 		const cachedAllData = await cachingService.getAllUserMessageData(user.id);
-		console.log(cachedAllData);
 
-		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
-			userStatsService.getDailyMessageData(this.cached),
-			userStatsService.getWeeklyMessageData(this.cached),
-			userStatsService.getLookbackMessageData(this.cached),
-			userStatsService.getAlltimeMessageData(this.cached)
-		]);
-		console.log(dailyData, weeklyData, lookbackData, alltimeData);
+		const { all: alltimeData, daily: dailyData, lookback: lookbackData, weekly: weeklyData } = cachedAllData;
+		this.cached;
+		// const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
+		// 	userStatsService.getDailyMessageData(this.cached),
+		// 	userStatsService.getWeeklyMessageData(this.cached),
+		// 	userStatsService.getLookbackMessageData(this.cached),
+		// 	userStatsService.getAlltimeMessageData(this.cached)
+		// ]);
+		// console.log(dailyData, weeklyData, lookbackData, alltimeData);
 
 		const timeTaken = stopWatch.stop().toString();
 
