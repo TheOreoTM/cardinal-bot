@@ -19,9 +19,17 @@ export class StatsCachingService {
 		const cachedData = await this.cache.hGetAll(key);
 
 		console.log('cachedData', cachedData);
-		const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
+		const data: Record<'lookback' | 'weekly' | 'daily' | 'all', string> = {} as any; // Assert the type
+
+		for (const [field, value] of Object.entries(cachedData)) {
+			if (field === 'lookback' || field === 'daily' || field === 'weekly' || field === 'all') {
+				data[field as 'lookback' | 'daily' | 'weekly' | 'all'] = value;
+			}
+		}
+
 		console.log('data', data, 'type', typeof data);
-		if (isNullish(data) || Object.keys(data).length === 0 || cachedData.size === 0) {
+
+		if (isNullish(data) || Object.keys(data).length === 0 || Object.values(data).every((val) => val === undefined)) {
 			const realtimeData = {
 				lookback: await service.getLookbackMessageData(),
 				daily: await service.getDailyMessageData(),
@@ -36,10 +44,15 @@ export class StatsCachingService {
 			await this.cache.expire(key, 180);
 			return realtimeData;
 		}
-		console.log('data', data);
-		return data;
-	}
 
+		console.log(data);
+
+		for (const [field, value] of Object.entries(data)) {
+			data[field as 'lookback' | 'daily' | 'weekly' | 'all'] = JSON.parse(value);
+		}
+
+		return data as unknown as GetAllUserMessageData;
+	}
 	public async getLookbackUserMessageData(memberId: string) {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const field = StatsCacheFields.Lookback as Key;
