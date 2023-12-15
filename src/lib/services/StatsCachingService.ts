@@ -19,12 +19,13 @@ export class StatsCachingService {
 		const cachedData = await this.cache.hGetAll(key);
 		const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
 		if (isNullish(data)) {
-			return {
+			const data = {
 				lookback: await service.getLookbackMessageData(),
 				daily: await service.getDailyMessageData(),
 				weekly: await service.getWeeklyMessageData(),
 				all: await service.getAlltimeMessageData()
 			};
+			await this.cache.hset(key, data);
 		}
 		console.log('data', data);
 		return data;
