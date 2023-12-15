@@ -1,5 +1,6 @@
 import { PermissionLevel } from '#lib/decorators';
 import { ChannelStatsService, UserStatsService } from '#lib/services';
+import { StatsCachingService } from '#lib/services/StatsCachingService';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
 import { days, hours, minutes, seconds } from '#utils/common';
 import { CardinalColors, CardinalEmojis } from '#utils/constants';
@@ -147,6 +148,10 @@ export class statsCommand extends CardinalSubcommand {
 		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
 		const userStatsService = new UserStatsService(message.guild.id, user.id);
+		const cachingService = new StatsCachingService(message.guild.id);
+
+		const cachedAllData = await cachingService.getAllUserMessageData(user.id);
+		console.log(cachedAllData);
 
 		const [dailyData, weeklyData, lookbackData, alltimeData] = await Promise.all([
 			userStatsService.getDailyMessageData(this.cached),

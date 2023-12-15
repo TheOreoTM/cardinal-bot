@@ -19,6 +19,7 @@ export class StatsCachingService {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const cachedData = await this.cache.hGetAll(key);
 		if (cachedData) {
+			console.log(JSON.stringify(cachedData));
 			const data = Object.fromEntries(Object.entries(cachedData)) as GetAllUserMessageData;
 			return data;
 		}
