@@ -18,14 +18,14 @@ export class StatsCachingService {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const cachedData = await this.cache.hGetAll(key);
 		const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
-		if (isNullish(data)) {
-			const data = {
+		if (isNullish(data) || Object.keys(data).length === 0) {
+			const realtimeData = {
 				lookback: await service.getLookbackMessageData(),
 				daily: await service.getDailyMessageData(),
 				weekly: await service.getWeeklyMessageData(),
 				all: await service.getAlltimeMessageData()
 			};
-			await this.cache.hset(key, data);
+			await this.cache.hset(key, realtimeData);
 		}
 		console.log('data', data);
 		return data;
