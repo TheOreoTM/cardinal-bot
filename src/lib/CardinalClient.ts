@@ -19,6 +19,7 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 	public override async login(token?: string): Promise<string> {
 		container.db = new PrismaClient();
 		container.cache = new RedisClient({
+			db: 1,
 			host: envParseString('REDIS_HOST'),
 			password: envParseString('REDIS_PASSWORD'),
 			port: envParseNumber('REDIS_PORT')
