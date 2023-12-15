@@ -2,7 +2,6 @@ import { RedisClient, StatsCacheFields, userStatsCacheKey } from '#lib/database'
 import { UserStatsService } from '#lib/services/UserStatsService';
 import type { MessageData } from '#lib/services/types';
 import type { Key } from '#lib/types';
-import { minutes } from '#utils/common';
 import { container } from '@sapphire/pieces';
 import { isNullish } from '@sapphire/utilities';
 
@@ -78,10 +77,10 @@ export class StatsCachingService {
 				return data;
 			}
 		}
-
+		console.log('wasnt cached');
 		const data = await getDataFunction();
 		await this.cache.hSet(key, field, JSON.stringify(data));
-		await this.cache.expire(key, minutes(3) / 1000);
+		await this.cache.expire(key, 180);
 
 		return data;
 	}
