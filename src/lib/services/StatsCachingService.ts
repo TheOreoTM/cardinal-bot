@@ -18,8 +18,8 @@ export class StatsCachingService {
 		const key = userStatsCacheKey(this.guildId, memberId);
 		const cachedData = await this.cache.hGetAll(key);
 		if (!isNullish(cachedData)) {
-			console.log(cachedData);
 			const data = Object.fromEntries(cachedData) as GetAllUserMessageData;
+			console.log('data', data);
 			return data;
 		}
 
@@ -71,13 +71,11 @@ export class StatsCachingService {
 		const cacheResult = await this.cache.hget(key, field);
 		if (!isNullish(cacheResult)) {
 			const data = JSON.parse(cacheResult);
-			console.log('data', data);
 			if (!isNullish(data)) {
 				return data;
 			}
 			console.log('isNullish', data);
 		}
-		console.log('wasnt cached');
 		const data = await getDataFunction();
 		await this.cache.hSet(key, field, JSON.stringify(data));
 		await this.cache.expire(key, 180);
