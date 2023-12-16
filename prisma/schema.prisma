@@ -210,10 +210,14 @@ model Message {
 
   @@index([memberId, guildId, minuteMessage, createdAt]) // stats user
   @@index([memberId, guildId, createdAt])
+  @@index([memberId, guildId])
   @@index([memberId, guildId, minuteMessage])
   @@index([channelId, guildId, minuteMessage, createdAt]) // stats channel
   @@index([channelId, guildId, createdAt])
+  @@index([channelId, guildId])
   @@index([channelId, guildId, minuteMessage])
+  @@index([guildId, createdAt]) // stats server
+  @@index([guildId])
 }
 
 model Command {

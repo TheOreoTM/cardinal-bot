@@ -160,7 +160,6 @@ export class statsCommand extends CardinalSubcommand {
 			userStatsService.getAlltimeMessageData(this.cached)
 		]);
 
-		console.log(dailyData, weeklyData, lookbackData, alltimeData);
 		const timeTaken = stopWatch.stop().toString();
 
 		const embed = new CardinalEmbedBuilder()
