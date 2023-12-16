@@ -195,6 +195,9 @@ model MemberActivity {
   userId    String
   action    MemberAcivityType
   createdAt DateTime          @default(now())
+
+  @@index([guildId, createdAt, action]) // stats server
+  @@index([guildId, action])
 }
 
 model Message {
