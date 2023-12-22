@@ -30,11 +30,11 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 		const exactRegExp = new RegExp(exactRegExpString, 'i'); // 'i' flag for case-insensitive matching
 		const isExactMatch = exactRegExp.test(content);
 
-		const wildcardWordsPattern = this.createPattern(rule.wildcard);
-		const wildcardRegExpString = `\\b(${wildcardWordsPattern.replace(/\*/g, '.*')})\\b`;
+		const wildcardRegExpString = `(?i).*${rule.exact.join('|')}.*`;
 		const wildcardRegExp = new RegExp(wildcardRegExpString, 'i');
 		const isWildcardMatch = wildcardRegExp.test(content);
 
+		console.log(isWildcardMatch, isExactMatch);
 		if (isWildcardMatch || isExactMatch) {
 			return true;
 		}
@@ -51,12 +51,6 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 	}
 
 	private createPattern(words: string[]) {
-		const pattern = words
-			.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
-			.map((word) => `${word}.*`)
-			.join('|');
-
-		console.log(pattern);
-		return pattern;
+		return words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
 	}
 }
