@@ -2,6 +2,7 @@ import type { AutomodRule } from '#lib/types/Data';
 import { container } from '@sapphire/pieces';
 import { Collection, type Snowflake } from 'discord.js';
 
+// TODO: Move this to redis
 export class InfractionManager {
 	private static instance: InfractionManager;
 	private infractionCollection: Collection<`${Snowflake}-${AutomodRule}`, number> = new Collection();

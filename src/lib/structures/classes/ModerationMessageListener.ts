@@ -47,7 +47,6 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		}
 		infractionManager.addHeat(message.author.id, this.rule, 1, duration);
 		const currentViolations = infractionManager.getHeat(message.author.id, this.rule);
-		console.log(currentViolations, setting.automuteAfter);
 		if (currentViolations >= setting.automuteAfter) {
 			infractionManager.setHeat(message.member.id, this.rule, 0);
 			if (!setting.actions) return;
