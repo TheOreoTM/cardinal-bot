@@ -25,10 +25,14 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 
 		const rule = data?.bannedWords!;
 
-		const exactRegExp = this.createBannedWordsRegExp(rule.exact);
+		const exactWordsPattern = this.createPattern(rule.exact);
+		const exactRegExpString = `\\b(${exactWordsPattern})\\b`; // Use word boundaries to match whole words only
+		const exactRegExp = new RegExp(exactRegExpString, 'i'); // 'i' flag for case-insensitive matching
 		const isExactMatch = exactRegExp.test(content);
 
-		const wildcardRegExp = this.createBannedWordsRegExp(rule.wildcard, true);
+		const wildcardWordsPattern = this.createPattern(rule.wildcard);
+		const wildcardRegExpString = `\\b(${wildcardWordsPattern.replace(/\*/g, '.*')})\\b`;
+		const wildcardRegExp = new RegExp(wildcardRegExpString, 'i');
 		const isWildcardMatch = wildcardRegExp.test(content);
 
 		if (isWildcardMatch || isExactMatch) {
@@ -46,9 +50,7 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 		return sendTemporaryMessage(message, `${message.member}, That word isn't allowed in this server`);
 	}
 
-	private createBannedWordsRegExp(words: string[], replaceWildcard = false) {
-		const wordsPattern = words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
-
-		return new RegExp(`\\b(${replaceWildcard ? wordsPattern.replace(/\*/g, '.*') : wordsPattern})\\b`, 'i');
+	private createPattern(words: string[]) {
+		return words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
 	}
 }
