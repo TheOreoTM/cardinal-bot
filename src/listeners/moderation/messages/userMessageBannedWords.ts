@@ -30,7 +30,7 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 		const exactRegExp = new RegExp(exactRegExpString, 'i'); // 'i' flag for case-insensitive matching
 		const isExactMatch = exactRegExp.test(content);
 
-		const wildcardWordsPattern = this.createPattern(rule.wildcard);
+		const wildcardWordsPattern = this.createPattern(rule.wildcard, true);
 		const wildcardRegExpString = `\\b(${wildcardWordsPattern.replace(/\*/g, '.*')})\\b`;
 		const wildcardRegExp = new RegExp(wildcardRegExpString, 'i');
 		const isWildcardMatch = wildcardRegExp.test(content);
