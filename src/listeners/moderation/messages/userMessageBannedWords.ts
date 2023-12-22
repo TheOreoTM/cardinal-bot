@@ -51,6 +51,12 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 	}
 
 	private createPattern(words: string[]) {
-		return words.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|');
+		const pattern = words
+			.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'))
+			.map((word) => `${word}.*`)
+			.join('|');
+
+		console.log(pattern);
+		return pattern;
 	}
 }
