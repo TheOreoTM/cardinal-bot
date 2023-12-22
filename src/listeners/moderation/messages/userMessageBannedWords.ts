@@ -31,7 +31,7 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 		const isExactMatch = exactRegExp.test(content);
 
 		const wildcardWordsPattern = this.createPattern(rule.wildcard, true);
-		const wildcardRegExpString = `\\b(${wildcardWordsPattern.replace(/\*/g, '.*')})\\b`;
+		const wildcardRegExpString = `\\b(${wildcardWordsPattern})\\b`;
 		const wildcardRegExp = new RegExp(wildcardRegExpString, 'i');
 		const isWildcardMatch = wildcardRegExp.test(content);
 
