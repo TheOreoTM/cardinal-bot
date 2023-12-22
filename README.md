@@ -31,9 +31,9 @@ If you want to be a beta tester you can join the [support server][support] and c
 
 -   [`Node.js`]: To run the project.
 -   [`PostgreSQL`]: To store persistent data.
--   [`Redis`]: To store scheduled tasks.
+-   [`Redis`]: To store scheduled tasks and cache.
 -   [`Discord.js`]: To interact with the Discord API
--   [`Sapphire`]: Framework used in Radon
+-   [`Sapphire`]: Framework used in Cardinal
 
 ## Contributing
 
@@ -61,7 +61,7 @@ To contribute to this repository, feel free to fork the repository and make your
 [`node.js`]: https://nodejs.org/en/
 [`mongodb`]: https://www.mongodb.com/
 [typescript]: https://www.typescriptlang.org/
-[pr]: https://github.com/EvolutionX-10/Radon/pulls
+[pr]: https://github.com/TheOreoTM/cardinal-bot/pulls
 [stars]: https://github.com/TheOreoTM/cardinal-bot/stargazers
 [issues]: https://github.com/TheOreoTM/cardinal-bot/issues
 [changelog]: https://github.com/TheOreoTM/cardinal-bot/blob/main/CHANGELOG.md

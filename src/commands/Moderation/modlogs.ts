@@ -6,6 +6,7 @@ import { getTag } from '#utils/utils';
 import type { Prisma } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
+import { GuildMember } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'View modlogs of a user',
@@ -56,13 +57,15 @@ export class modlogCommand extends ModerationCommand {
 		if (includeAfk) filter.push(ModerationType.AfkClear, ModerationType.AfkReset);
 		if (includeModnicks) filter.push(ModerationType.Modnick);
 
-		const target = await args.pick('user').catch(() => null);
+		const targetArg = await args.pick('member').catch(() => args.pick('user').catch(() => null));
 
-		if (!target) {
+		if (!targetArg) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`Provide a valid user`)]
 			});
 		}
+
+		const target = targetArg instanceof GuildMember ? targetArg.user : targetArg;
 
 		const where: Prisma.ModlogWhereInput = {
 			memberId: target.id,
