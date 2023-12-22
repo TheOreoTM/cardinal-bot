@@ -35,8 +35,6 @@ export class BannedWordModerationListener extends ModerationMessageListener {
 		const wildcardRegExp = new RegExp(wildcardRegExpString, 'i');
 		const isWildcardMatch = wildcardRegExp.test(content);
 
-		console.log(exactWordsPattern, wildcardWordsPattern);
-
 		if (isWildcardMatch || isExactMatch) {
 			return true;
 		}
