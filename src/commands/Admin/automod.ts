@@ -1,5 +1,5 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
-import type { AutomodRule } from '#lib/types';
+import type { AutomodRule, InteractionOrMessage } from '#lib/types';
 import { days, minutes } from '#utils/common';
 import { CardinalEmojis } from '#utils/constants';
 import { sendInteractionOrMessage } from '#utils/functions';
@@ -25,7 +25,18 @@ export class automodCommand extends ModerationCommand {
 				builder
 					.setName(this.name)
 					.setDescription(this.description)
-
+					.addSubcommand((builder) =>
+						builder
+							.setName('view')
+							.setDescription('View an automod rule')
+							.addStringOption((option) =>
+								option
+									.setName('rule')
+									.setDescription('The rule you want to view the settings for')
+									.setRequired(true)
+									.addChoices(...AutomodRuleChoices)
+							)
+					) // view
 					.addSubcommandGroup(
 						(builder) =>
 							builder
@@ -40,7 +51,6 @@ export class automodCommand extends ModerationCommand {
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
 												.setRequired(true)
-												.setMinLength(2)
 												.addChoices(...AutomodRuleChoices)
 										)
 										.addChannelOption((option) =>
@@ -55,7 +65,6 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
-												.setMinLength(2)
 												.addChoices(...AutomodRuleChoices)
 												.setRequired(true)
 										)
@@ -78,7 +87,6 @@ export class automodCommand extends ModerationCommand {
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
 												.setRequired(true)
-												.setMinLength(2)
 												.addChoices(...AutomodRuleChoices)
 										)
 										.addRoleOption((option) =>
@@ -94,7 +102,6 @@ export class automodCommand extends ModerationCommand {
 												.setName('rule')
 												.setDescription('The rule you want to change the setting for')
 												.addChoices(...AutomodRuleChoices)
-												.setMinLength(2)
 												.setRequired(true)
 										)
 										.addRoleOption((option) =>
@@ -114,12 +121,11 @@ export class automodCommand extends ModerationCommand {
 										option
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
-											.setMinLength(2)
 											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
 									)
 									.addStringOption((option) =>
-										option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setMinLength(2).setRequired(true)
+										option.setName('duration').setDescription('The duration (eg: 2m, 1d30m)').setRequired(true)
 									)
 							)
 							.addSubcommand((builder) =>
@@ -130,7 +136,7 @@ export class automodCommand extends ModerationCommand {
 										option
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
-											.setMinLength(2)
+
 											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
 									)
@@ -156,7 +162,6 @@ export class automodCommand extends ModerationCommand {
 										option
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
-											.setMinLength(2)
 											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
 									)
@@ -193,7 +198,6 @@ export class automodCommand extends ModerationCommand {
 										option
 											.setName('rule')
 											.setDescription('The rule you want to change the setting for')
-											.setMinLength(2)
 											.addChoices(...AutomodRuleChoices)
 											.setRequired(true)
 									)
@@ -239,7 +243,7 @@ export class automodCommand extends ModerationCommand {
 											option
 												.setName('type')
 												.setDescription('Whether the word is an exact match or a wildcard')
-												.setMinLength(2)
+
 												.addChoices(
 													{
 														name: 'Wild Card',
@@ -275,8 +279,12 @@ export class automodCommand extends ModerationCommand {
 		const guild = interaction.guild;
 		const subcommandGroup = interaction.options.getSubcommandGroup(true) as SubcommandGroupType;
 		const subcommand = interaction.options.getSubcommand(true) as SubcommandType;
-
 		const rule = interaction.options.getString('rule', false) as AutomodRule;
+
+		if (subcommand === 'view') {
+			this.handleViewRule(interaction, rule);
+			return;
+		}
 
 		switch (subcommandGroup) {
 			case 'action':
@@ -401,9 +409,13 @@ export class automodCommand extends ModerationCommand {
 
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const rule = await args.pick('automodRule');
+		this.handleViewRule(message, rule);
+	}
+
+	private handleViewRule(iom: InteractionOrMessage, rule: AutomodRule) {
 		switch (rule) {
 			case 'bannedWords':
-				this.sendBannedWordsRule(message);
+				this.sendBannedWordsRule(iom);
 				break;
 
 			default:
@@ -411,7 +423,7 @@ export class automodCommand extends ModerationCommand {
 		}
 	}
 
-	private async sendBannedWordsRule(interactionOrMessage: ModerationCommand.Message | ModerationCommand.ChatInputCommandInteraction) {
+	private async sendBannedWordsRule(interactionOrMessage: InteractionOrMessage) {
 		const data = await interactionOrMessage.guild.settings.automod.getSetting<AutomodBannedWords>('bannedWords');
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
@@ -488,4 +500,4 @@ type SubcommandGroupType =
 	| 'new-lines'
 	| 'spam'
 	| 'stickers';
-type SubcommandType = 'add' | 'remove' | 'duration' | 'after';
+type SubcommandType = 'add' | 'remove' | 'duration' | 'after' | 'view';
