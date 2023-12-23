@@ -223,47 +223,50 @@ export class automodCommand extends ModerationCommand {
 									)
 							)
 					) // actions
-					.addSubcommandGroup((builder) =>
-						builder
-							.setName('banned-words')
-							.setDescription('Modify the banned words specific automod rule')
-							.addSubcommand((builder) =>
-								builder
-									.setName('add')
-									.setDescription('Add a word to the banned words list')
-									.addStringOption((option) => option.setName('word').setDescription('The word you want to add').setRequired(true))
-									.addStringOption((option) =>
-										option
-											.setName('type')
-											.setDescription('Whether the word is an exact match or a wildcard')
-											.setMinLength(2)
-											.addChoices(
-												{
-													name: 'Wild Card',
-													value: 'wildcard'
-												},
-												{
-													name: 'Exact Match',
-													value: 'exact'
-												}
-											)
-											.setRequired(true)
-									)
-							)
-							.addSubcommand((builder) =>
-								builder
-									.setName('remove')
-									.setDescription('Remove a word from the banned words list')
-									.addStringOption((option) =>
-										option
-											.setName('word')
-											.setDescription('The word you want to remove')
-											.setRequired(true)
-											.setMinLength(1)
-											.setAutocomplete(true)
-									)
-							)
-							.addSubcommand((builder) => builder.setName('list').setDescription('List all the banned words'))
+					.addSubcommandGroup(
+						(builder) =>
+							builder
+								.setName('banned-words')
+								.setDescription('Modify the banned words specific automod rule')
+								.addSubcommand((builder) =>
+									builder
+										.setName('add')
+										.setDescription('Add a word to the banned words list')
+										.addStringOption((option) =>
+											option.setName('word').setDescription('The word you want to add').setRequired(true)
+										)
+										.addStringOption((option) =>
+											option
+												.setName('type')
+												.setDescription('Whether the word is an exact match or a wildcard')
+												.setMinLength(2)
+												.addChoices(
+													{
+														name: 'Wild Card',
+														value: 'wildcard'
+													},
+													{
+														name: 'Exact Match',
+														value: 'exact'
+													}
+												)
+												.setRequired(true)
+										)
+								)
+								.addSubcommand((builder) =>
+									builder
+										.setName('remove')
+										.setDescription('Remove a word from the banned words list')
+										.addStringOption((option) =>
+											option
+												.setName('word')
+												.setDescription('The word you want to remove')
+												.setRequired(true)
+												.setMinLength(1)
+												.setAutocomplete(true)
+										)
+								)
+						// .addSubcommand((builder) => builder.setName('list').setDescription('List all the banned words'))
 					) // banned words
 		);
 	}
@@ -274,6 +277,7 @@ export class automodCommand extends ModerationCommand {
 		const subcommand = interaction.options.getSubcommand(true) as SubcommandType;
 
 		const rule = interaction.options.getString('rule', false) as AutomodRule;
+
 		switch (subcommandGroup) {
 			case 'action':
 				const action = interaction.options.getString('action', true) as ModerationActionType;
