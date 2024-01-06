@@ -16,8 +16,14 @@ import { DurationFormatter } from '@sapphire/time-utilities';
 export class moderationsCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message) {
 		const prisma = this.container.db;
-		const bans = await prisma.ban.findMany({ where: { expiresAt: { not: null } }, select: { modlog: true, expiresAt: true } });
-		const mutes = await prisma.mute.findMany({ where: { expiresAt: { not: null } }, select: { modlog: true, expiresAt: true } });
+		const bans = await prisma.ban.findMany({
+			where: { modlog: { guildId: message.guildId }, expiresAt: { not: null } },
+			select: { modlog: true, expiresAt: true }
+		});
+		const mutes = await prisma.mute.findMany({
+			where: { modlog: { guildId: message.guildId }, expiresAt: { not: null } },
+			select: { modlog: true, expiresAt: true }
+		});
 
 		const moderations = bans.concat(mutes);
 

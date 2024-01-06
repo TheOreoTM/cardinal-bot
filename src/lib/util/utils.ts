@@ -98,9 +98,10 @@ export async function muteMember(
 	}
 
 	await target.roles.set(rolesToAdd).catch((err: Error) => {
-		return send(message, {
+		send(message, {
 			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
 		});
+		return;
 	});
 
 	send(message, {
