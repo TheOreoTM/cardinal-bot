@@ -17,13 +17,12 @@ export class moderationsCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message) {
 		const prisma = this.container.db;
 		const guildId = message.guildId;
-		console.log('🚀 ~ file: moderations.ts:20 ~ moderationsCommand ~ overridemessageRun ~ guildId:', guildId);
 		const bans = await prisma.ban.findMany({
-			where: { modlog: { guildId } },
+			where: { modlog: { guildId }, expiresAt: { not: null } },
 			select: { modlog: true, expiresAt: true }
 		});
 		const mutes = await prisma.mute.findMany({
-			where: { modlog: { guildId } },
+			where: { modlog: { guildId }, expiresAt: { not: null } },
 			select: { modlog: true, expiresAt: true }
 		});
 
