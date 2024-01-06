@@ -1,5 +1,5 @@
 import { ModerationCommand } from '#lib/structures';
-import type { InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
+import type { GuildMessage, InteractionOrMessage, InteractionOrMessageCommand } from '#lib/types';
 import { isAdmin } from '#utils/functions';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Precondition, type MessageCommand, type ChatInputCommand, type ContextMenuCommand } from '@sapphire/framework';
@@ -11,7 +11,8 @@ import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Messag
 })
 export class UserPrecondition extends Precondition {
 	public override messageRun(message: Message, command: MessageCommand) {
-		return this.check(message, command);
+		if (!message.guild) return this.ok();
+		return this.check(message as GuildMessage, command);
 	}
 
 	public override chatInputRun(interaction: ChatInputCommandInteraction<'cached'>, command: ChatInputCommand) {
@@ -39,9 +40,12 @@ export class UserPrecondition extends Precondition {
 
 		if (!channel) return this.ok();
 
-		const memberIsAllowed = await guild.settings.restrictions.checkMemberAllowed(command.name, member.id);
-		const channelIsAllowed = await guild.settings.restrictions.checkChannelAllowed(command.name, channel.id);
-		const roleIsAllowed = await guild.settings.restrictions.checkRoleAllowed(command.name, member.roles.cache);
+		const settings = guild.settings;
+		if (!settings) return this.ok();
+
+		const memberIsAllowed = await settings.restrictions.checkMemberAllowed(command.name, member.id);
+		const channelIsAllowed = await settings.restrictions.checkChannelAllowed(command.name, channel.id);
+		const roleIsAllowed = await settings.restrictions.checkRoleAllowed(command.name, member.roles.cache);
 
 		if (memberIsAllowed === false || channelIsAllowed === false || roleIsAllowed === false)
 			return this.error({

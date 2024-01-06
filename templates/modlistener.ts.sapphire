@@ -1,0 +1,25 @@
+import { ModerationMessageListener } from '#lib/structures';
+import type { GuildMessage } from '#lib/types';
+import { deleteMessage,  sendTemporaryMessage } from '#utils/functions';
+import { ApplyOptions } from '@sapphire/decorators';
+
+@ApplyOptions<ModerationMessageListener.Options>({
+	name: '{{name}}',
+	reason: 'REASON',
+	rule: 'RULE',
+	enabled: true
+})
+export class BannedWordModerationListener extends ModerationMessageListener {
+	protected async preProcess(message: GuildMessage) {
+		// Code here
+	}
+
+	protected onDelete(message: GuildMessage) {
+		return deleteMessage(message);
+	}
+
+	protected onAlert(message: GuildMessage) {
+		return sendTemporaryMessage(message, `${message.member}, MESSAGE`);
+	}
+
+}
