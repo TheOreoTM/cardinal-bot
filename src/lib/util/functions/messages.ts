@@ -60,7 +60,7 @@ export async function sendMessageAsGuild(
 	user: User,
 	guild: Guild,
 	options: string | Omit<MessagePayload, 'components'> | MessageCreateOptions,
-	appealLink?: string | Nullish
+	appealLink: string | Nullish
 ) {
 	const sentFromButton = generateSendMessageAsGuildButton(guild);
 	const appealButton = new ButtonBuilder()
