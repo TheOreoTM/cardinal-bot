@@ -78,7 +78,7 @@ export async function sendMessageAsGuild(
 					...options,
 					components: [new ActionRowBuilder<ButtonBuilder>().addComponents(buttons)]
 			  };
-	await user.send(o).catch((err) => console.error(err));
+	await user.send(o).catch((err) => container.logger.error(err));
 }
 
 /**

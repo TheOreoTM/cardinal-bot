@@ -42,9 +42,16 @@ export class warnCommand extends ModerationCommand {
 		await modlog.createWarn();
 
 		try {
-			await sendMessageAsGuild(target.user, target.guild, {
-				embeds: [new CardinalEmbedBuilder().setStyle('info').setDescription(`You have been warned for the reason: ${reason ?? 'No reason'}`)]
-			});
+			await sendMessageAsGuild(
+				target.user,
+				target.guild,
+				{
+					embeds: [
+						new CardinalEmbedBuilder().setStyle('info').setDescription(`You have been warned for the reason: ${reason ?? 'No reason'}`)
+					]
+				},
+				null
+			);
 		} catch (ignored) {}
 
 		return send(message, {
