@@ -47,7 +47,7 @@ export class afkCommand extends CardinalCommand {
 			});
 		}
 
-		const afkMessage = await args.rest('string').catch(() => 'AFK');
+		let afkMessage = (await args.rest('string').catch(() => 'AFK')).slice(0, 250);
 		return await this.goAfk(message, afkMessage);
 	}
 
