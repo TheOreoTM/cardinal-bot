@@ -9,9 +9,9 @@ body = """
 	# [{{ version | trim_start_matches(pat="v") }}]\
 	{% if previous %}\
 		{% if previous.version %}\
-			(https://github.com/EvolutionX-10/Radon/compare/{{ previous.version }}...{{ version }})\
+			(https://github.com/theoreotm/cardinal-bot/compare/{{ previous.version }}...{{ version }})\
 		{% else %}\
-			(https://github.com/EvolutionX-10/Radon/tree/{{ version }})\
+			(https://github.com/theoreotm/cardinal-bot/tree/{{ version }})\
 		{% endif %}\
 	{% endif %} \
 	- ({{ timestamp | date(format="%Y-%m-%d") }})
@@ -24,7 +24,7 @@ body = """
 		- {% if commit.scope %}\
 			**{{commit.scope}}:** \
 		{% endif %}\
-			{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/EvolutionX-10/Radon/commit/{{ commit.id }}))\
+			{{ commit.message | upper_first }} ([{{ commit.id | truncate(length=7, end="") }}](https://github.com/theoreotm/cardinal-bot/commit/{{ commit.id }}))\
 		{% if commit.breaking %}\
 			{% for breakingChange in commit.footers %}\
 				\n{% raw %}  {% endraw %}- 💥 **{{ breakingChange.token }}{{ breakingChange.separator }}** {{ breakingChange.value }}\
