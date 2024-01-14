@@ -31,23 +31,30 @@ export class UnmuteMemberTask extends ScheduledTask {
 			}
 		});
 
-		const deletedData = await this.container.db.mute.delete({
-			where: { id: payload.muteId }
-		});
-
-		console.log(deletedData, payload.muteId);
-
 		if (!mute) {
-			return console.log('no mute', payload.muteId);
+			console.log('no mute', payload.muteId);
+			return;
 		}
 
 		const guild = await getGuild(mute.modlog.guildId);
-		if (!guild) return this.container.logger.warn('[UnmuteMemberTask] Returned bc no guild');
+		if (!guild) {
+			this.container.logger.warn('[UnmuteMemberTask] Returned bc no guild');
+			return;
+		}
+
 		const muteRole =
 			guild.roles.cache.get(await guild.settings.roles.mute()) ?? guild.roles.cache.find((role) => role.name.toLowerCase() == 'muted');
-		if (!muteRole) return this.container.logger.warn('[UnmuteMemberTask] Returned bc no muterole');
+		if (!muteRole) {
+			this.container.logger.warn('[UnmuteMemberTask] Returned bc no muterole');
+			return;
+		}
+
 		const member = await getMember(guild, mute.modlog.memberId);
-		if (!member) return this.container.logger.warn('[UnmuteMemberTask] Returned bc no member');
+		if (!member) {
+			this.container.logger.warn('[UnmuteMemberTask] Returned bc no member');
+			return;
+		}
+
 		const staff = guild.members.me ?? (await guild.members.fetchMe());
 
 		this.container.logger.info('[UnmuteMemberTask] Removed roles expire mute:', mute.removedRoles);
