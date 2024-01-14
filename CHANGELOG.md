@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.4.0](https://github.com/theoreotm/cardinal-bot/compare/v1.4.0...v1.4.0) - (2024-01-14)
+
+## 🐛 Bug Fixes
+
+- **cliff-jumper:** Update links ([29a5795](https://github.com/theoreotm/cardinal-bot/commit/29a5795948031fcce6e5d9eb1d358a10edc11f58))
+
+## 🚀 Features
+
+- **cliffjumper:** Added cliff jumper ([69bde5d](https://github.com/theoreotm/cardinal-bot/commit/69bde5d44cb2c165594102d82adf4836db2a9b1b))
+
 # [1.1.0](https://github.com/EvolutionX-10/Radon/compare/v1.1.0...v1.1.0) - (2024-01-14)
 
 ## 🏠 Refactor
