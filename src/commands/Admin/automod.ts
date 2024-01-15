@@ -459,9 +459,23 @@ export class automodCommand extends ModerationCommand {
 		data: Automod | null,
 		customFields?: EmbedField[]
 	): Promise<MessageCreateOptions> {
+		let ruleName = '';
+
+		switch (rule) {
+			case 'bannedWords':
+				ruleName = 'Banned Words';
+				break;
+			case 'inviteLinks':
+				ruleName = 'Invite Links';
+				break;
+			default:
+				ruleName = 'Unknown Rule';
+				break;
+		}
+
 		let embed = new CardinalEmbedBuilder()
 			.setStyle('default')
-			.setTitle('Automod: Banned Words')
+			.setTitle(`Automod: ${ruleName}`)
 			.setDescription(
 				[
 					'Update the banned words settings for the server',
