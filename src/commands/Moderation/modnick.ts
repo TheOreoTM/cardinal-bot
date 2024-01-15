@@ -16,7 +16,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 		usages: ['User', 'User Modnick', 'User --f', 'User Modnick --freeze'],
 		examples: ['@gayballs Golf', '@dick_muncher', '@clink cant change --f']
 	},
-	flags: ['frozen']
+	flags: ['frozen', 'f', 'freeze']
 })
 export class modnickCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
