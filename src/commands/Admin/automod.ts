@@ -1,13 +1,13 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
-import type { AutomodRule, InteractionOrMessage } from '#lib/types';
+import type { Automod, AutomodRule, InteractionOrMessage } from '#lib/types';
 import { days, minutes } from '#utils/common';
 import { CardinalEmojis } from '#utils/constants';
 import { sendInteractionOrMessage } from '#utils/functions';
 import { AutomodRules, type ModerationActionType } from '#utils/moderationConstants';
-import type { AutomodBannedWords } from '@prisma/client';
+import type { AutomodBannedWords, AutomodInviteLinks } from '@prisma/client';
 import { ApplyOptions } from '@sapphire/decorators';
 import { Duration, DurationFormatter } from '@sapphire/time-utilities';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, GuildMember, type EmbedField, type MessageCreateOptions } from 'discord.js';
 
 const AutomodRuleChoices = AutomodRules.map((rule) => ({
 	name: rule.readableName,
@@ -395,7 +395,7 @@ export class automodCommand extends ModerationCommand {
 
 				break;
 			case 'capitalization':
-			case 'invite-links':
+				break;
 			case 'link-cooldown':
 			case 'links':
 			case 'mass-mention':
@@ -417,15 +417,49 @@ export class automodCommand extends ModerationCommand {
 			case 'bannedWords':
 				this.sendBannedWordsRule(iom);
 				break;
-
+			case 'inviteLinks':
+				this.sendInviteLinksRule(iom);
+				break;
 			default:
 				break;
 		}
 	}
 
-	private async sendBannedWordsRule(interactionOrMessage: InteractionOrMessage) {
-		const data = await interactionOrMessage.guild.settings.automod.getSetting<AutomodBannedWords>('bannedWords');
-		const embed = new CardinalEmbedBuilder()
+	private async sendInviteLinksRule(iom: InteractionOrMessage) {
+		const data = await iom.guild.settings.automod.getSetting<AutomodInviteLinks>('inviteLinks');
+		let message = await this.buildRuleEmbed(iom, 'inviteLinks', data);
+
+		await sendInteractionOrMessage(iom, message);
+	}
+
+	private async sendBannedWordsRule(iom: InteractionOrMessage) {
+		const data = await iom.guild.settings.automod.getSetting<AutomodBannedWords>('bannedWords');
+
+		const customFields: EmbedField[] = [
+			{
+				name: 'Exact Matches',
+				value: `${data?.exact.length !== 0 && data !== null ? data.exact.map((w) => `\`${w}\``).join(' ') : 'None'}`,
+				inline: true
+			},
+			{
+				name: 'Wildcards Matches',
+				value: `${data?.wildcard.length !== 0 && data ? data.wildcard.map((w) => `\`${w}\``).join(' ') : 'None'}`,
+				inline: true
+			}
+		];
+
+		let message = await this.buildRuleEmbed(iom, 'bannedWords', data, customFields);
+
+		await sendInteractionOrMessage(iom, message);
+	}
+
+	private async buildRuleEmbed(
+		iom: InteractionOrMessage,
+		rule: AutomodRule,
+		data: Automod | null,
+		customFields?: EmbedField[]
+	): Promise<MessageCreateOptions> {
+		let embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setTitle('Automod: Banned Words')
 			.setDescription(
@@ -436,21 +470,6 @@ export class automodCommand extends ModerationCommand {
 				].join('\n')
 			)
 			.setFields(
-				{
-					name: 'Exact Matches',
-					value: `${data?.exact.length !== 0 && data !== null ? data.exact.map((w) => `\`${w}\``).join(' ') : 'None'}`,
-					inline: true
-				},
-				{
-					name: 'Wildcards Matches',
-					value: `${data?.wildcard.length !== 0 && data ? data.wildcard.map((w) => `\`${w}\``).join(' ') : 'None'}`,
-					inline: true
-				},
-				{
-					name: 'Actions',
-					value: `${data?.actions.length !== 0 && data ? data.actions.map((w) => `\`${w}\``).join(' ') : 'None'}`,
-					inline: true
-				},
 				{
 					name: 'Automute Settings',
 					value: [
@@ -473,16 +492,35 @@ export class automodCommand extends ModerationCommand {
 				}
 			);
 
-		const toggleButton = new ButtonBuilder()
-			.setLabel(`${data?.enabled ?? false ? 'Disable' : 'Enable'}`)
-			.setEmoji(`${data?.enabled ?? false ? CardinalEmojis.Invisible : CardinalEmojis.Online}`)
-			.setStyle(data?.enabled ?? false ? ButtonStyle.Secondary : ButtonStyle.Success)
-			.setCustomId(`${data?.enabled ?? false ? 'disable' : 'enable'}rule-${interactionOrMessage.member.id}-bannedWords`);
-
-		sendInteractionOrMessage(interactionOrMessage, {
+		if (customFields) embed = this.addFieldsToStart(embed, customFields);
+		const button = this.buildToggleButton(data?.enabled ?? false, iom.member, rule);
+		const actionRow = new ActionRowBuilder<ButtonBuilder>().addComponents(button);
+		return {
 			embeds: [embed],
-			components: [new ActionRowBuilder<ButtonBuilder>().addComponents(toggleButton)]
-		});
+			components: [actionRow]
+		};
+	}
+
+	private buildToggleButton(enabled: boolean, member: GuildMember, rule: AutomodRule) {
+		const toggleButton = new ButtonBuilder()
+			.setLabel(`${enabled ? 'Disable' : 'Enable'}`)
+			.setEmoji(`${enabled ? CardinalEmojis.Invisible : CardinalEmojis.Online}`)
+			.setStyle(enabled ? ButtonStyle.Secondary : ButtonStyle.Success)
+			.setCustomId(`${enabled ? 'disable' : 'enable'}rule-${member.id}-${rule}`);
+
+		return toggleButton;
+	}
+
+	private addFieldsToStart(embed: CardinalEmbedBuilder, field: EmbedField[]) {
+		const fields = embed.data.fields ?? [];
+		if (fields.length === 0) {
+			embed.setFields(...field);
+			return embed;
+		}
+
+		const newFields = [...field, ...fields];
+		embed.setFields(...newFields);
+		return embed;
 	}
 }
 
