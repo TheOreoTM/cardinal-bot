@@ -55,7 +55,7 @@ export class InviteModerationListener extends ModerationMessageListener {
 	}
 
 	private async fetchIfAllowedInvite(message: GuildMessage, code: string) {
-		const data = await message.guild.invites.fetch(code).catch(() => null);
+		const data = await message.client.fetchInvite(code).catch(() => null);
 
 		// Invalid invites should not be deleted.
 		if (!data) return true;
