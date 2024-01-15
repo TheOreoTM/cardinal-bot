@@ -427,7 +427,7 @@ export class automodCommand extends ModerationCommand {
 
 	private async sendInviteLinksRule(iom: InteractionOrMessage) {
 		const data = await iom.guild.settings.automod.getSetting<AutomodInviteLinks>('inviteLinks');
-		let message = await this.buildRuleEmbed(iom, 'inviteLinks', data);
+		const message = await this.buildRuleEmbed(iom, 'inviteLinks', data);
 
 		await sendInteractionOrMessage(iom, message);
 	}
@@ -448,7 +448,7 @@ export class automodCommand extends ModerationCommand {
 			}
 		];
 
-		let message = await this.buildRuleEmbed(iom, 'bannedWords', data, customFields);
+		const message = await this.buildRuleEmbed(iom, 'bannedWords', data, customFields);
 
 		await sendInteractionOrMessage(iom, message);
 	}
