@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.5.0](https://github.com/theoreotm/cardinal-bot/compare/v1.5.0...v1.5.0) - (2024-01-15)
+
+## 🏠 Refactor
+
+- **code-cov:** Change let to const ([d949de2](https://github.com/theoreotm/cardinal-bot/commit/d949de2c572fcd7689090fbec6ab2e9a9cf34abf))
+
+## 🐛 Bug Fixes
+
+- **automod-invitelinks:** Fetch invite from client instead of guild ([d15fe73](https://github.com/theoreotm/cardinal-bot/commit/d15fe7384dce854dacfa7061c693e3279e98d8bf))
+- **automod-invitelinks:** Made it default to null instead of erroring ([21d59b6](https://github.com/theoreotm/cardinal-bot/commit/21d59b67d720f67026233aaa3e100afd03d7b972))
+- **automod-listener:** Fixed all the typos ([ae3f169](https://github.com/theoreotm/cardinal-bot/commit/ae3f1691475c25eb99cb132dc3e30c658b3dcf41))
+- **automod:** Made it show actual rulename instead of "banned words" ([07ddeb9](https://github.com/theoreotm/cardinal-bot/commit/07ddeb9da2076d0e28f444ba5c9b8bc230805ad8))
+
+## 🚀 Features
+
+- **automod-invitelinks:** Added proper warning message ([90f7301](https://github.com/theoreotm/cardinal-bot/commit/90f7301a2b556137760433a49a822e495f53e697))
+- **ci:** Make dev bot be hosted on the vps ([1ea6d56](https://github.com/theoreotm/cardinal-bot/commit/1ea6d56e7ec6b8a8df9aedb8b823fad02e398eb9))
+- **config:** Added redis db ([5e1ffaa](https://github.com/theoreotm/cardinal-bot/commit/5e1ffaa84f5dcbe6d11a0e716e2505b6189490dd))
+- **automod:** Invites Handler ([5d5acc0](https://github.com/theoreotm/cardinal-bot/commit/5d5acc0132c2cfc58703c3a8465b5079f602512c))
+- **issuetemplate:** Added bug report and feature request issues ([1fbbb4b](https://github.com/theoreotm/cardinal-bot/commit/1fbbb4bd5c6a3352c8230b9eb86bd7c8cf5c697f))
+
 # [1.4.0](https://github.com/theoreotm/cardinal-bot/compare/v1.4.0...v1.4.0) - (2024-01-14)
 
 ## 🐛 Bug Fixes
