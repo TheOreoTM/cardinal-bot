@@ -9,7 +9,7 @@ const enum CodeType {
 }
 
 @ApplyOptions<ModerationMessageListener.Options>({
-	name: 'userMessageInvitesHandlder',
+	name: 'userMessageInvitesHandler',
 	reason: 'Sending banned invites',
 	rule: 'inviteLinks',
 	enabled: true
