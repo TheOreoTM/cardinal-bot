@@ -47,7 +47,7 @@ export class InviteModerationListener extends ModerationMessageListener {
 	}
 
 	protected onAlert(message: GuildMessage) {
-		return sendTemporaryMessage(message, `${message.member}, Too many caps`);
+		return sendTemporaryMessage(message, `${message.member}, you may not send invite links to other servers here.`);
 	}
 
 	private async scanLink(message: GuildMessage, url: string, code: string) {
