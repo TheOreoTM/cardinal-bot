@@ -8,14 +8,13 @@ datasource db {
 }
 
 model Lockdown {
-  id        Int      @id @default(autoincrement())
-  guildId   String
-  channelId String
-  expiresAt DateTime
-  createdAt DateTime @default(now())
+  id            Int      @id @default(autoincrement())
+  guildId       String
+  channelId     String   @unique
+  oldPermission Int
+  createdAt     DateTime @default(now())
 
   @@unique([guildId, channelId])
-  @@index([guildId, channelId])
 }
 
 model Note {
@@ -193,6 +192,7 @@ model Guild {
 
   lockdownChannelList     String[] @default([])
   lockdownChannelListType String   @default("whitelist") // whitelist | blacklist
+  isLocked                Boolean  @default(false)
 
   // Relations
   automodBannedWordsGuildId    String?
