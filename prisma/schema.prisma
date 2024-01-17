@@ -155,15 +155,16 @@ model Afk {
 // }
 
 model Guild {
-  guildId       String  @id @unique
+  guildId String @id @unique
+
+  // Staff Settings
   roleTrainee   String?
   roleStaff     String?
   roleModerator String?
   roleAdmin     String?
   roleMuted     String?
 
-  appealLink String?
-
+  // Automod Settings
   bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsGuildId], references: [guildId])
   capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationGuildId], references: [guildId])
   inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksGuildId], references: [guildId])
@@ -174,19 +175,26 @@ model Guild {
   spam           AutomodSpam?           @relation(fields: [automodSpamGuildId], references: [guildId])
   stickers       AutomodStickers?       @relation(fields: [automodStickersGuildId], references: [guildId])
 
+  // Basic Settings & Info
+  lookback Int     @default(7)
+  prefix   String  @default(">")
+  premium  Boolean @default(false)
+
+  restrictionNodes RestrictionNode[]
+
   channelModlog     String?
   channelSuggestion String?
 
   suggestionCreateThread Boolean?
 
-  restrictionNodes RestrictionNode[]
+  appealLink String?
 
   useCachedStats Boolean @default(true)
 
-  lookback Int     @default(7)
-  prefix   String  @default(">")
-  premium  Boolean @default(false)
+  lockdownChannelList     String[] @default([])
+  lockdownChannelListType String   @default("whitelist") // whitelist | blacklist
 
+  // Relations
   automodBannedWordsGuildId    String?
   automodCapitalizationGuildId String?
   automodInviteLinksGuildId    String?
