@@ -7,6 +7,16 @@ import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector'
 import { BotPrefix } from '#constants';
 import { RedisClient } from '#lib/database';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
+import { Client as PgClient } from 'pg';
+import { drizzle } from 'drizzle-orm/node-postgres';
+
+const client = new PgClient({
+	connectionString: envParseString('DATABASE_URL')
+});
+
+await client.connect();
+const db = drizzle(client, {});
+db;
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)

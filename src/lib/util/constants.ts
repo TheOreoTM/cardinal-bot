@@ -1,4 +1,9 @@
+import { getRootData } from '@sapphire/pieces';
 import { envParseArray, envParseString } from '@skyra/env-utilities';
+import { join } from 'path';
+
+export const mainFolder = getRootData().root;
+export const rootFolder = join(mainFolder, '..');
 
 export const CardinalEpoch = 1689677721;
 export const ZeroWidthSpace = '\u200B';

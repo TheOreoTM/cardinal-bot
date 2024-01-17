@@ -33,6 +33,7 @@ declare module '@skyra/env-utilities' {
 		OAUTH_SECRET: string;
 
 		WEB_URL: string;
+		DATABASE_URL: string;
 
 		CARDINAL_API_KEY: string;
 
