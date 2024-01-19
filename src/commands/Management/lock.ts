@@ -74,7 +74,7 @@ export class lockCommand extends ModerationCommand {
 				embed.setFooter({ text: `Locked by ${getTag(message.author)}`, iconURL: message.author.displayAvatarURL({ forceStatic: false }) });
 			}
 
-			channel.send({ embeds: [embed] });
+			channel.send({ embeds: [embed] }).catch();
 		}
 
 		if (duration) {
