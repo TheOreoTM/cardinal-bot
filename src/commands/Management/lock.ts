@@ -39,12 +39,12 @@ export class lockCommand extends ModerationCommand {
 
 		const report = lockdownManager.report;
 		const formattedReport = report.channels.map((r) => {
-			return `${r.success ? '✅' : '❌'} ${r.channelId} ${r.error ? `(${r.error})` : ''}`;
+			return `${r.success ? '✅' : '❌'} <@${r.channelId}> ${r.error ? `(${r.error})` : ''}`;
 		});
 
 		const reportEmbed = new CardinalEmbedBuilder()
 			.setStyle('info')
-			.setDescription(`🔒 Locked ${report.channels.length} channels.`)
+			.setAuthor({ name: `Locked ${report.channels.length} channels.` })
 			.setFields({
 				name: 'Report',
 				value: formattedReport.join('\n')
