@@ -1,4 +1,4 @@
-name: Continuous Integration (Dev)
+name: Development Continuous Integration
 
 on:
   push:
