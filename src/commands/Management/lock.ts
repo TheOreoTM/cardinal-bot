@@ -12,10 +12,18 @@ import { TextChannel } from 'discord.js';
 	requiredClientPermissions: ['ManageChannels'],
 	detailedDescription: {
 		extendedHelp: `This command will lock a channel, preventing users from sending messages, adding reaction, making and sending messages in threads in it. The bot will try to store the old permissions and then edit the permissions for the \`@everyone\` role to deny the permissions stated before.`,
-		examples: ['', '#general'],
-		usages: ['', 'Channel'],
+		examples: ['', '#general', '#general 10m', '#general 10m "reason"', '#general 10m "reason" -s', '#general 10m "reason" -a'],
+		usages: ['', 'Channel', 'Channel Duration', 'Channel Duration Reason', 'Channel Reason', 'Channel Duration Reason Flags'],
 		possibleFormats: [['Channel', 'ID/Mention/Name']],
-		explainedUsage: [['Channel', 'The channel to lock']]
+		explainedUsage: [
+			['Channel', 'The channel to lock'],
+			['Duration', 'The duration of the lock'],
+			['Reason', 'The reason for the lock'],
+			[
+				'Flags',
+				'The flags for the command, Use `-s`/`--silent` to make the command silent, and `-a`/`--anonymous` to make the command anonymous.'
+			]
+		]
 	},
 	flags: ['silent', 's', 'anonymous', 'a'],
 	aliases: ['lockchannel'],
@@ -73,7 +81,7 @@ export class lockCommand extends ModerationCommand {
 
 		if (duration) {
 			const offset = duration.offset;
-			this.container.tasks.create('UnlockChannelTask', { data: { guildId: guild.id, channelId: channel.id }, offset });
+			this.container.tasks.create('UnlockChannelTask', { data: { channelId: channel.id }, offset });
 		}
 
 		send(message, {

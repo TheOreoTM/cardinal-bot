@@ -1,4 +1,4 @@
-import { CardinalEmbedBuilder, LockdownManager, ModerationCommand } from '#lib/structures';
+import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
@@ -33,23 +33,26 @@ export class lockCommand extends ModerationCommand {
 		}
 
 		const guild = message.guild;
-		const lockdownManager = new LockdownManager(guild);
 
-		lockdownManager.unlockChannel(channel, null);
+		if (channel.permissionsFor(guild.roles.everyone).has('SendMessages')) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`That channel is not locked`)]
+			});
+		}
 
-		const report = lockdownManager.report;
-		const formattedReport = report.channels.map((r) => {
-			return `${r.success ? '✅' : '❌'} <#${r.channelId}> ${r.error ? `(${r.error})` : ''}`;
-		});
-
-		const reportEmbed = new CardinalEmbedBuilder()
-			.setStyle('info')
-			.setAuthor({ name: `Locked ${report.channels.length} channels.` })
-			.setFields({
-				name: 'Report',
-				value: formattedReport.length !== 0 ? formattedReport.join('\n') : 'No channels were locked.'
+		channel.permissionOverwrites
+			.edit(guild.roles.everyone, {
+				SendMessages: null
+			})
+			.catch(() => {
+				send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`I couldn't unlock that channel`)]
+				});
 			});
 
-		send(message, { embeds: [reportEmbed] });
+		send(message, {
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Unlocked ${channel}`)]
+		});
+		return;
 	}
 }
