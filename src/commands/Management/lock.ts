@@ -68,13 +68,13 @@ export class lockCommand extends ModerationCommand {
 			});
 
 		if (lockMessage && !silent) {
-			const embed = new CardinalEmbedBuilder().setAuthor({ name: 'Channel Locked' }).setDescription(`🔒 ${message}`);
+			const embed = new CardinalEmbedBuilder().setAuthor({ name: 'Channel Locked' }).setDescription(`🔒 ${lockMessage}`);
 
 			if (!anonymous) {
 				embed.setFooter({ text: `Locked by ${getTag(message.author)}`, iconURL: message.author.displayAvatarURL({ forceStatic: false }) });
 			}
 
-			message.channel.send({ embeds: [embed] });
+			channel.send({ embeds: [embed] });
 		}
 
 		if (duration) {
