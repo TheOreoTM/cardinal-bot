@@ -99,7 +99,7 @@ export class lockCommand extends ModerationCommand {
 		const overwrites = channel.permissionOverwrites.cache.get(channel.guild.roles.everyone.id);
 		if (!overwrites) return false;
 		const permissionsBitField = new PermissionsBitField(overwrites.allow.bitfield);
-		if (overwrites.allow.bitfield === 0n || permissionsBitField.has('SendMessages')) return false;
-		return true;
+		if (!permissionsBitField.has('SendMessages')) return true;
+		return false;
 	}
 }
