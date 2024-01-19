@@ -1,42 +1,29 @@
 import { container } from '@sapphire/pieces';
-import { ChannelType, type Guild } from 'discord.js';
+import { ChannelType, Collection, type Guild, type OverwriteData, type Snowflake } from 'discord.js';
 import { CardinalEmbedBuilder } from './CardinalEmbedBuilder';
 import type { GuildChannel } from '#lib/types';
+import type { Nullish } from '@sapphire/utilities';
 
 export class LockdownManager {
 	private readonly db = container.db;
-	private lockdownReport: LockdownReport = { fullSuccess: true, channels: [] };
+	public report: LockdownReport = { fullSuccess: true, channels: [] };
 
 	public constructor(private readonly guild: Guild) {
 		this.guild = guild;
 	}
 
 	public async unlock() {
+		this.report = { fullSuccess: true, channels: [] }; // Reset the unlockdown report
 		const data = await this.db.guild.findUnique({ where: { guildId: this.guild.id } });
 		if (!data) return;
 
 		const channels = await this.getLockdownChannels();
 
-		channels.forEach(async (channel) => {
-			const channelData = await this.db.lockdown.findUnique({ where: { channelId: channel.id } });
-
-			let permission: boolean | null = null;
-			if (channelData) {
-				const { oldPermission } = channelData;
-				if (oldPermission === OldPermission.None) permission = null;
-				if (oldPermission === OldPermission.Allow) permission = true;
-				if (oldPermission === OldPermission.Deny) permission = false;
-			}
-
-			channel.permissionOverwrites.edit(channel.guild.roles.everyone, { SendMessages: permission }).catch((e) => {
-				this.lockdownReport.channels.push({ channelId: channel.id, success: false, error: e.message });
-				this.lockdownReport.fullSuccess = false;
-				return;
-			});
-		});
+		channels.forEach(({ channel, data }) => this.unlockChannel(channel, data));
 	}
 
 	public async lock() {
+		this.report = { fullSuccess: true, channels: [] }; // Reset the lockdown report
 		const data = await this.db.guild.findUnique({ where: { guildId: this.guild.id } });
 		if (!data) return;
 
@@ -44,12 +31,7 @@ export class LockdownManager {
 
 		const channels = await this.getLockdownChannels();
 
-		channels.forEach((channel) => this.lockChannel(channel));
-
-		await this.db.guild.update({
-			where: { guildId: this.guild.id },
-			data: { isLocked: true }
-		});
+		channels.forEach(({ channel }) => this.lockChannel(channel));
 
 		return report;
 	}
@@ -61,79 +43,183 @@ export class LockdownManager {
 		};
 	}
 
-	private lockChannel(channel: GuildChannel) {
-		const lockdownEmbed = new CardinalEmbedBuilder()
-			.setStyle('info')
-			.setDescription('This channel has been locked down by a moderator. Please wait until the lockdown is over.');
+	public async unlockChannel(channel: GuildChannel, data: LockedChannel | Nullish) {
+		const unlockEmbed = new CardinalEmbedBuilder().setStyle('info').setDescription('🔓 This channel has been unlocked');
+		const overwrites = data?.overwrites;
 
-		let oldPermission: number = OldPermission.None;
-
-		const allowEveryone = channel.permissionsFor(channel.guild.roles.everyone).has('SendMessages');
-		if (allowEveryone) {
-			oldPermission = OldPermission.Allow;
-		} else {
-			oldPermission = OldPermission.Deny;
+		if (!overwrites) {
+			channel.permissionOverwrites
+				.edit(this.guild.id, defaultUnlockOptions, { reason: 'Unlocking channel w/ default options' })
+				.then(() => {
+					channel.send({ embeds: [unlockEmbed] });
+					this.report.channels.push({ channelId: channel.id, success: true });
+				})
+				.catch((e) => {
+					this.report.channels.push({ channelId: channel.id, success: false, error: `Failed to edit permissions: ${e}` });
+				});
 		}
 
-		channel.permissionOverwrites.edit(channel.guild.roles.everyone, { SendMessages: false }).catch((e) => {
-			this.lockdownReport.channels.push({ channelId: channel.id, success: false, error: e.message });
-			return;
+		if (overwrites) {
+			channel.permissionOverwrites
+				.set(
+					overwrites.map((overwrite) => ({ id: overwrite.id, allow: overwrite.allow, deny: overwrite.deny })) as OverwriteData[],
+					`Unlocking channel`
+				)
+				.then(() => {
+					channel.send({ embeds: [unlockEmbed] });
+					this.report.channels.push({ channelId: channel.id, success: true });
+				})
+				.catch((e) => {
+					this.report.channels.push({ channelId: channel.id, success: false, error: `Failed to edit permissions: ${e}` });
+				});
+		}
+
+		this.db.lockedChannel.deleteMany({
+			where: {
+				channelId: channel.id
+			}
 		});
+	}
 
-		channel.send({ embeds: [lockdownEmbed] });
+	public async lockChannel(channel: GuildChannel) {
+		const lockEmbed = new CardinalEmbedBuilder()
+			.setStyle('info')
+			.setDescription('🔒 This channel has been locked by a moderator. Please wait until the lockdown is over.');
 
-		const data = {
-			channelId: channel.id,
-			guildId: this.guild.id,
-			oldPermission: oldPermission
-		};
+		const permissionOverwrites = channel.permissionOverwrites.cache;
+		const overwrites = permissionOverwrites.map((overwrite) => overwrite.toJSON()) as Overwrite[];
 
-		this.db.lockdown.upsert({
-			create: data,
-			update: data,
-			where: { channelId: channel.id }
+		channel.permissionOverwrites
+			.edit(this.guild.id, lockOptions)
+			.then(() => channel.send({ embeds: [lockEmbed] }))
+			.catch((e) => {
+				this.report.channels.push({ channelId: channel.id, success: false, error: `Failed to edit permissions: ${e}` });
+			});
+
+		this.report.channels.push({ channelId: channel.id, success: true });
+
+		this.db.lockedChannel.upsert({
+			create: {
+				channelId: channel.id,
+				guildId: this.guild.id,
+				overwrites: {
+					create: overwrites
+				}
+			},
+			update: {
+				channelId: channel.id,
+				guildId: this.guild.id,
+				overwrites: {
+					create: overwrites
+				}
+			},
+			where: {
+				channelId: channel.id
+			}
 		});
-
-		this.lockdownReport.channels.push({ channelId: channel.id, success: true });
 	}
 
 	/**
 	 * Retrieves the lockdown channels based on the configuration in the database.
 	 * @returns A promise that resolves to an array of GuildChannel objects representing the lockdown channels.
 	 */
-	private async getLockdownChannels(): Promise<GuildChannel[]> {
-		const data = await this.db.guild.findUnique({ where: { guildId: this.guild.id } });
-		if (!data) return [];
+	private async getLockdownChannels(): Promise<Collection<Snowflake, LockedChannelData>> {
+		const channels: Collection<Snowflake, LockedChannelData> = new Collection();
+
+		const promisedata = this.db.guild.findUnique({ where: { guildId: this.guild.id } });
+		const promiseChannelsData = this.getLockdownChannelsData();
+
+		const [data, channelsData] = await Promise.all([promisedata, promiseChannelsData]).catch(() => {
+			return [null, null];
+		});
+
+		if (!data) return channels;
+		if (!channelsData) return channels;
 
 		const lockdownChannels = data.lockdownChannelList;
 		const listType = data.lockdownChannelListType as LockdownChannelListType;
 
-		const channels: GuildChannel[] = [];
-
 		this.guild.channels.cache.forEach((channel) => {
 			if (channel.type !== ChannelType.GuildText) return;
+			const data = channelsData.get(channel.id);
+			if (!data) return;
 
 			if (listType === 'include' && lockdownChannels.includes(channel.id)) {
-				channels.push(channel);
+				channels.set(channel.id, { channel, data });
 			}
 
 			if (listType === 'exclude' && !lockdownChannels.includes(channel.id)) {
-				channels.push(channel);
+				channels.set(channel.id, { channel, data });
 			}
+		});
+
+		return channels;
+	}
+
+	private async getLockdownChannelsData(): Promise<Collection<Snowflake, LockedChannel>> {
+		const data = await this.db.lockedChannel.findMany({
+			where: {
+				guildId: this.guild.id
+			},
+			select: {
+				overwrites: {
+					select: {
+						allow: true,
+						deny: true,
+						id: true,
+						type: true
+					}
+				},
+				channelId: true,
+				guildId: true
+			}
+		});
+
+		const channels = new Collection<Snowflake, LockedChannel>();
+
+		data.forEach((channel) => {
+			channels.set(channel.channelId, channel);
 		});
 
 		return channels;
 	}
 }
 
+const lockOptions = {
+	SendMessages: false,
+	AddReactions: false,
+	CreatePublicThreads: false,
+	CreatePrivateThreads: false
+};
+
+const defaultUnlockOptions = {
+	SendMessages: null,
+	AddReactions: null,
+	CreatePublicThreads: null,
+	CreatePrivateThreads: null
+};
+
+type Overwrite = {
+	allow: string;
+	deny: string;
+	id: string;
+	type: number;
+};
+
 type LockdownChannelListType = 'exclude' | 'include';
+
 type LockdownReport = {
 	fullSuccess: boolean;
 	channels: { channelId: string; success: boolean; error?: string }[];
 };
 
-enum OldPermission {
-	None,
-	Allow,
-	Deny
-}
+type LockedChannelData = {
+	channel: GuildChannel;
+	data: LockedChannel;
+};
+
+type LockedChannel = {
+	channelId: string;
+	guildId: string;
+	overwrites: Overwrite[] | Nullish;
+};

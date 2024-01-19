@@ -7,14 +7,28 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Lockdown {
-  id            Int      @id @default(autoincrement())
-  guildId       String
-  channelId     String   @unique
-  oldPermission Int
-  createdAt     DateTime @default(now())
+model LockedChannelOverwrites {
+  uuid String @id @default(uuid())
 
-  @@unique([guildId, channelId])
+  // The overwrite's id, either a User or a Role id
+  id    String
+  // The type of this overwrite
+  type  Int
+  // The permissions that are allowed for the user or role.
+  allow String
+  // The permissions that are denied for the user or role
+  deny  String
+
+  lockedChannel          LockedChannel? @relation(fields: [lockedChannelChannelId], references: [channelId])
+  lockedChannelChannelId String?
+}
+
+// https://old.discordjs.dev/#/docs/discord.js/main/class/PermissionOverwrites
+model LockedChannel {
+  guildId   String
+  channelId String @id
+
+  overwrites LockedChannelOverwrites[]
 }
 
 model Note {
