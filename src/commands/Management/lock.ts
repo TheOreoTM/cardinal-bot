@@ -47,12 +47,6 @@ export class lockCommand extends ModerationCommand {
 			return;
 		}
 
-		if (this.canLock(channel)) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant manage that channel')]
-			});
-		}
-
 		if (this.isLocked(channel)) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That channel is already locked')]
@@ -66,7 +60,9 @@ export class lockCommand extends ModerationCommand {
 				SendMessages: false
 			})
 			.catch((e) => {
-				throw e;
+				send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`I cant manage that channel: ${e}`)]
+				});
 			});
 
 		if (lockMessage && !silent) {
@@ -88,10 +84,6 @@ export class lockCommand extends ModerationCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${duration}` : ''}`)]
 		});
 		return;
-	}
-
-	private canLock(channel: TextChannel) {
-		return channel.manageable;
 	}
 
 	private isLocked(channel: TextChannel) {
