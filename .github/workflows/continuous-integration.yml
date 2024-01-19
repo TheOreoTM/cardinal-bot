@@ -1,8 +1,8 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches: ['main']
+  # push:
+  #   branches: ['main']
   pull_request:
     branches: ['main']
 
@@ -35,5 +35,5 @@ jobs:
             git pull
             yarn install
             yarn build
-            yarn prisma:push-prod
+            yarn db:push
             pm2 start dist/index.js --name cardinal-bot

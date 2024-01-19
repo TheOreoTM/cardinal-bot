@@ -7,6 +7,30 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model LockedChannelOverwrites {
+  uuid String @id @default(uuid())
+
+  // The overwrite's id, either a User or a Role id
+  id    String
+  // The type of this overwrite
+  type  Int
+  // The permissions that are allowed for the user or role.
+  allow String
+  // The permissions that are denied for the user or role
+  deny  String
+
+  lockedChannel          LockedChannel? @relation(fields: [lockedChannelChannelId], references: [channelId])
+  lockedChannelChannelId String?
+}
+
+// https://old.discordjs.dev/#/docs/discord.js/main/class/PermissionOverwrites
+model LockedChannel {
+  guildId   String
+  channelId String @id
+
+  overwrites LockedChannelOverwrites[]
+}
+
 model Note {
   id        Int      @id @default(autoincrement())
   noteId    Int
@@ -144,15 +168,16 @@ model Afk {
 // }
 
 model Guild {
-  guildId       String  @id @unique
+  guildId String @id @unique
+
+  // Staff Settings
   roleTrainee   String?
   roleStaff     String?
   roleModerator String?
   roleAdmin     String?
   roleMuted     String?
 
-  appealLink String?
-
+  // Automod Settings
   bannedWords    AutomodBannedWords?    @relation(fields: [automodBannedWordsGuildId], references: [guildId])
   capitalization AutomodCapitalization? @relation(fields: [automodCapitalizationGuildId], references: [guildId])
   inviteLinks    AutomodInviteLinks?    @relation(fields: [automodInviteLinksGuildId], references: [guildId])
@@ -163,19 +188,27 @@ model Guild {
   spam           AutomodSpam?           @relation(fields: [automodSpamGuildId], references: [guildId])
   stickers       AutomodStickers?       @relation(fields: [automodStickersGuildId], references: [guildId])
 
+  // Basic Settings & Info
+  lookback Int     @default(7)
+  prefix   String  @default(">")
+  premium  Boolean @default(false)
+
+  restrictionNodes RestrictionNode[]
+
   channelModlog     String?
   channelSuggestion String?
 
   suggestionCreateThread Boolean?
 
-  restrictionNodes RestrictionNode[]
+  appealLink String?
 
   useCachedStats Boolean @default(true)
 
-  lookback Int     @default(7)
-  prefix   String  @default(">")
-  premium  Boolean @default(false)
+  lockdownChannelList     String[] @default([])
+  lockdownChannelListType String   @default("whitelist") // whitelist | blacklist
+  isLocked                Boolean  @default(false)
 
+  // Relations
   automodBannedWordsGuildId    String?
   automodCapitalizationGuildId String?
   automodInviteLinksGuildId    String?
