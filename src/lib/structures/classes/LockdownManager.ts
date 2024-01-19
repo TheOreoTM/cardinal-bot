@@ -1,6 +1,6 @@
 import { container } from '@sapphire/pieces';
 import { ChannelType, Collection, type Guild, type OverwriteData, type Snowflake } from 'discord.js';
-import { CardinalEmbedBuilder } from './CardinalEmbedBuilder';
+import { CardinalEmbedBuilder } from '#lib/structures';
 import type { GuildChannel } from '#lib/types';
 import type { Nullish } from '@sapphire/utilities';
 
