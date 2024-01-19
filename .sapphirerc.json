@@ -8,7 +8,7 @@
 		"preconditions": "preconditions",
 		"interaction-handlers": "interaction-handlers",
 		"routes": "routes",
-		"tasks": "tasks"
+		"tasks": "scheduled-tasks"
 	},
 	"customFileTemplates": {
 		"enabled": true,

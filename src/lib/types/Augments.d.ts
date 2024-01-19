@@ -89,6 +89,7 @@ declare module '@sapphire/plugin-scheduled-tasks' {
 		UnbanMemberTask: never;
 		EndGiveawayTask: never;
 		RemoveInfractionTask: never;
+		UnlockChannelTask: never;
 	}
 }
 

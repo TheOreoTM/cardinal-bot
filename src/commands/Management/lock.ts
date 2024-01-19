@@ -1,5 +1,6 @@
-import { CardinalEmbedBuilder, LockdownManager, ModerationCommand } from '#lib/structures';
+import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -8,6 +9,7 @@ import { TextChannel } from 'discord.js';
 @ApplyOptions<ModerationCommand.Options>({
 	name: 'lock',
 	description: 'Lock a channel',
+	requiredClientPermissions: ['ManageChannels'],
 	detailedDescription: {
 		extendedHelp: `This command will lock a channel, preventing users from sending messages, adding reaction, making and sending messages in threads in it. The bot will try to store the old permissions and then edit the permissions for the \`@everyone\` role to deny the permissions stated before.`,
 		examples: ['', '#general'],
@@ -15,6 +17,7 @@ import { TextChannel } from 'discord.js';
 		possibleFormats: [['Channel', 'ID/Mention/Name']],
 		explainedUsage: [['Channel', 'The channel to lock']]
 	},
+	flags: ['silent', 's', 'anonymous', 'a'],
 	aliases: ['lockchannel'],
 	cooldownDelay: seconds(20),
 	cooldownScope: BucketScope.Guild,
@@ -23,6 +26,10 @@ import { TextChannel } from 'discord.js';
 export class lockCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const channel = await args.pick('guildTextChannel').catch(() => message.channel);
+		const duration = await args.pick('duration').catch(() => null);
+		const lockMessage = await args.pick('string').catch(() => null);
+		const silent = args.getFlags('silent', 's');
+		const anonymous = args.getFlags('anonymous', 'a');
 
 		if (!(channel instanceof TextChannel)) {
 			send(message, {
@@ -32,24 +39,55 @@ export class lockCommand extends ModerationCommand {
 			return;
 		}
 
-		const guild = message.guild;
-		const lockdownManager = new LockdownManager(guild);
+		if (this.canLock(channel)) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant manage that channel')]
+			});
+		}
 
-		lockdownManager.lockChannel(channel);
+		if (this.isLocked(channel)) {
+			return send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That channel is already locked')]
+			});
+		}
 
-		const report = lockdownManager.report;
-		const formattedReport = report.channels.map((r) => {
-			return `${r.success ? '✅' : '❌'} <@${r.channelId}> ${r.error ? `(${r.error})` : ''}`;
-		});
+		const guild = channel.guild;
 
-		const reportEmbed = new CardinalEmbedBuilder()
-			.setStyle('info')
-			.setAuthor({ name: `Locked ${report.channels.length} channels.` })
-			.setFields({
-				name: 'Report',
-				value: formattedReport.join('\n')
+		channel.permissionOverwrites
+			.edit(guild.roles.everyone, {
+				SendMessages: false
+			})
+			.catch((e) => {
+				throw e;
 			});
 
-		send(message, { embeds: [reportEmbed] });
+		if (lockMessage && !silent) {
+			const embed = new CardinalEmbedBuilder().setAuthor({ name: 'Channel Locked' }).setDescription(`🔒 ${message}`);
+
+			if (!anonymous) {
+				embed.setFooter({ text: `Locked by ${getTag(message.author)}`, iconURL: message.author.displayAvatarURL({ forceStatic: false }) });
+			}
+
+			message.channel.send({ embeds: [embed] });
+		}
+
+		if (duration) {
+			const offset = duration.offset;
+			this.container.tasks.create('UnlockChannelTask', { data: { guildId: guild.id, channelId: channel.id }, offset });
+		}
+
+		send(message, {
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${duration}` : ''}`)]
+		});
+		return;
+	}
+
+	private canLock(channel: TextChannel) {
+		return channel.manageable;
+	}
+
+	private isLocked(channel: TextChannel) {
+		if (channel.permissionsFor(channel.guildId)?.has('SendMessages')) return true;
+		return false;
 	}
 }

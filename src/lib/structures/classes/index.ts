@@ -13,4 +13,3 @@ export * from './GiveawayManager.js';
 export * from './InfractionManager.js';
 export * from './ModerationMessageListener.js';
 export * from './AutomodConfig.js';
-export * from './LockdownManager.js';
