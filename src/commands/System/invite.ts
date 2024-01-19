@@ -1,7 +1,3 @@
-{
-  "category": "commands"
-}
----
 import { CardinalCommand } from '#lib/structures';
 import type { InteractionOrMessage } from '#lib/types';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -9,7 +5,7 @@ import { send } from '@sapphire/plugin-editable-commands';
 import { ApplicationCommandType, Message } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
-	description: 'ADD DESCRIPTION',
+	description: 'Get the invite link for the bot',
 	detailedDescription: {
 		extendedHelp: 'ADD'
 	}

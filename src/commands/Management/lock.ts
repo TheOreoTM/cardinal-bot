@@ -6,7 +6,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import { PermissionsBitField } from 'discord.js';
 import { TextChannel } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
