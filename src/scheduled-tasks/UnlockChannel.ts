@@ -19,7 +19,10 @@ export class UnlockChannelTask extends ScheduledTask {
 
 		channel.permissionOverwrites
 			.edit(channel.guild.roles.everyone, {
-				SendMessages: false
+				SendMessages: null
+			})
+			.then(() => {
+				channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Unlocked this channel`)] });
 			})
 			.catch((error) => {
 				channel.send({ embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`I couldn't unlock this channel: ${error}`)] });

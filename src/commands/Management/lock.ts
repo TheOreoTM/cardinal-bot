@@ -4,6 +4,8 @@ import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
+import { DurationFormatter } from '@sapphire/time-utilities';
+import { PermissionsBitField } from 'discord.js';
 import { TextChannel } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
@@ -80,14 +82,18 @@ export class lockCommand extends ModerationCommand {
 			this.container.tasks.create('UnlockChannelTask', { data: { channelId: channel.id }, offset });
 		}
 
+		const formattedDuration = new DurationFormatter().format(duration?.offset ?? 0);
 		send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${duration}` : ''}`)]
+			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${formattedDuration}` : ''}`)]
 		});
 		return;
 	}
 
 	private isLocked(channel: TextChannel) {
-		if (channel.permissionsFor(channel.guildId)?.has('SendMessages')) return true;
-		return false;
+		const overwrites = channel.permissionOverwrites.cache.get(channel.guild.roles.everyone.id);
+		if (!overwrites) return false;
+		const permissionsBitField = new PermissionsBitField(overwrites.allow.bitfield);
+		if (overwrites.allow.bitfield === 0n || permissionsBitField.has('SendMessages')) return false;
+		return true;
 	}
 }
