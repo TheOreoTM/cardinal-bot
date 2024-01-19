@@ -15,7 +15,6 @@ export class UnlockChannelTask extends ScheduledTask {
 	public async run(payload: UnlockChannelTaskPaylod) {
 		this.container.logger.info('[UnlockChannelTask] Started');
 		const channel = await this.container.client.channels.fetch(payload.channelId);
-		console.log(channel);
 		if (!channel) return;
 		if (!(channel instanceof TextChannel)) return;
 
