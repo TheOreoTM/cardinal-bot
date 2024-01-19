@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
+import { CardinalColors } from '#utils/constants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
@@ -68,10 +69,12 @@ export class lockCommand extends ModerationCommand {
 			});
 
 		if (lockMessage && !silent) {
-			const embed = new CardinalEmbedBuilder().setAuthor({ name: 'Channel Locked' }).setDescription(`🔒 ${lockMessage}`);
+			const embed = new CardinalEmbedBuilder().setStyle('info').setAuthor({ name: 'Channel Locked' }).setDescription(`🔒 ${lockMessage}`);
 
 			if (!anonymous) {
-				embed.setFooter({ text: `Locked by ${getTag(message.author)}`, iconURL: message.author.displayAvatarURL({ forceStatic: false }) });
+				embed
+					.setColor(CardinalColors.Info)
+					.setFooter({ text: `Locked by ${getTag(message.author)}`, iconURL: message.author.displayAvatarURL({ forceStatic: false }) });
 			}
 
 			channel.send({ embeds: [embed] }).catch();
@@ -79,7 +82,7 @@ export class lockCommand extends ModerationCommand {
 
 		if (duration) {
 			const offset = duration.offset;
-			this.container.tasks.create('UnlockChannelTask', { data: { channelId: channel.id }, offset });
+			this.container.tasks.create('UnlockChannelTask', { channelId: channel.id }, offset);
 		}
 
 		const formattedDuration = new DurationFormatter().format(duration?.offset ?? 0);
