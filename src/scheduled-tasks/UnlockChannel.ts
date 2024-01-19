@@ -18,7 +18,6 @@ export class UnlockChannelTask extends ScheduledTask {
 		if (!channel) return;
 		if (!(channel instanceof TextChannel)) return;
 
-		console.log('hi');
 		channel.permissionOverwrites
 			.edit(channel.guild.roles.everyone, {
 				SendMessages: null
