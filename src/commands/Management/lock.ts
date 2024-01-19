@@ -49,12 +49,6 @@ export class lockCommand extends ModerationCommand {
 			return;
 		}
 
-		if (this.isLocked(channel)) {
-			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${channel} is already locked`)]
-			});
-		}
-
 		const guild = channel.guild;
 
 		channel.permissionOverwrites
@@ -92,10 +86,5 @@ export class lockCommand extends ModerationCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${formattedDuration}` : ''}`)]
 		});
 		return;
-	}
-
-	private isLocked(channel: TextChannel) {
-		const serializedPermissions = channel.permissionsFor(channel.guild.roles.everyone).serialize();
-		return serializedPermissions.SendMessages;
 	}
 }
