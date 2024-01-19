@@ -3,8 +3,7 @@ name: Continuous Integration (Dev)
 on:
   push:
     branches:
-      - '*'
-      - '!main'
+    [ '*', '!main' ]
 
 jobs:
   build:
