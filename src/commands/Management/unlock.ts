@@ -1,5 +1,6 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
+import { isChannelLocked } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -34,7 +35,7 @@ export class lockCommand extends ModerationCommand {
 
 		const guild = message.guild;
 
-		if (channel.permissionsFor(guild.roles.everyone).has('SendMessages')) {
+		if (!isChannelLocked(channel)) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`That channel is not locked`)]
 			});

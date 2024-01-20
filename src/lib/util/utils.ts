@@ -22,7 +22,8 @@ import {
 	GuildMember,
 	Role,
 	PermissionFlagsBits,
-	type RESTAPIPartialCurrentUserGuild
+	type RESTAPIPartialCurrentUserGuild,
+	TextChannel
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
 import { chunk, isNullishOrEmpty, type Nullish } from '@sapphire/utilities';
@@ -41,6 +42,16 @@ export function addUniqueToArray<T>(array: T[], value: T): T[] {
 	set.add(value);
 	const newArr = Array.from(set);
 	return newArr;
+}
+
+/**
+ * Checks if a channel is locked and users cannot send messages.
+ * @param channel - The text channel to check.
+ * @returns True if the channel is locked, false otherwise.
+ */
+export function isChannelLocked(channel: TextChannel) {
+	const serializedPermissions = channel.permissionsFor(channel.guild.roles.everyone).serialize();
+	return !serializedPermissions.SendMessages;
 }
 
 /**

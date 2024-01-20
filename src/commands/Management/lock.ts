@@ -1,7 +1,7 @@
 import { CardinalEmbedBuilder, ModerationCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
-import { getTag } from '#utils/utils';
+import { getTag, isChannelLocked } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { BucketScope } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -49,7 +49,7 @@ export class lockCommand extends ModerationCommand {
 			return;
 		}
 
-		if (this.isLocked(channel)) {
+		if (isChannelLocked(channel)) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${channel} is already locked`)]
 			});
@@ -92,10 +92,5 @@ export class lockCommand extends ModerationCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Locked ${channel} ${duration ? `for ${formattedDuration}` : ''}`)]
 		});
 		return;
-	}
-
-	private isLocked(channel: TextChannel) {
-		const serializedPermissions = channel.permissionsFor(channel.guild.roles.everyone).serialize();
-		return !serializedPermissions.SendMessages;
 	}
 }
