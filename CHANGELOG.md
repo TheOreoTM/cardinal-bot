@@ -2,6 +2,42 @@
 
 All notable changes to this project will be documented in this file.
 
+# [1.6.0](https://github.com/theoreotm/cardinal-bot/compare/v1.6.0...v1.6.0) - (2024-01-21)
+
+## 🏠 Refactor
+
+- **lock:** Moved isChannelLock to seperate file ([0b1d5ce](https://github.com/theoreotm/cardinal-bot/commit/0b1d5ce96e07b8cfb728b67c8bffb3cdfc29a545))
+
+## 🐛 Bug Fixes
+
+- **lock:** Correct isLocked checking? ([02f3478](https://github.com/theoreotm/cardinal-bot/commit/02f3478b2bb32ca6b56c049ccc9874d265a8ca71))
+- **lock:** Correct isLocked checking? ([ef82236](https://github.com/theoreotm/cardinal-bot/commit/ef82236bab1f50ac6802f71e429fc36a422474fe))
+- **lock:** Correct isLocked checking? ([a92f79e](https://github.com/theoreotm/cardinal-bot/commit/a92f79e1911cadabd87f0e4b9bb3d0220086a043))
+- **lock:** Correct isLocked checking? ([7c1bbdd](https://github.com/theoreotm/cardinal-bot/commit/7c1bbdd095c84578e38b0e726799f8ca0ffa2c3b))
+- **lock:** Made error messages more clear ([be775f1](https://github.com/theoreotm/cardinal-bot/commit/be775f1fa1f471f374571c9ea2496d4a35fc076f))
+- **lock:** Create task correctly ([ade97dc](https://github.com/theoreotm/cardinal-bot/commit/ade97dc31a0dda72cbb8c73cdb39b0ba9d44f831))
+- **lock:** Add error handling to lockmessage sending ([0c91a8a](https://github.com/theoreotm/cardinal-bot/commit/0c91a8a2206756dbb4fdc7cd3e02f307166293a9))
+- **lock:** Made the lockmessage be sent in the channel that got locked ([c510e92](https://github.com/theoreotm/cardinal-bot/commit/c510e92d14cb09522a407048290c5dabae91d366))
+- **unlock-task:** Made it reset instead of deny ([e2def40](https://github.com/theoreotm/cardinal-bot/commit/e2def40107395e3bcc93f727f8855da9fe49bfee))
+- **lock:** Invalid permission checking ([945ab3b](https://github.com/theoreotm/cardinal-bot/commit/945ab3b70d78bc40f53cc75f02d7771679c04330))
+- **modnick:** Check for 'f' and 'freeze' flags ([3ee4a1e](https://github.com/theoreotm/cardinal-bot/commit/3ee4a1e967b4948582edc794bce02f0eda7c1525))
+
+## 🚀 Features
+
+- **lock:** Remove checking if a channel is locked or not ([7977f41](https://github.com/theoreotm/cardinal-bot/commit/7977f41b62f7f189d425012d4885898e038e0e76))
+- **ci:** Back to normal ([352478a](https://github.com/theoreotm/cardinal-bot/commit/352478a62a0a2bc99a0820a3e372df6fcb14d90a))
+- **lock:** Keep it simple ([d67466f](https://github.com/theoreotm/cardinal-bot/commit/d67466f9ef502ff0dca23cf5e499fd46e0185e22))
+- **ci:** Optimized workflow ([d789488](https://github.com/theoreotm/cardinal-bot/commit/d789488ff3d1dda778ddb4f73b5a1c5d303cfca0))
+- **ci:** Removed dev workflow ([33b319f](https://github.com/theoreotm/cardinal-bot/commit/33b319fc0a0a56b72d466cc053440c9a3a8357e2))
+- **ci:** Updated workflow ([e288725](https://github.com/theoreotm/cardinal-bot/commit/e2887257a3e134d4f6845984db5cdefc0b79ffe1))
+- **ci:** Updated workflow again ([b5e35ad](https://github.com/theoreotm/cardinal-bot/commit/b5e35ad54575f2703ad94c63c25c7b692e7b966e))
+- **ci:** Updated name ([bdf9a2e](https://github.com/theoreotm/cardinal-bot/commit/bdf9a2e7af311aace008ebafca3b1b96db03215e))
+- **ci:** Updated workflow ([5e2b777](https://github.com/theoreotm/cardinal-bot/commit/5e2b7779423654d1ca249c262e32ed1a9a1fbdb7))
+- **lockdown:** Added lockdown manager to handle locking down channels ([ddc0def](https://github.com/theoreotm/cardinal-bot/commit/ddc0def57c37ac7ace5769c9b0b4fd58add18b7d))
+- **db:** Add lockdown settings in guild schema ([23980d3](https://github.com/theoreotm/cardinal-bot/commit/23980d304a2aad22b31bd705c8abc21ba79b297c))
+- **db:** Add schema for lockdown ([676862f](https://github.com/theoreotm/cardinal-bot/commit/676862fd56949b70f048ce96e751893cc4c49650))
+- **constants:** Added root folder def ([0e1906d](https://github.com/theoreotm/cardinal-bot/commit/0e1906de49da142f7c7aee4db7403ee43ffe5a05))
+
 # [1.5.0](https://github.com/theoreotm/cardinal-bot/compare/v1.5.0...v1.5.0) - (2024-01-15)
 
 ## 🏠 Refactor
