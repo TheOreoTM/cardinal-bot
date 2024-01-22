@@ -108,35 +108,39 @@ export async function muteMember(
 		if (target.roles.cache.has(boosterRole.id)) rolesToAdd.push(boosterRole.id);
 	}
 
-	await target.roles.set(rolesToAdd).catch((err: Error) => {
-		send(message, {
-			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+	await target.roles
+		.set(rolesToAdd)
+
+		.then(async () => {
+			send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
+			});
+
+			modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
+			const data = await container.db.guild.findUnique({
+				where: {
+					guildId: message.guildId
+				}
+			});
+			await sendMessageAsGuild(
+				target.user,
+				target.guild,
+				{
+					embeds: [
+						new CardinalEmbedBuilder()
+							.setStyle('info')
+							.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+					]
+				},
+				data?.appealLink
+			);
+		})
+		.catch((err: Error) => {
+			send(message, {
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription(`${err.message}`)]
+			});
+			return;
 		});
-		return;
-	});
-
-	send(message, {
-		embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
-	});
-
-	modlog.createMute({ expiresAt: duration?.fromNow, removedRoles });
-	const data = await container.db.guild.findUnique({
-		where: {
-			guildId: message.guildId
-		}
-	});
-	await sendMessageAsGuild(
-		target.user,
-		target.guild,
-		{
-			embeds: [
-				new CardinalEmbedBuilder()
-					.setStyle('info')
-					.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
-			]
-		},
-		data?.appealLink
-	);
 }
 
 export function containsAny(arr1: string[], arr2: string[]): boolean {
