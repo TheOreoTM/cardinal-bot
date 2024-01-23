@@ -49,6 +49,29 @@ export class unmuteCommand extends ModerationCommand {
 			}
 		});
 
+		const muteData = muteDatas[0];
+
+		if (hasMuterole && muteData) {
+			try {
+				target.roles.add(muteData.removedRoles);
+				target.roles.remove(muteRole.id);
+			} catch (error) {
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
+				});
+			}
+		}
+
+		if (hasMuterole && !muteData) {
+			try {
+				target.roles.remove(muteRole.id);
+			} catch (error) {
+				return send(message, {
+					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
+				});
+			}
+		}
+
 		if (muteDatas.length > 0) {
 			await this.container.db.mute.deleteMany({
 				where: {
@@ -58,17 +81,6 @@ export class unmuteCommand extends ModerationCommand {
 					}
 				}
 			});
-		}
-
-		if (hasMuterole) {
-			try {
-				target.roles.add(muteDatas[0].removedRoles);
-				target.roles.remove(muteRole.id);
-			} catch (error) {
-				return send(message, {
-					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
-				});
-			}
 		}
 
 		await send(message, {
