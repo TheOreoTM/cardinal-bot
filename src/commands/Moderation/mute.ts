@@ -53,8 +53,6 @@ export class muteCommand extends ModerationCommand {
 		const extracted = this.extractRoles(target, position);
 		extracted.keepRoles.push(muteRole.id);
 
-		console.log('🚀 ~ muteCommand ~ overridemessageRun ~ extracted:', extracted);
-
 		try {
 			const formattedDuration = new DurationFormatter().format(duration?.offset ?? 0);
 
