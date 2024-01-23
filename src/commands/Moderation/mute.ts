@@ -51,6 +51,7 @@ export class muteCommand extends ModerationCommand {
 		const { position } = (await message.guild.members.fetchMe()).roles.highest;
 
 		const extracted = this.extractRoles(target, position);
+		console.log('🚀 ~ muteCommand ~ overridemessageRun ~ extracted:', extracted);
 
 		extracted.keepRoles.push(muteRole.id);
 
