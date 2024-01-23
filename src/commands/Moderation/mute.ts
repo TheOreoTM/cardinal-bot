@@ -51,9 +51,9 @@ export class muteCommand extends ModerationCommand {
 		const { position } = (await message.guild.members.fetchMe()).roles.highest;
 
 		const extracted = this.extractRoles(target, position);
-		console.log('🚀 ~ muteCommand ~ overridemessageRun ~ extracted:', extracted);
-
 		extracted.keepRoles.push(muteRole.id);
+
+		console.log('🚀 ~ muteCommand ~ overridemessageRun ~ extracted:', extracted);
 
 		try {
 			await target.edit({ roles: extracted.keepRoles, reason: reason ?? undefined });
@@ -89,7 +89,8 @@ export class muteCommand extends ModerationCommand {
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 			});
-		} catch {
+		} catch (e) {
+			console.log(e);
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I could not mute that member')]
 			});
