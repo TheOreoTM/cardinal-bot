@@ -18,11 +18,11 @@ export class moderationsCommand extends ModerationCommand {
 		const prisma = this.container.db;
 		const guildId = message.guildId;
 		const bans = await prisma.ban.findMany({
-			where: { modlog: { guildId }, expiresAt: { not: null } },
+			where: { modlog: { guildId }, expiresAt: { gte: new Date() } },
 			select: { modlog: true, expiresAt: true }
 		});
 		const mutes = await prisma.mute.findMany({
-			where: { modlog: { guildId }, expiresAt: { not: null } },
+			where: { modlog: { guildId }, expiresAt: { gte: new Date() } },
 			select: { modlog: true, expiresAt: true }
 		});
 

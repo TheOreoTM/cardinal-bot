@@ -57,8 +57,8 @@ export class UnmuteMemberTask extends ScheduledTask {
 
 		const staff = guild.members.me ?? (await guild.members.fetchMe());
 
-		this.container.logger.info('[UnmuteMemberTask] Removed roles expire mute:', mute.removedRoles);
-		await member.roles.set(mute.removedRoles);
+		await member.roles.add(mute.removedRoles).catch(() => null);
+		await member.roles.remove(muteRole.id).catch(() => null);
 
 		const modlog = new Modlog({
 			member,
@@ -67,6 +67,7 @@ export class UnmuteMemberTask extends ScheduledTask {
 			reason: 'Mute expired',
 			caseId: await CardinalIndexBuilder.modlogId(member.guild.id)
 		});
+
 		await modlog.createUnmute();
 	}
 }
