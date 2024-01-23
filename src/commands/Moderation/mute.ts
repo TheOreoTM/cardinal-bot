@@ -56,6 +56,8 @@ export class muteCommand extends ModerationCommand {
 		console.log('🚀 ~ muteCommand ~ overridemessageRun ~ extracted:', extracted);
 
 		try {
+			const formattedDuration = new DurationFormatter().format(duration?.offset ?? 0);
+
 			await target.edit({ roles: extracted.keepRoles, reason: reason ?? undefined });
 
 			const modlog = new Modlog({
@@ -63,7 +65,7 @@ export class muteCommand extends ModerationCommand {
 				staff: message.member,
 				type: ModerationType.Mute,
 				reason: reason ?? null,
-				length: duration ? new DurationFormatter().format(duration?.offset) : null
+				length: duration ? formattedDuration : null
 			});
 
 			await modlog.createMute({ expiresAt: duration?.fromNow, removedRoles: extracted.removedRoles });
@@ -80,7 +82,9 @@ export class muteCommand extends ModerationCommand {
 					embeds: [
 						new CardinalEmbedBuilder()
 							.setStyle('info')
-							.setDescription(`You have been muted ${length ? `for ${length}` : ''} for the reason: ${reason ?? 'No reason'}`)
+							.setDescription(
+								`You have been muted ${duration ? `for ${formattedDuration}` : ''} for the reason: ${reason ?? 'No reason'}`
+							)
 					]
 				},
 				data?.appealLink
