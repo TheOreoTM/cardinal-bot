@@ -87,7 +87,7 @@ export class unmuteCommand extends ModerationCommand {
 			embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Unmuted ${getTag(target.user)}`)]
 		});
 
-		if (muteDatas.length > 0) {
+		if (muteData) {
 			const modlog = new Modlog({
 				member: target,
 				staff: message.member,
