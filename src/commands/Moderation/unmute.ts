@@ -62,11 +62,8 @@ export class unmuteCommand extends ModerationCommand {
 
 		if (hasMuterole) {
 			try {
-				target.roles.set(muteDatas[0].removedRoles).catch(() => {
-					return send(message, {
-						embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
-					});
-				});
+				target.roles.add(muteDatas[0].removedRoles);
+				target.roles.remove(muteRole.id);
 			} catch (error) {
 				return send(message, {
 					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
