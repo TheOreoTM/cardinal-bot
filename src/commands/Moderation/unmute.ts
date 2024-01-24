@@ -30,13 +30,15 @@ export class unmuteCommand extends ModerationCommand {
 		let muteRole: Role | Nullish = await message.guild.roles.fetch(await message.guild.settings.roles.mute());
 		if (!muteRole) muteRole = message.guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted');
 		if (!muteRole) {
-			return send(message, {
+			send(message, {
 				embeds: [
 					new CardinalEmbedBuilder()
 						.setStyle('fail')
 						.setDescription('I cant find the mute role for this server. Configure it using ' + mention('config', message.client))
 				]
 			});
+
+			return;
 		}
 
 		const hasMuterole = target.roles.cache.has(muteRole.id);
@@ -51,10 +53,21 @@ export class unmuteCommand extends ModerationCommand {
 
 		const muteData = muteDatas[0];
 
+		const removedRoles = new Set(muteData?.removedRoles);
+
+		target.roles.cache.forEach((role) => {
+			if (muteRole) {
+				if (role.id === muteRole.id) return;
+			}
+
+			removedRoles.add(role.id);
+		});
+
+		const removedRolesArray = Array.from(removedRoles);
+
 		if (hasMuterole && muteData) {
 			try {
-				target.roles.add(muteData.removedRoles);
-				target.roles.remove(muteRole.id);
+				target.roles.set(removedRolesArray);
 			} catch (error) {
 				return send(message, {
 					embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I couldnt unmute that user')]
