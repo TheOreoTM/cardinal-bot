@@ -31,7 +31,7 @@ export class muteCommand extends ModerationCommand {
 
 		if (!(await canManage(message.member, target))) {
 			return send(message, {
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant mute that member')]
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I cant manage that member')]
 			});
 		}
 
