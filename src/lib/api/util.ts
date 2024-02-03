@@ -9,10 +9,11 @@ import type { OauthFlattenedGuild, PartialOauthFlattenedGuild, TransformedLoginD
 import { isAdmin } from '#utils/functions';
 import { GuildDefaultMessageNotifications } from 'discord.js';
 import { GuildPremiumTier } from 'discord.js';
+import { envParseString } from '@skyra/env-utilities';
 
 export const authenticated = () =>
 	createFunctionPrecondition(
-		(request: ApiRequest) => Boolean(request.auth?.token),
+		(request: ApiRequest) => Boolean(request.headers.authorization === `Bot ${envParseString('DISCORD_TOKEN')}`),
 		(_request: ApiRequest, response: ApiResponse) => response.error(HttpCodes.Unauthorized)
 	);
 
