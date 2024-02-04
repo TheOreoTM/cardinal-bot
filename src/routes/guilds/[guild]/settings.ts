@@ -31,19 +31,22 @@ export class UserRoute extends Route {
 		const body = _request.body;
 		const guildId = _request.params.guild;
 
-		const data = this.parseIncomingData(body);
+		const result = this.parseIncomingData(body);
+		if (result.error) {
+			return response.error(HttpCodes.BadRequest);
+		}
 
-		return response.json({ data, guildId });
+		return response.json({ data: result.unwrap(), guildId });
 	}
 
 	private parseIncomingData(data: any) {
 		const validator = s.object({
 			module: s.string,
-			value: s.any,
-			settings: s.string
+			setting: s.string,
+			value: s.union(s.string, s.number, s.boolean, s.array(s.any)).describe('')
 		});
 
-		const result = validator.parse(data);
+		const result = validator.run(data);
 		return result;
 	}
 }
