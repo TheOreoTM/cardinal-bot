@@ -28,7 +28,7 @@ export class UserRoute extends Route {
 	}
 
 	public [methods.POST](_request: ApiRequest, response: ApiResponse) {
-		const body = _request.body as { module: string; value: any; settings: string };
+		const body = _request.body;
 		const guildId = _request.params.guild;
 
 		const data = this.parseIncomingData(body);
@@ -39,7 +39,7 @@ export class UserRoute extends Route {
 	private parseIncomingData(data: any) {
 		const validator = s.object({
 			module: s.string,
-			value: s.union(s.string, s.number, s.boolean, s.string.array),
+			value: s.any,
 			settings: s.string
 		});
 
