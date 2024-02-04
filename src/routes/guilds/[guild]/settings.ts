@@ -1,6 +1,7 @@
 import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
+import { s } from '@sapphire/shapeshift';
 
 @ApplyOptions<Route.Options>({
 	name: 'guildSettings',
@@ -30,6 +31,19 @@ export class UserRoute extends Route {
 		const body = _request.body as { module: string; value: any; settings: string };
 		const guildId = _request.params.guild;
 
-		return response.json({ body, guildId });
+		const data = this.parseIncomingData(body);
+
+		return response.json({ data, guildId });
+	}
+
+	private parseIncomingData(data: any) {
+		const validator = s.object({
+			module: s.string,
+			value: s.union(s.string, s.number, s.boolean, s.string.array),
+			settings: s.string
+		});
+
+		const result = validator.parse(data);
+		return result;
 	}
 }
