@@ -27,7 +27,7 @@ export class UserRoute extends Route {
 		response.json(data);
 	}
 
-	public [methods.POST](_request: ApiRequest, response: ApiResponse) {
+	public async [methods.POST](_request: ApiRequest, response: ApiResponse) {
 		const body = _request.body;
 		const guildId = _request.params.guild;
 
@@ -36,7 +36,21 @@ export class UserRoute extends Route {
 			return response.error(HttpCodes.BadRequest);
 		}
 
-		return response.json({ data: result.unwrap(), guildId });
+		const data = result.unwrap();
+
+		await this.container.db.guild.upsert({
+			where: {
+				guildId
+			},
+			create: {
+				guildId
+			},
+			update: {
+				[data.setting]: data.value
+			}
+		});
+
+		return response.status(HttpCodes.OK).json({ ...data });
 	}
 
 	private parseIncomingData(data: any) {
