@@ -43,7 +43,7 @@ export class UserRoute extends Route {
 		const validator = s.object({
 			module: s.string,
 			setting: s.string,
-			value: s.union(s.string, s.number, s.boolean, s.array(s.any)).describe('')
+			value: s.union(s.string, s.number, s.boolean, s.array(s.any))
 		});
 
 		const result = validator.run(data);
