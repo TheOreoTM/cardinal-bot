@@ -27,6 +27,9 @@ export class UserRoute extends Route {
 	}
 
 	public [methods.POST](_request: ApiRequest, response: ApiResponse) {
-		response.json({ message: 'Hello World' });
+		const body = _request.body as { module: string; value: any; settings: string };
+		const guildId = _request.params.guild;
+
+		return response.json({ body, guildId });
 	}
 }
