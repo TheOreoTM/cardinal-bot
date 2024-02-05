@@ -8,8 +8,8 @@ import { s } from '@sapphire/shapeshift';
 	route: 'guilds/:guild/settings'
 })
 export class UserRoute extends Route {
-	@authenticated()
 	// @ratelimit(seconds(5), 2, true)
+	@authenticated()
 	public async [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const guildId = request.params.guild;
 
@@ -27,6 +27,7 @@ export class UserRoute extends Route {
 		response.json(data);
 	}
 
+	@authenticated()
 	public async [methods.POST](_request: ApiRequest, response: ApiResponse) {
 		const body = _request.body;
 		const guildId = _request.params.guild;

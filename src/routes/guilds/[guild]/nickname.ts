@@ -4,7 +4,7 @@ import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@s
 import { s } from '@sapphire/shapeshift';
 
 @ApplyOptions<Route.Options>({
-	name: 'guildSettings',
+	name: 'guildNickname',
 	route: 'guilds/:guild/nickname'
 })
 export class UserRoute extends Route {
