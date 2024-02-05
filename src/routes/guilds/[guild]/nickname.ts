@@ -57,7 +57,7 @@ export class UserRoute extends Route {
 
 	private parseIncomingData(data: any) {
 		const validator = s.object({
-			nickname: s.string.lengthLessThanOrEqual(32).lengthGreaterThan(0)
+			nickname: s.union(s.string.lengthLessThanOrEqual(32).lengthGreaterThan(0), s.null)
 		});
 
 		const result = validator.run(data);
