@@ -1,5 +1,5 @@
 import type { CardinalClient } from '#lib/CardinalClient';
-import { Gauge, collectDefaultMetrics } from 'prom-client';
+import { Counter, Gauge, Histogram, collectDefaultMetrics, register } from 'prom-client';
 
 export class Analytics {
 	readonly guildCreate = new Gauge({
@@ -28,6 +28,12 @@ export class Analytics {
 		help: "ms ping to discord's gateway"
 	});
 
+	readonly historicPing = new Histogram({
+		name: 'historic_ping',
+		help: 'historic ping to discord gateway',
+		buckets: [0.1, 0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 300]
+	});
+
 	readonly gatewayEvents = new Gauge({
 		name: 'gateway_events',
 		help: 'events received over the Discord gateway'
@@ -35,7 +41,12 @@ export class Analytics {
 
 	readonly messageCount = new Gauge({
 		name: 'message_count',
-		help: 'the number of messages sent'
+		help: 'the number of messages sent since reboot'
+	});
+
+	readonly messageCreate = new Counter({
+		name: 'message_create',
+		help: 'messages created per second'
 	});
 
 	readonly trackedMessageCount = new Gauge({
@@ -54,7 +65,8 @@ export class Analytics {
 	});
 
 	constructor(private client: CardinalClient) {
-		collectDefaultMetrics();
+		register.setDefaultLabels({ app: 'cardinal' });
+		collectDefaultMetrics({ register, prefix: 'cardinal_' });
 	}
 
 	addCommandUsage(command: string, success: boolean) {
@@ -71,6 +83,7 @@ export class Analytics {
 
 	updateGatewayPing() {
 		this.gatewayPing.set(this.client.ws.ping);
+		this.historicPing.observe(this.client.ws.ping);
 	}
 
 	addGatewayEvent() {
@@ -79,6 +92,7 @@ export class Analytics {
 
 	addMessage() {
 		this.messageCount.inc();
+		this.messageCreate.inc();
 	}
 
 	addGuild() {
