@@ -9,8 +9,11 @@ import { Listener, type MessageCommandErrorPayload, UserError } from '@sapphire/
 	event: CardinalEvents.MessageCommandError
 })
 export class UserListener extends Listener {
-	public override async run(error: UserError, { message }: MessageCommandErrorPayload) {
+	public override async run(error: UserError, { message, command }: MessageCommandErrorPayload) {
 		let content = '';
+
+		this.container.client.analytics.addCommandUsage(command.name, false);
+
 		if (error instanceof UserError) {
 			if (Reflect.get(Object(error.context), 'silent')) return;
 

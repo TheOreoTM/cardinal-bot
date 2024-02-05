@@ -1,12 +1,13 @@
 import '@sapphire/pieces';
 import type { PrismaClient } from '@prisma/client';
 import type { ArrayString, NumberString } from '@skyra/env-utilities';
-import type { CardinalCommand, GuildSettings } from '#lib/structures';
+import type { Analytics, CardinalCommand, GuildSettings } from '#lib/structures';
 import type { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import type { User, Snowflake } from 'discord.js';
 import type { Duration } from '@sapphire/time-utilities';
 import type { AutomodRule } from '#lib/types';
 import type { RedisClient } from '#lib/database';
+import type { Metrics } from '@prisma/client/runtime/library';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -96,6 +97,7 @@ declare module '@sapphire/plugin-scheduled-tasks' {
 declare module 'discord.js' {
 	interface Client {
 		readonly llrCollectors: Set<LongLivingReactionCollector>;
+		readonly analytics: Analytics;
 	}
 
 	interface Guild {

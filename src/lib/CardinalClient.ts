@@ -7,13 +7,19 @@ import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector'
 import { BotPrefix } from '#constants';
 import { RedisClient } from '#lib/database';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
+import { Analytics } from '#lib/structures';
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)
 	public override llrCollectors = new Set<LongLivingReactionCollector>();
 
+	@Enumerable(false)
+	public override readonly analytics: Analytics;
+
 	public constructor() {
 		super(ClientConfig);
+
+		this.analytics = new Analytics(this);
 	}
 
 	public override async login(token?: string): Promise<string> {
