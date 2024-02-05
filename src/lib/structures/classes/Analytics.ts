@@ -109,7 +109,7 @@ export class Analytics {
 		this.trackedMessageCount.set(amount);
 	}
 
-	updateUserCount() {
-		this.userCount.set(this.client.users.cache.size);
+	updateUserCount(amount = this.client.users.cache.size) {
+		this.userCount.set(amount);
 	}
 }

@@ -11,9 +11,11 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 })
 export class UpdateAnalyticsTask extends ScheduledTask {
 	public async run() {
+		const users = this.container.client.guilds.cache.reduce((acc, val) => acc + (val.memberCount ?? 0), 0);
+
 		this.container.client.analytics.updateChannelCount();
 		this.container.client.analytics.updateGuildCount();
-		this.container.client.analytics.updateUserCount();
+		this.container.client.analytics.updateUserCount(users);
 		this.container.client.analytics.updateGatewayPing();
 
 		const allMsgs = await this.container.db.message.count();
