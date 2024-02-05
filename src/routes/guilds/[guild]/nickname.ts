@@ -50,6 +50,7 @@ export class UserRoute extends Route {
 
 		try {
 			await member.setNickname(nickname);
+			return response.status(HttpCodes.OK).json({ nickname });
 		} catch (error: any) {
 			return response.error(HttpCodes.BadRequest, error.message);
 		}
