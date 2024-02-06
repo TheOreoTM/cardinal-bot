@@ -1,7 +1,5 @@
 import type { CardinalClient } from '#lib/CardinalClient';
-import { Sql } from '@prisma/client/runtime/library.js';
 import { container } from '@sapphire/pieces';
-import { Stopwatch } from '@sapphire/stopwatch';
 import { Gauge, collectDefaultMetrics, register } from 'prom-client';
 
 export class Analytics {
@@ -94,10 +92,12 @@ export class Analytics {
 		name: 'cardinal_db_ping',
 		help: 'Ping of the database',
 		async collect() {
-			const stopwatch = new Stopwatch(0);
-			await container.db.$queryRaw(new Sql(['SELECT 1'], []));
-			const dbLatency = stopwatch.stop().duration;
-			this.set(dbLatency);
+			const startTime = performance.now();
+			await container.db.$executeRaw`SELECT 1`;
+			const endTime = performance.now();
+
+			const elapsedTime = endTime - startTime;
+			this.set(elapsedTime);
 		}
 	});
 
@@ -105,10 +105,12 @@ export class Analytics {
 		name: 'cardinal_cache_ping',
 		help: 'Ping of the cache',
 		async collect() {
-			const stopwatch = new Stopwatch(0);
+			const startTime = performance.now();
 			await container.cache.ping();
-			const cacheLatency = stopwatch.stop().duration;
-			this.set(cacheLatency);
+			const endTime = performance.now();
+
+			const elapsedTime = endTime - startTime;
+			this.set(elapsedTime);
 		}
 	});
 
