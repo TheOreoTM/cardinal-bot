@@ -1,89 +1,87 @@
 import type { CardinalClient } from '#lib/CardinalClient';
-import { Counter, Gauge, Histogram, collectDefaultMetrics, register } from 'prom-client';
+import { container } from '@sapphire/pieces';
+import { Gauge, collectDefaultMetrics, register } from 'prom-client';
 
 export class Analytics {
-	readonly guildCreate = new Gauge({
-		name: 'guild_create',
-		help: 'the number of guilds joined'
-	});
+	// readonly guildCreate = new Gauge({
+	// 	name: 'guild_create',
+	// 	help: 'the number of guilds joined',
+	// 	async collect() {
+	// 		this.set(container.client.guilds.cache.size);
+	// 	}
+	// });
 
-	readonly guildDelete = new Gauge({
-		name: 'guild_delete',
-		help: 'the number of guilds left'
-	});
+	// readonly guildDelete = new Gauge({
+	// 	name: 'guild_delete',
+	// 	help: 'the number of guilds left'
+	// });
 
 	readonly guildCount = new Gauge({
-		name: 'guild_count',
-		help: 'the number of servers the bot is in'
+		name: 'cardinal_guild_count',
+		help: 'the number of servers the bot is in',
+		async collect() {
+			this.set(container.client.guilds.cache.size);
+		}
 	});
 
 	readonly commandUsed = new Gauge({
-		name: 'commands_used',
-		help: 'the number of commands used',
-		labelNames: ['command', 'success']
+		name: 'cardinal_commands_used',
+		help: 'The total number of commands used',
+		async collect() {
+			this.set(await container.db.command.count());
+		}
 	});
 
 	readonly gatewayPing = new Gauge({
-		name: 'gateway_ping',
-		help: "ms ping to discord's gateway"
-	});
-
-	readonly historicPing = new Histogram({
-		name: 'historic_ping',
-		help: 'historic ping to discord gateway',
-		buckets: [0.1, 0.5, 1, 2, 5, 10, 15, 20, 30, 60, 120, 300]
+		name: 'cardinal_ws_ping',
+		help: "Ping to discord's gateway",
+		collect() {
+			this.set(container.client.ws.ping);
+		}
 	});
 
 	readonly gatewayEvents = new Gauge({
-		name: 'gateway_events',
-		help: 'events received over the Discord gateway'
+		name: 'cardinal_gateway_events_count',
+		help: 'Events received over the Discord gateway'
 	});
 
 	readonly messageCount = new Gauge({
-		name: 'message_count',
-		help: 'the number of messages sent since reboot'
-	});
-
-	readonly messageCreate = new Counter({
-		name: 'message_create',
-		help: 'messages created per second'
+		name: 'cardinal_message_count',
+		help: 'The number of messages received since reboot'
 	});
 
 	readonly trackedMessageCount = new Gauge({
-		name: 'tracked_message_count',
-		help: 'the number of messages tracked'
+		name: 'cardinal_tracked_message_count',
+		help: 'The number of messages tracked for stats'
 	});
 
 	readonly userCount = new Gauge({
-		name: 'user_count',
-		help: 'the number of users the bot can see'
+		name: 'cardinal_cached_user_count',
+		help: 'The total number of users the bot has cached.',
+		async collect() {
+			this.set(container.client.users.cache.size);
+		}
+	});
+
+	readonly memberCount = new Gauge({
+		name: 'cardinal_member_count',
+		help: 'The total members in all guilds the bot is in.',
+		async collect() {
+			this.set(container.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0));
+		}
 	});
 
 	readonly channelCount = new Gauge({
-		name: 'channel_count',
-		help: 'the number of channels the bot can see'
+		name: 'cardinal_channel_count',
+		help: 'The total number of channels the bot can see.',
+		async collect() {
+			this.set(container.client.channels.cache.size);
+		}
 	});
 
 	constructor(private client: CardinalClient) {
 		register.setDefaultLabels({ app: 'cardinal' });
 		collectDefaultMetrics({ register, prefix: 'cardinal_' });
-	}
-
-	addCommandUsage(command: string, success: boolean) {
-		this.commandUsed.labels(command, String(success)).inc();
-	}
-
-	updateGuildCount() {
-		this.guildCount.set(this.client.guilds.cache.size);
-	}
-
-	updateChannelCount() {
-		this.channelCount.set(this.client.channels.cache.size);
-	}
-
-	updateGatewayPing() {
-		this.gatewayPing.set(this.client.ws.ping);
-		this.historicPing.observe(this.client.ws.ping);
 	}
 
 	addGatewayEvent() {
@@ -92,17 +90,6 @@ export class Analytics {
 
 	addMessage() {
 		this.messageCount.inc();
-		this.messageCreate.inc();
-	}
-
-	addGuild() {
-		this.guildCreate.inc();
-		this.updateGuildCount();
-	}
-
-	removeGuild() {
-		this.guildDelete.inc();
-		this.updateGuildCount();
 	}
 
 	updateTrackedMessageCount(amount: number) {

@@ -23,10 +23,7 @@ export class UserEvent extends Listener {
 			// await guild.settings.init();
 		}
 
-		this.container.client.analytics.updateChannelCount();
-		this.container.client.analytics.updateGuildCount();
 		this.container.client.analytics.updateUserCount();
-		this.container.client.analytics.updateGatewayPing();
 
 		const allMsgs = await this.container.db.message.count();
 		this.container.client.analytics.updateTrackedMessageCount(allMsgs);
