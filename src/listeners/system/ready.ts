@@ -24,9 +24,6 @@ export class UserEvent extends Listener {
 		}
 
 		this.container.client.analytics.updateUserCount();
-
-		const allMsgs = await this.container.db.message.count();
-		this.container.client.analytics.updateTrackedMessageCount(allMsgs);
 	}
 
 	private printBanner() {

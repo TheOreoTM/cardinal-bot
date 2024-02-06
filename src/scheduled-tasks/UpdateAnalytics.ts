@@ -12,8 +12,5 @@ import { ScheduledTask } from '@sapphire/plugin-scheduled-tasks';
 export class UpdateAnalyticsTask extends ScheduledTask {
 	public async run() {
 		this.container.client.analytics.updateUserCount();
-
-		const allMsgs = await this.container.db.message.count();
-		this.container.client.analytics.updateTrackedMessageCount(allMsgs);
 	}
 }

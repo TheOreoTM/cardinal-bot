@@ -1,5 +1,7 @@
 import type { CardinalClient } from '#lib/CardinalClient';
+import { Sql } from '@prisma/client/runtime/library';
 import { container } from '@sapphire/pieces';
+import { Stopwatch } from '@sapphire/stopwatch';
 import { Gauge, collectDefaultMetrics, register } from 'prom-client';
 
 export class Analytics {
@@ -15,6 +17,8 @@ export class Analytics {
 	// 	name: 'guild_delete',
 	// 	help: 'the number of guilds left'
 	// });
+
+	// Client Start
 
 	readonly guildCount = new Gauge({
 		name: 'cardinal_guild_count',
@@ -52,7 +56,10 @@ export class Analytics {
 
 	readonly trackedMessageCount = new Gauge({
 		name: 'cardinal_tracked_message_count',
-		help: 'The number of messages tracked for stats'
+		help: 'The number of messages tracked for stats',
+		async collect() {
+			this.set(await container.db.message.count());
+		}
 	});
 
 	readonly userCount = new Gauge({
@@ -79,6 +86,34 @@ export class Analytics {
 		}
 	});
 
+	// Client End
+
+	// DB Start
+
+	readonly dbPing = new Gauge({
+		name: 'cardinal_db_ping',
+		help: 'Ping of the database',
+		async collect() {
+			const stopwatch = new Stopwatch(0);
+			await container.db.$queryRaw(new Sql(['SELECT 1'], []));
+			const dbLatency = stopwatch.stop().duration;
+			this.set(dbLatency);
+		}
+	});
+
+	readonly cachePing = new Gauge({
+		name: 'cardinal_cache_ping',
+		help: 'Ping of the cache',
+		async collect() {
+			const stopwatch = new Stopwatch(0);
+			await container.cache.ping();
+			const cacheLatency = stopwatch.stop().duration;
+			this.set(cacheLatency);
+		}
+	});
+
+	// DB end
+
 	constructor(private client: CardinalClient) {
 		register.setDefaultLabels({ app: 'cardinal' });
 		collectDefaultMetrics({ register, prefix: 'cardinal_' });
@@ -90,10 +125,6 @@ export class Analytics {
 
 	addMessage() {
 		this.messageCount.inc();
-	}
-
-	updateTrackedMessageCount(amount: number) {
-		this.trackedMessageCount.set(amount);
 	}
 
 	updateUserCount(amount = this.client.users.cache.size) {
