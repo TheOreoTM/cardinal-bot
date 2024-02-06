@@ -321,7 +321,6 @@ export function logSuccessCommand(payload: ContextMenuCommandSuccessPayload | Ch
 		successLoggerData = getSuccessLoggerData(payload.message.guild, payload.message.author, payload.command);
 	}
 
-	container.client.analytics.addCommandUsage(payload.command.name, true);
 	container.logger.debug(`${successLoggerData.shard} - ${successLoggerData.commandName} ${successLoggerData.author} ${successLoggerData.sentAt}`);
 }
 
