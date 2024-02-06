@@ -1,5 +1,5 @@
 import type { CardinalClient } from '#lib/CardinalClient';
-import { Sql } from '@prisma/client/runtime/library';
+import { Sql } from '@prisma/client/runtime/library.js';
 import { container } from '@sapphire/pieces';
 import { Stopwatch } from '@sapphire/stopwatch';
 import { Gauge, collectDefaultMetrics, register } from 'prom-client';
