@@ -1,6 +1,5 @@
 import type { MessageCommandSuccessPayload } from '@sapphire/framework';
-import { Listener, LogLevel } from '@sapphire/framework';
-import type { Logger } from '@sapphire/plugin-logger';
+import { Listener } from '@sapphire/framework';
 import { logSuccessCommand } from '#utils/utils';
 
 export class UserEvent extends Listener {
@@ -13,10 +12,5 @@ export class UserEvent extends Listener {
 				name: payload.command.name
 			}
 		});
-	}
-
-	public onLoad() {
-		this.enabled = (this.container.logger as Logger).level <= LogLevel.Debug;
-		return super.onLoad();
 	}
 }

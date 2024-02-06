@@ -1,6 +1,5 @@
 import { logSuccessCommand } from '#utils/utils';
-import { Listener, LogLevel, type ChatInputCommandSuccessPayload } from '@sapphire/framework';
-import type { Logger } from '@sapphire/plugin-logger';
+import { Listener, type ChatInputCommandSuccessPayload } from '@sapphire/framework';
 
 export class UserListener extends Listener {
 	public async run(payload: ChatInputCommandSuccessPayload) {
@@ -12,10 +11,5 @@ export class UserListener extends Listener {
 				name: payload.command.name
 			}
 		});
-	}
-
-	public onLoad() {
-		this.enabled = (this.container.logger as Logger).level <= LogLevel.Debug;
-		return super.onLoad();
 	}
 }
