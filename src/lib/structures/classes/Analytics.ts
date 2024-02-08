@@ -84,6 +84,14 @@ export class Analytics {
 		}
 	});
 
+	readonly uptime = new Gauge({
+		name: 'cardinal_uptime',
+		help: 'The uptime of the bot',
+		async collect() {
+			this.set(container.client.uptime!);
+		}
+	});
+
 	// Client End
 
 	// DB Start
@@ -115,6 +123,52 @@ export class Analytics {
 	});
 
 	// DB end
+
+	// Process Start
+
+	readonly processMemoryUsage = new Gauge({
+		name: 'cardinal_memory_usage',
+		help: 'The memory usage of the bot process',
+		async collect() {
+			const usage = process.memoryUsage();
+			this.set(usage.heapUsed);
+		}
+	});
+
+	readonly processCpuUsageTotal = new Gauge({
+		name: 'cardinal_cpu_usage_total',
+		help: 'The CPU usage of the bot process',
+		async collect() {
+			const usage = process.cpuUsage();
+			this.set(usage.user + usage.system);
+		}
+	});
+
+	readonly processCpuUsageUser = new Gauge({
+		name: 'cardinal_cpu_usage_user',
+		help: 'The CPU usage of the bot process',
+		async collect() {
+			const usage = process.cpuUsage();
+			this.set(usage.user);
+		}
+	});
+
+	readonly processCpuUsageSystem = new Gauge({
+		name: 'cardinal_cpu_usage_system',
+		help: 'The CPU usage of the bot process',
+		async collect() {
+			const usage = process.cpuUsage();
+			this.set(usage.system);
+		}
+	});
+
+	readonly processUptime = new Gauge({
+		name: 'cardinal_process_uptime',
+		help: 'The uptime of the bot process',
+		async collect() {
+			this.set(process.uptime() * 1000);
+		}
+	});
 
 	constructor(private client: CardinalClient) {
 		register.setDefaultLabels({ app: 'cardinal' });
