@@ -24,15 +24,15 @@ export abstract class CardinalCommand extends Command {
 	/**
 	 * Whether the command can be disabled.
 	 */
-	public readonly guarded?: boolean;
+	public readonly guarded: boolean;
 	/**
 	 * Whether the command is hidden from everyone.
 	 */
-	public readonly hidden?: boolean;
+	public readonly hidden: boolean;
 	/**
 	 * The permission level required to run the command.
 	 */
-	public readonly permissionLevel?: PermissionLevels;
+	public readonly permissionLevel: PermissionLevels;
 	/**
 	 * Whether the command is only for community servers.
 	 */
