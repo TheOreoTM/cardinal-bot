@@ -24,7 +24,7 @@ export class UserRoute extends Route {
 		return {
 			category: command.category,
 			description: command.description,
-			extendedHelp: (command.detailedDescription, { prefix: BotPrefix }),
+			extendedHelp: { ...command.detailedDescription, prefix: BotPrefix },
 			guarded: command.guarded,
 			name: command.name,
 			permissionLevel: command.permissionLevel,
