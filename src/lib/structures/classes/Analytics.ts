@@ -30,7 +30,7 @@ export class Analytics {
 		name: 'cardinal_commands_used',
 		help: 'The total number of commands used',
 		async collect() {
-			this.set(await container.db.command.count());
+			this.set((await container.db.command.count()) ?? 0);
 		}
 	});
 
@@ -56,7 +56,7 @@ export class Analytics {
 		name: 'cardinal_tracked_message_count',
 		help: 'The number of messages tracked for stats',
 		async collect() {
-			this.set(await container.db.message.count());
+			this.set((await container.db.message.count()) ?? 0);
 		}
 	});
 
@@ -88,7 +88,7 @@ export class Analytics {
 		name: 'cardinal_uptime',
 		help: 'The uptime of the bot',
 		async collect() {
-			this.set(container.client.uptime!);
+			this.set(container.client.uptime ?? 0);
 		}
 	});
 

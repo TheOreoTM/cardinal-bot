@@ -1,6 +1,7 @@
 import { ratelimit } from '#lib/api/util';
 import type { CardinalCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
+import { BotPrefix } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Command } from '@sapphire/framework';
 import { Route, methods, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
@@ -23,7 +24,7 @@ export class UserRoute extends Route {
 		return {
 			category: command.category,
 			description: command.description,
-			extendedHelp: (command.detailedDescription, { prefix: process.env.CLIENT_PREFIX }),
+			extendedHelp: (command.detailedDescription, { prefix: BotPrefix }),
 			guarded: command.guarded,
 			name: command.name,
 			permissionLevel: command.permissionLevel,
