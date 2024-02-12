@@ -3,7 +3,7 @@ import type { CardinalCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { BotPrefix } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Command } from '@sapphire/framework';
+import type { Command, PreconditionContainerArray } from '@sapphire/framework';
 import { Route, methods, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
 
 @ApplyOptions<Route.Options>({ route: 'commands' })
@@ -12,9 +12,11 @@ export class UserRoute extends Route {
 	public [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const { category } = request.query;
 		const commands = this.container.stores.get('commands');
-		const filtered = (category ? commands.filter((cmd) => cmd.category === category) : commands).filter(
-			(cmd) => (cmd as CardinalCommand).permissionLevel < 9
-		);
+		const filtered = (category ? commands.filter((cmd) => cmd.category === category) : commands).filter((cmd) => {
+			const c = cmd as CardinalCommand;
+
+			return c.permissionLevel < 9 && !c.hidden && c.category !== 'Private';
+		});
 
 		return response.json(filtered.map((cmd) => UserRoute.process(cmd)));
 	}

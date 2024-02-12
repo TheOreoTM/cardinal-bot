@@ -2,8 +2,8 @@
 	"name": "cardinal-bot",
 	"version": "1.6.0",
 	"main": "./dist/index.js",
-	"author": "@sapphire",
-	"license": "UNLICENSE",
+	"author": "@theoreotm",
+	"license": "MIT",
 	"type": "module",
 	"imports": {
 		"#config": "./dist/config.js",
