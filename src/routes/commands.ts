@@ -3,7 +3,7 @@ import type { CardinalCommand } from '#lib/structures';
 import { seconds } from '#utils/common';
 import { BotPrefix } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
-import type { Command, PreconditionContainerArray } from '@sapphire/framework';
+import type { Command } from '@sapphire/framework';
 import { Route, methods, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
 
 @ApplyOptions<Route.Options>({ route: 'commands' })

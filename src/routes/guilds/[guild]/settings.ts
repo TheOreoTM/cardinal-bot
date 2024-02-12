@@ -24,7 +24,15 @@ export class UserRoute extends Route {
 			}
 		});
 
-		response.json(data);
+		if (data) {
+			response.json(data);
+		} else {
+			const newData = await this.container.db.guild.create({
+				data: { guildId }
+			});
+
+			return response.json(newData);
+		}
 	}
 
 	@authenticated()
