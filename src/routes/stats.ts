@@ -1,5 +1,6 @@
 import { ratelimit } from '#lib/api/util';
 import { seconds } from '#utils/common';
+import { BotVersion } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
 
@@ -14,6 +15,6 @@ export class UserRoute extends Route {
 		const channels = this.container.client.channels.cache.size;
 		const commands = await this.container.db.command.count();
 
-		return response.json({ guildAmount: guilds, memberAmount: members, channelAmount: channels, commandsUsed: commands });
+		return response.json({ guildAmount: guilds, memberAmount: members, channelAmount: channels, commandsUsed: commands, version: BotVersion });
 	}
 }

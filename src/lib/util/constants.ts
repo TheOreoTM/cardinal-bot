@@ -1,5 +1,6 @@
 import { getRootData } from '@sapphire/pieces';
 import { envParseArray, envParseString } from '@skyra/env-utilities';
+import { version } from '../../../package.json';
 
 import { join } from 'path';
 
@@ -19,7 +20,7 @@ export const CooldownFiltered = [BotOwner, ...BotPrivilegedUsers];
 export const BotPrefix = envParseString('BOT_PREFIX');
 export const BotClientID = '740962735306702858';
 export const BotName = 'Cardinal';
-export const BotVersion = '2.0.0';
+export const BotVersion = version;
 
 export const MainServerID = '519734247519420438';
 /**
