@@ -1,6 +1,6 @@
 import { getRootData } from '@sapphire/pieces';
 import { envParseArray, envParseString } from '@skyra/env-utilities';
-import { version } from '../../../package.json';
+import { version } from '../../../package.json' assert { type: 'json' };
 
 import { join } from 'path';
 
