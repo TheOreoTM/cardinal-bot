@@ -1,5 +1,3 @@
-import { ratelimit } from '#lib/api/util';
-import { seconds } from '#utils/common';
 import { BotVersion } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse } from '@sapphire/plugin-api';
@@ -8,7 +6,6 @@ import { methods, Route, type ApiRequest, type ApiResponse } from '@sapphire/plu
 	route: 'stats'
 })
 export class UserRoute extends Route {
-	@ratelimit(seconds(5), 2, false)
 	public async [methods.GET](_request: ApiRequest, response: ApiResponse) {
 		const guilds = this.container.client.guilds.cache.size;
 		const members = this.container.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
