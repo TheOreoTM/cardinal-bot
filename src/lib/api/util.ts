@@ -27,6 +27,12 @@ export function ratelimit(time: number, limit = 1, auth = false) {
 	const xRateLimitLimit = time;
 	return createFunctionPrecondition(
 		(request: ApiRequest, response: ApiResponse) => {
+			const authorization = request.headers.authorization;
+
+			if (authorization === `Bot ${envParseString('DISCORD_TOKEN')}`) {
+				return false;
+			}
+
 			const id = (auth ? request.auth!.id : request.headers['x-forwarded-for'] || request.socket.remoteAddress) as string;
 			const bucket = manager.acquire(id);
 

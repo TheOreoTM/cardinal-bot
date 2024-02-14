@@ -8,7 +8,7 @@ import { methods, Route, type ApiRequest, type ApiResponse } from '@sapphire/plu
 	route: 'stats'
 })
 export class UserRoute extends Route {
-	@ratelimit(seconds(5), 2, false)
+	@ratelimit(seconds(5), 2, true)
 	public async [methods.GET](_request: ApiRequest, response: ApiResponse) {
 		const guilds = this.container.client.guilds.cache.size;
 		const members = this.container.client.guilds.cache.reduce((acc, guild) => acc + guild.memberCount, 0);
