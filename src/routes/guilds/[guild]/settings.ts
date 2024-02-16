@@ -25,13 +25,13 @@ export class UserRoute extends Route {
 		});
 
 		if (data) {
-			response.json(data);
+			response.json({ ...data, setup: true });
 		} else {
 			const newData = await this.container.db.guild.create({
 				data: { guildId }
 			});
 
-			return response.json(newData);
+			return response.json({ ...newData, setup: false });
 		}
 	}
 
