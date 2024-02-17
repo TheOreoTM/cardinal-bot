@@ -85,7 +85,7 @@ export class muteCommand extends ModerationCommand {
 							)
 					]
 				},
-				data?.appealLink
+				data?.appealType !== 'disabled' ? data?.appealLink : null
 			);
 
 			send(message, {
