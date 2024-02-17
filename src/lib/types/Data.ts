@@ -44,3 +44,5 @@ export type Automod =
 	| AutomodNewlines
 	| AutomodSpam
 	| AutomodStickers;
+
+export type AppealType = 'builtin' | 'external' | 'disabled';

@@ -202,6 +202,7 @@ model Guild {
   suggestionCreateThread Boolean?
 
   appealLink String?
+  appealType String  @default("disabled")
 
   useCachedStats Boolean @default(true)
 
