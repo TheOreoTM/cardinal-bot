@@ -197,6 +197,7 @@ model Guild {
 
   channelModlog     String?
   channelSuggestion String?
+  channelAppeal     String?
 
   suggestionCreateThread Boolean?
 
