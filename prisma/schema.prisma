@@ -7,6 +7,23 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Appeal {
+  id        String @id @default(cuid())
+  guildId   String
+  userId    String
+  muteOrBan String
+  reason    String
+  appeal    String
+  extra     String
+
+  staffId       String?
+  staffUsername String?
+
+  status    String   @default("pending")
+  updatedAt DateTime @default(now())
+  createdAt DateTime @default(now())
+}
+
 model LockedChannelOverwrites {
   uuid String @id @default(uuid())
 
