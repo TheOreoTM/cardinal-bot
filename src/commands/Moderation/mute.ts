@@ -23,7 +23,7 @@ export class muteCommand extends ModerationCommand {
 		const target = await args.pick('member').catch(() => null);
 		const duration = await args.pick('duration').catch(() => null);
 		const reason = await args.rest('string').catch(() => null);
-		const muteRole = message.guild.roles.cache.find((role) => role.name.toLowerCase() === 'muted');
+		const muteRole = await muteCommand.getMuteRole(message.guild);
 		if (!target) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Provide a valid member to mute')]
@@ -109,7 +109,9 @@ export class muteCommand extends ModerationCommand {
 	}
 
 	public static async getMuteRole(guild: Guild) {
-		const muteRole = (await container.db.guild.getMuteRole(guild.id)) ?? guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted') ?? null;
+		const muteRoleId = await container.db.guild.getMuteRole(guild.id);
+
+		const muteRole = guild.roles.cache.get(muteRoleId ?? '0') ?? guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted') ?? null;
 
 		return muteRole;
 	}

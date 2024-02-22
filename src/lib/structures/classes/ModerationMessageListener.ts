@@ -2,14 +2,14 @@ import { CardinalEvents, type GuildChannel, type GuildMessage } from '#lib/types
 import type { AutomodRule, Automod } from '#lib/types/Data';
 import { isAdmin } from '#utils/functions';
 import { Listener, type Awaitable, type ListenerOptions, type PieceContext, UserError } from '@sapphire/framework';
-import type { GuildMember, Role } from 'discord.js';
+import type { GuildMember } from 'discord.js';
 import { floatPromise, minutes } from '#utils/common';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
 import { InfractionManager, Modlog } from '#lib/structures';
 import { ModerationType, type ModerationActionType } from '#utils/moderationConstants';
 import { DurationFormatter, Duration } from '@sapphire/time-utilities';
-import { muteMember } from '#utils/utils';
 import type { AutomodLinkCooldown } from '@prisma/client';
+import { muteCommand } from '#root/commands/Moderation/mute';
 
 export abstract class ModerationMessageListener<T = unknown> extends Listener {
 	private readonly rule: AutomodRule;
@@ -107,15 +107,14 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 
 	protected async onMute(message: GuildMessage, duration: Duration) {
 		const staff = message.guild.members.me ?? (await message.guild.members.fetchMe());
-		const muteRoleId = await message.guild.settings.roles.mute();
-		let muteRole: Role | undefined;
-		muteRole = message.member.roles.cache.get(muteRoleId);
-		if (!muteRole) {
-			muteRole = message.guild.roles.cache.find((role) => role.name.toLowerCase() === 'muted');
-		}
-		if (!muteRole) return;
+		const muteRoleId = await this.container.db.guild.getMuteRole(message.guildId);
 
-		await muteMember(message, message.member, staff, muteRole, this.reason, duration);
+		const muteRole = message.guild.roles.cache.get(muteRoleId ?? '0');
+
+		if (!muteRole || !muteRoleId) return;
+
+		await muteCommand.muteMember(message.member, staff, muteRole, this.reason, duration.offset);
+		// await muteMember(message, message.member, staff, muteRole, this.reason, duration);
 	}
 
 	protected async onBan(message: GuildMessage) {
