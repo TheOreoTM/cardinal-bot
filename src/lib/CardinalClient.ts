@@ -4,10 +4,9 @@ import type { Message } from 'discord.js';
 import { ClientConfig } from '#config';
 import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import { BotPrefix } from '#constants';
-import { RedisClient } from '#lib/database';
+import { RedisClient, xprisma } from '#lib/database';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
 import { Analytics } from '#lib/structures';
-import { xprisma } from './database/prisma';
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)
