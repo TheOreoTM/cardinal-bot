@@ -42,7 +42,7 @@ export class unmuteCommand extends ModerationCommand {
 		}
 
 		const hasMuterole = target.roles.cache.has(muteRole.id);
-		const muteDatas = await this.container.db.mute.findMany({
+		const muteData = await this.container.db.mute.findFirst({
 			where: {
 				modlog: {
 					memberId: target.id,
@@ -50,8 +50,6 @@ export class unmuteCommand extends ModerationCommand {
 				}
 			}
 		});
-
-		const muteData = muteDatas[0];
 
 		const removedRoles = new Set(muteData?.removedRoles);
 
@@ -85,7 +83,7 @@ export class unmuteCommand extends ModerationCommand {
 			}
 		}
 
-		if (muteDatas.length > 0) {
+		if (muteData) {
 			await this.container.db.mute.deleteMany({
 				where: {
 					modlog: {
