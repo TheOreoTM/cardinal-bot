@@ -5,7 +5,6 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
 import type { Nullish } from '@sapphire/utilities';
 import type { Role } from 'discord.js';
-import { muteCommand } from './mute';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Unmute a user',
@@ -28,7 +27,11 @@ export class unmuteCommand extends ModerationCommand {
 
 		const reason = await args.rest('string').catch(() => 'No reason');
 
-		let muteRole: Role | Nullish = await muteCommand.getMuteRole(message.guild);
+		const muteRoleId =
+			(await this.container.db.guild.getMuteRole(message.guild.id)) ??
+			message.guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted')?.id ??
+			'0';
+		let muteRole: Role | Nullish = message.guild.roles.cache.get(muteRoleId);
 		if (!muteRole) muteRole = message.guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted');
 		if (!muteRole) {
 			send(message, {

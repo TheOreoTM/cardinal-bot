@@ -9,7 +9,7 @@ import { InfractionManager, Modlog } from '#lib/structures';
 import { ModerationType, type ModerationActionType } from '#utils/moderationConstants';
 import { DurationFormatter, Duration } from '@sapphire/time-utilities';
 import type { AutomodLinkCooldown } from '@prisma/client';
-import { muteCommand } from '#root/commands/Moderation/mute';
+import { muteMember } from '#utils/utils';
 
 export abstract class ModerationMessageListener<T = unknown> extends Listener {
 	private readonly rule: AutomodRule;
@@ -113,8 +113,8 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 
 		if (!muteRole || !muteRoleId) return;
 
-		await muteCommand.muteMember(message.member, staff, muteRole, this.reason, duration.offset);
-		// await muteMember(message, message.member, staff, muteRole, this.reason, duration);
+		// await muteCommand.muteMember(message.member, staff, muteRole, this.reason, duration.offset);
+		await muteMember(message, message.member, staff, muteRole, this.reason, duration);
 	}
 
 	protected async onBan(message: GuildMessage) {
