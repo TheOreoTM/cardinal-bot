@@ -85,7 +85,7 @@ export class muteCommand extends ModerationCommand {
 
 		const expiresAt = new Date(Date.now() + (durationMs ?? 0));
 
-		await modlog.createMute({ expiresAt, removedRoles: extracted.removedRoles });
+		await modlog.createMute({ expiresAt: durationMs ? expiresAt : null, removedRoles: extracted.removedRoles });
 
 		const data = await container.db.guild.findUnique({
 			where: {
