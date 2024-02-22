@@ -8,6 +8,7 @@ import type { Duration } from '@sapphire/time-utilities';
 import type { AutomodRule } from '#lib/types';
 import type { RedisClient } from '#lib/database';
 import type { Metrics } from '@prisma/client/runtime/library';
+import type { xprisma } from '#lib/database/prisma';
 
 declare module '@skyra/env-utilities' {
 	interface Env {
@@ -44,7 +45,7 @@ declare module '@skyra/env-utilities' {
 
 declare module '@sapphire/pieces' {
 	interface Container {
-		db: PrismaClient;
+		db: typeof xprisma;
 		cache: RedisClient;
 	}
 }

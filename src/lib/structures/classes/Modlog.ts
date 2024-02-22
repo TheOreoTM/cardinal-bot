@@ -1,4 +1,3 @@
-import type { Prisma } from '@prisma/client';
 import { container } from '@sapphire/pieces';
 import { GuildMember, type User } from 'discord.js';
 import { CardinalIndexBuilder, CardinalEmbedBuilder } from '#lib/structures';
@@ -7,6 +6,7 @@ import type { Nullish } from '@sapphire/utilities';
 import { CardinalColors } from '#utils/constants';
 import { capitalizeWords } from '#utils/formatters';
 import { getTag } from '#utils/utils';
+import type { Prisma } from '@prisma/client';
 
 export class Modlog implements Prisma.ModlogCreateInput {
 	caseId: number = 0;
@@ -22,6 +22,24 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	warn?: Prisma.WarnCreateNestedManyWithoutModlogInput | undefined;
 	modnick?: Prisma.ModnickCreateNestedManyWithoutModlogInput | undefined;
 	mute?: Prisma.MuteCreateNestedManyWithoutModlogInput | undefined;
+
+	private toDb() {
+		return {
+			caseId: this.caseId,
+			staffId: this.staffId,
+			staffName: this.staffName,
+			memberId: this.memberId,
+			guildId: this.guildId,
+			memberName: this.memberName,
+			reason: this.reason,
+			type: this.type,
+			length: this.length,
+			createdAt: this.createdAt,
+			warn: this.warn,
+			modnick: this.modnick,
+			mute: this.mute
+		};
+	}
 
 	public constructor(data?: ModlogCreateInput) {
 		if (data) {
@@ -53,7 +71,7 @@ export class Modlog implements Prisma.ModlogCreateInput {
 
 	public async createKick() {
 		const kick = await container.db.modlog.create({
-			data: this
+			data: this.toDb()
 		});
 
 		await this.sendModlog(kick.id);
@@ -153,27 +171,27 @@ export class Modlog implements Prisma.ModlogCreateInput {
 	}
 
 	public async createUnwarn() {
-		const unwarn = await container.db.modlog.create({ data: this });
+		const unwarn = await container.db.modlog.create({ data: this.toDb() });
 		await this.sendModlog(unwarn.id);
 	}
 
 	public async createUnmute() {
-		const unmute = await container.db.modlog.create({ data: this });
+		const unmute = await container.db.modlog.create({ data: this.toDb() });
 		await this.sendModlog(unmute.id);
 	}
 
 	public async createUnban() {
-		const unban = await container.db.modlog.create({ data: this });
+		const unban = await container.db.modlog.create({ data: this.toDb() });
 		await this.sendModlog(unban.id);
 	}
 
 	public async createAfkClear() {
-		const afkclear = await container.db.modlog.create({ data: this });
+		const afkclear = await container.db.modlog.create({ data: this.toDb() });
 		await this.sendModlog(afkclear.id);
 	}
 
 	public async createAfkReset() {
-		const afkreset = await container.db.modlog.create({ data: this });
+		const afkreset = await container.db.modlog.create({ data: this.toDb() });
 		await this.sendModlog(afkreset.id);
 	}
 

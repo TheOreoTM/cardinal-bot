@@ -1,4 +1,3 @@
-import { PrismaClient } from '@prisma/client';
 import { Enumerable } from '@sapphire/decorators';
 import { SapphireClient, container, type SapphirePrefix, type SapphirePrefixHook } from '@sapphire/framework';
 import type { Message } from 'discord.js';
@@ -8,6 +7,7 @@ import { BotPrefix } from '#constants';
 import { RedisClient } from '#lib/database';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
 import { Analytics } from '#lib/structures';
+import { xprisma } from './database/prisma';
 
 export class CardinalClient<Ready extends boolean = boolean> extends SapphireClient<Ready> {
 	@Enumerable(false)
@@ -23,7 +23,7 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 	}
 
 	public override async login(token?: string): Promise<string> {
-		container.db = new PrismaClient();
+		container.db = xprisma;
 		container.cache = new RedisClient({
 			db: 1,
 			host: envParseString('REDIS_HOST'),

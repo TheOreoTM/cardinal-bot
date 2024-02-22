@@ -32,7 +32,7 @@ export class UnmuteMemberTask extends ScheduledTask {
 		});
 
 		if (!mute) {
-			console.log('no mute', payload.muteId);
+			this.container.logger.error('No mute found in database', payload.muteId);
 			return;
 		}
 

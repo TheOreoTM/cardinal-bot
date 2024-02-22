@@ -6,7 +6,8 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { container } from '@sapphire/pieces';
 import { send } from '@sapphire/plugin-editable-commands';
 import { DurationFormatter } from '@sapphire/time-utilities';
-import type { GuildMember } from 'discord.js';
+import type { Nullish } from '@sapphire/utilities';
+import type { Guild, GuildMember, Role } from 'discord.js';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Mute a member so they cannot type',
@@ -48,45 +49,8 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		const { position } = (await message.guild.members.fetchMe()).roles.highest;
-
-		const extracted = this.extractRoles(target, position);
-		extracted.keepRoles.push(muteRole.id);
-
 		try {
-			const formattedDuration = new DurationFormatter().format(duration?.offset ?? 0);
-
-			await target.edit({ roles: extracted.keepRoles, reason: reason ?? undefined });
-
-			const modlog = new Modlog({
-				member: target,
-				staff: message.member,
-				type: ModerationType.Mute,
-				reason: reason ?? null,
-				length: duration ? formattedDuration : null
-			});
-
-			await modlog.createMute({ expiresAt: duration?.fromNow, removedRoles: extracted.removedRoles });
-
-			const data = await container.db.guild.findUnique({
-				where: {
-					guildId: message.guildId
-				}
-			});
-			await sendMessageAsGuild(
-				target.user,
-				target.guild,
-				{
-					embeds: [
-						new CardinalEmbedBuilder()
-							.setStyle('info')
-							.setDescription(
-								`You have been muted ${duration ? `for ${formattedDuration}` : ''} for the reason: ${reason ?? 'No reason'}`
-							)
-					]
-				},
-				data?.appealType !== 'disabled' ? data?.appealLink : null
-			);
+			muteCommand.muteMember(target, message.member, muteRole, reason, duration?.offset);
 
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
@@ -101,7 +65,56 @@ export class muteCommand extends ModerationCommand {
 		return;
 	}
 
-	private extractRoles(member: GuildMember, selfPosition: number) {
+	public static async muteMember(target: GuildMember, staff: GuildMember, muteRole: Role, reason: string | Nullish, durationMs: number | Nullish) {
+		const { position } = (await target.guild.members.fetchMe()).roles.highest;
+
+		const extracted = muteCommand.extractRoles(target, position);
+		extracted.keepRoles.push(muteRole.id);
+
+		const formattedDuration = new DurationFormatter().format(durationMs ?? 0);
+
+		await target.edit({ roles: extracted.keepRoles, reason: reason ?? undefined });
+
+		const modlog = new Modlog({
+			member: target,
+			staff: staff,
+			type: ModerationType.Mute,
+			reason: reason ?? null,
+			length: durationMs ? formattedDuration : null
+		});
+
+		const expiresAt = new Date(Date.now() + (durationMs ?? 0));
+
+		await modlog.createMute({ expiresAt, removedRoles: extracted.removedRoles });
+
+		const data = await container.db.guild.findUnique({
+			where: {
+				guildId: target.guild.id
+			}
+		});
+		await sendMessageAsGuild(
+			target.user,
+			target.guild,
+			{
+				embeds: [
+					new CardinalEmbedBuilder()
+						.setStyle('info')
+						.setDescription(
+							`You have been muted ${durationMs ? `for ${formattedDuration}` : ''} for the reason: ${reason ?? 'No reason'}`
+						)
+				]
+			},
+			data?.appealType !== 'disabled' ? data?.appealLink : null
+		);
+	}
+
+	public static async getMuteRole(guild: Guild) {
+		const muteRole = (await container.db.guild.getMuteRole(guild.id)) ?? guild.roles.cache.find((r) => r.name.toLowerCase() === 'muted') ?? null;
+
+		return muteRole;
+	}
+
+	public static extractRoles(member: GuildMember, selfPosition: number) {
 		const keepRoles: string[] = [];
 		const removedRoles: string[] = [];
 
