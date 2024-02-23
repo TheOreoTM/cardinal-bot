@@ -16,6 +16,6 @@ export class UserRoute extends Route {
 			}
 		});
 
-		return response.json({ ...appeals });
+		return response.json([...appeals]);
 	}
 }
