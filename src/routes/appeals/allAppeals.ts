@@ -12,8 +12,8 @@ export class UserRoute extends Route {
 		const userIdQuery = request.query.userId;
 		const guildIdQuery = request.query.guildId;
 
-		const userIdResult = this.parseSnowflake(userIdQuery);
-		const guildIdResult = this.parseSnowflake(guildIdQuery);
+		const userIdResult = this.parseUserId(userIdQuery);
+		const guildIdResult = this.parseGuildId(guildIdQuery);
 
 		if (userIdResult.error || guildIdResult.error) {
 			return response.badRequest();
@@ -31,8 +31,14 @@ export class UserRoute extends Route {
 		return response.json([...appeals]);
 	}
 
-	private parseSnowflake(snowflake: any) {
+	private parseUserId(snowflake: any) {
 		const validator = s.string.lengthGreaterThan(0);
+
+		return validator.run(snowflake);
+	}
+
+	private parseGuildId(snowflake: any) {
+		const validator = s.string.lengthGreaterThan(0).optional;
 
 		return validator.run(snowflake);
 	}
