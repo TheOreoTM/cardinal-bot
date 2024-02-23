@@ -28,7 +28,7 @@ export class UserRoute extends Route {
 			}
 		});
 
-		const nextIdx = latestAppeal ? latestAppeal.idx : 1;
+		const nextIdx = latestAppeal ? latestAppeal.idx + 1 : 1;
 
 		const appeal = await this.container.db.appeal.create({
 			data: {
