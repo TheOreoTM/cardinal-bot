@@ -19,8 +19,20 @@ export class UserRoute extends Route {
 
 		const data = result.unwrap();
 
+		const latestAppeal = await this.container.db.appeal.findFirst({
+			where: {
+				guildId: data.guildId
+			},
+			orderBy: {
+				idx: 'desc'
+			}
+		});
+
+		const nextIdx = latestAppeal ? latestAppeal.idx : 1;
+
 		const appeal = await this.container.db.appeal.create({
 			data: {
+				idx: nextIdx,
 				...data
 			}
 		});
