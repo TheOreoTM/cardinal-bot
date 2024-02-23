@@ -28,7 +28,17 @@ export class UserRoute extends Route {
 			}
 		});
 
-		return response.json([...appeals]);
+		const appealsWithGuildData = appeals.map((appeal) => {
+			const guild = this.container.client.guilds.cache.get(appeal.guildId);
+
+			return {
+				...appeal,
+				guildName: guild?.name ?? appeal.guildId,
+				guildIcon: guild?.icon ?? null
+			};
+		});
+
+		return response.json([...appealsWithGuildData]);
 	}
 
 	private parseUserId(snowflake: any) {
