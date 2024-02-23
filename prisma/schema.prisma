@@ -9,6 +9,7 @@ datasource db {
 
 model Appeal {
   id        String @id @default(cuid())
+  idx       Int
   guildId   String
   userId    String
   muteOrBan String

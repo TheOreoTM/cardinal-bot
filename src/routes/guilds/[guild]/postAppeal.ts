@@ -1,3 +1,4 @@
+import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 import { s } from '@sapphire/shapeshift';
@@ -7,6 +8,7 @@ import { s } from '@sapphire/shapeshift';
 	route: 'guilds/:guild/appeals'
 })
 export class UserRoute extends Route {
+	@authenticated()
 	public async [methods.POST](request: ApiRequest, response: ApiResponse) {
 		const body = request.body;
 
@@ -28,7 +30,6 @@ export class UserRoute extends Route {
 
 	private parseIncomingData(data: any) {
 		const validator = s.object({
-			id: s.string,
 			guildId: s.string,
 			userId: s.string,
 			muteOrBan: s.string,

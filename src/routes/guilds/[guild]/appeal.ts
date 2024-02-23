@@ -1,3 +1,4 @@
+import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 import { s } from '@sapphire/shapeshift';
@@ -7,6 +8,7 @@ import { s } from '@sapphire/shapeshift';
 	route: 'guilds/:guild/appeals/:appeal'
 })
 export class UserRoute extends Route {
+	@authenticated()
 	public async [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const guildId = request.params.guild;
 		const appealId = request.params.appeal;
@@ -25,6 +27,7 @@ export class UserRoute extends Route {
 		return response.json(appeal);
 	}
 
+	@authenticated()
 	public async [methods.PATCH](request: ApiRequest, response: ApiResponse) {
 		const guildId = request.params.guild;
 		const appealId = request.params.appeal;
@@ -57,7 +60,6 @@ export class UserRoute extends Route {
 
 	private parseIncomingData(data: any) {
 		const validator = s.object({
-			id: s.string,
 			guildId: s.string,
 			userId: s.string,
 			muteOrBan: s.string,
