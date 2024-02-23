@@ -5,7 +5,7 @@ import { s } from '@sapphire/shapeshift';
 
 @ApplyOptions<Route.Options>({
 	name: 'postAppeal',
-	route: 'guilds/:guild/appeals'
+	route: 'postAppeals'
 })
 export class UserRoute extends Route {
 	@authenticated()

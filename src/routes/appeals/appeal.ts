@@ -5,17 +5,15 @@ import { s } from '@sapphire/shapeshift';
 
 @ApplyOptions<Route.Options>({
 	name: 'appeal',
-	route: 'guilds/:guild/appeals/:appeal'
+	route: 'appeals/:appeal'
 })
 export class UserRoute extends Route {
 	@authenticated()
 	public async [methods.GET](request: ApiRequest, response: ApiResponse) {
-		const guildId = request.params.guild;
 		const appealId = request.params.appeal;
 
 		const appeal = await this.container.db.appeal.findUnique({
 			where: {
-				guildId: guildId,
 				id: appealId
 			}
 		});
@@ -29,7 +27,6 @@ export class UserRoute extends Route {
 
 	@authenticated()
 	public async [methods.PATCH](request: ApiRequest, response: ApiResponse) {
-		const guildId = request.params.guild;
 		const appealId = request.params.appeal;
 
 		const body = request.body;
@@ -44,8 +41,7 @@ export class UserRoute extends Route {
 		try {
 			const appeal = await this.container.db.appeal.update({
 				where: {
-					id: appealId,
-					guildId: guildId
+					id: appealId
 				},
 				data: {
 					...data
