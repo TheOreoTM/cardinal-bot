@@ -55,7 +55,7 @@ export class UserRoute extends Route {
 			return response.error(HttpCodes.BadRequest, { error: 'No appeal channel found' });
 		}
 
-		const user = this.container.client.users.cache.get(appeal.userId);
+		const user = await this.container.client.users.fetch(appeal.userId);
 
 		const accceptButton = new ButtonBuilder()
 			.setCustomId(`@appeal/a/${appeal.id}`)
