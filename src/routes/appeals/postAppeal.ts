@@ -65,7 +65,11 @@ export class UserRoute extends Route {
 
 		const rejectButton = new ButtonBuilder().setCustomId(`@appeal/r/${appeal.id}`).setDisabled().setStyle(ButtonStyle.Danger).setLabel('Reject');
 
-		const viewModlogsButton = new ButtonBuilder().setCustomId(`@appeal/m/${appeal.id}`).setLabel('View Modlogs').setDisabled();
+		const viewModlogsButton = new ButtonBuilder()
+			.setCustomId(`@appeal/m/${appeal.id}`)
+			.setLabel('View Modlogs')
+			.setDisabled()
+			.setStyle(ButtonStyle.Secondary);
 
 		appealChannel.send({
 			embeds: [
