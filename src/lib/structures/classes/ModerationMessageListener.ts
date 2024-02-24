@@ -25,7 +25,7 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 		const shouldRun = await this.checkPreRun(message);
 		if (!shouldRun) return;
 		const isGuildAdmin = await isAdmin(message.member);
-		if (isGuildAdmin && !isGuildAdmin) return;
+		if (isGuildAdmin) return;
 
 		const preProcessed = await this.preProcess(message);
 		if (preProcessed === null) return;
