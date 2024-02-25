@@ -1,6 +1,5 @@
-import { ratelimit } from '#lib/api/util';
+import { authenticated } from '#lib/api/util';
 import type { CardinalCommand } from '#lib/structures';
-import { seconds } from '#utils/common';
 import { BotPrefix } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Command } from '@sapphire/framework';
@@ -8,7 +7,7 @@ import { Route, methods, type ApiRequest, type ApiResponse } from '@sapphire/plu
 
 @ApplyOptions<Route.Options>({ route: 'commands' })
 export class UserRoute extends Route {
-	@ratelimit(seconds(2), 2)
+	@authenticated()
 	public [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const { category } = request.query;
 		const commands = this.container.stores.get('commands');

@@ -65,7 +65,7 @@ export async function sendMessageAsGuild(
 	const sentFromButton = generateSendMessageAsGuildButton(guild);
 	const appealButton = new ButtonBuilder()
 		.setLabel('Appeal')
-		.setURL(appealLink ?? 'https://google.com')
+		.setURL(appealLink ?? 'https://cardinal.oreotm.xyz')
 		.setStyle(ButtonStyle.Link);
 
 	const buttons = [sentFromButton];
