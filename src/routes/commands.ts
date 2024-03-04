@@ -10,6 +10,7 @@ export class UserRoute extends Route {
 	@authenticated()
 	public [methods.GET](request: ApiRequest, response: ApiResponse) {
 		const { category } = request.query;
+
 		const commands = this.container.stores.get('commands');
 		const filtered = (category ? commands.filter((cmd) => cmd.category === category) : commands).filter((cmd) => {
 			const c = cmd as CardinalCommand;

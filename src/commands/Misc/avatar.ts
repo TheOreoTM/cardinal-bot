@@ -53,7 +53,7 @@ export class UserCommand extends CardinalCommand {
 	}
 
 	private async showAvatar(interactionOrMessage: InteractionOrMessage, target: GuildMember) {
-		const avatar = target.displayAvatarURL();
+		const avatar = target.displayAvatarURL({extension: 'png', size: 4096, forceStatic: false});
 		const embed = new CardinalEmbedBuilder()
 			.setStyle('default')
 			.setAuthor({
