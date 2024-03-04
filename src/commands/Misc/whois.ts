@@ -85,6 +85,7 @@ export class WhoisCommand extends CardinalCommand {
 			.setAuthor({ name: memberTag, iconURL: memberAvatarURL })
 			.setThumbnail(memberAvatarURL)
 			.setTitle(globalName)
+			.setDescription(`${member}`)
 			.addFields(
 				{
 					name: 'Joined',
