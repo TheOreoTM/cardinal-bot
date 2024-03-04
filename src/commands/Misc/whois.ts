@@ -97,11 +97,11 @@ export class WhoisCommand extends CardinalCommand {
 					value: accountCreatedTimestamp.getLongDate(),
 					inline: true
 				},
-				{
-					name: 'Information',
-					value: [`Bot: ${isBot}`, `Highest Role: ${highestServerRole}`].join('\n'),
-					inline: true
-				},
+				// {
+				// 	name: 'Information',
+				// 	value: [`Bot: ${isBot}`, `Highest Role: ${highestServerRole}`].join('\n'),
+				// 	inline: true
+				// },
 				{
 					name: `Roles [${roles.size}]`,
 					value: formattedRoles || 'None',
