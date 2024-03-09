@@ -277,7 +277,6 @@ export class automodCommand extends ModerationCommand {
 
 	public async chatInputRun(interaction: ModerationCommand.ChatInputCommandInteraction) {
 		const guild = interaction.guild;
-		const subcommandGroup = interaction.options.getSubcommandGroup(true) as SubcommandGroupType;
 		const subcommand = interaction.options.getSubcommand(true) as SubcommandType;
 		const rule = interaction.options.getString('rule', false) as AutomodRule;
 
@@ -285,6 +284,7 @@ export class automodCommand extends ModerationCommand {
 			this.handleViewRule(interaction, rule);
 			return;
 		}
+		const subcommandGroup = interaction.options.getSubcommandGroup(true) as SubcommandGroupType;
 
 		switch (subcommandGroup) {
 			case 'action':
@@ -408,7 +408,14 @@ export class automodCommand extends ModerationCommand {
 	}
 
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
-		const rule = await args.pick('automodRule');
+		const rule = await args.pick('automodRule').catch(() => null);
+		if (!rule) {
+			message.channel.send({
+				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Please provide a valid automod rule, eg: `bannedWords`')]
+			});
+
+			return;
+		}
 		this.handleViewRule(message, rule);
 	}
 
