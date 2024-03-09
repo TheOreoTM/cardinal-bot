@@ -67,9 +67,9 @@ export class WhoisCommand extends CardinalCommand {
 		const memberAvatarURL = member.displayAvatarURL();
 		const accountCreatedTimestamp = new Timestamp(member.user.createdTimestamp ?? 0);
 		const memberJoinedTimestamp = new Timestamp(member.joinedTimestamp ?? 0);
-		const isBot = member.user.bot ? 'Yes' : 'No';
+		// const isBot = member.user.bot ? 'Yes' : 'No';
 		const globalName = member.user.globalName;
-		const highestServerRole = member.roles.highest;
+		// const highestServerRole = member.roles.highest;
 		const roles = member.roles.cache;
 		roles.sort((a, b) => b.position - a.position);
 		roles.delete(member.guild.id);
