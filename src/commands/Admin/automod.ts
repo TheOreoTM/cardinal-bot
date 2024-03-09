@@ -407,17 +407,17 @@ export class automodCommand extends ModerationCommand {
 		}
 	}
 
-	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
-		const rule = await args.pick('automodRule').catch(() => null);
-		if (!rule) {
-			message.channel.send({
-				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Please provide a valid automod rule, eg: `bannedWords`')]
-			});
+	// public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
+	// 	const rule = await args.pick('automodRule').catch(() => null);
+	// 	if (!rule) {
+	// 		message.channel.send({
+	// 			embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('Please provide a valid automod rule, eg: `bannedWords`')]
+	// 		});
 
-			return;
-		}
-		this.handleViewRule(message, rule);
-	}
+	// 		return;
+	// 	}
+	// 	this.handleViewRule(message, rule);
+	// }
 
 	private handleViewRule(iom: InteractionOrMessage, rule: AutomodRule) {
 		switch (rule) {
