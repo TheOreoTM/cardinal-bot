@@ -242,17 +242,6 @@ model Guild {
   @@index([guildId])
 }
 
-model MemberActivity {
-  id        Int               @id @default(autoincrement())
-  guildId   String
-  userId    String
-  action    MemberAcivityType
-  createdAt DateTime          @default(now())
-
-  @@index([guildId, createdAt, action]) // stats server
-  @@index([guildId, action])
-}
-
 model Message {
   id            Int     @id @default(autoincrement())
   messageId     String

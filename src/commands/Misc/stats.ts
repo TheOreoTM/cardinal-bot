@@ -1,8 +1,8 @@
 import { PermissionLevel } from '#lib/decorators';
 import { ChannelStatsService, UserStatsService } from '#lib/services';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
-import { days, hours, minutes, seconds } from '#utils/common';
-import { CardinalColors, CardinalEmojis } from '#utils/constants';
+import { days, minutes, seconds } from '#utils/common';
+import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { PaginatedMessage } from '@sapphire/discord.js-utilities';
@@ -52,10 +52,6 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 			messageRun: 'user'
 		},
 		{
-			name: 'server',
-			messageRun: 'server'
-		},
-		{
 			name: 'me',
 			messageRun: 'user',
 			default: true
@@ -78,64 +74,64 @@ export class statsCommand extends CardinalSubcommand {
 	public take: number = 5;
 	private cached: { cached: boolean } = { cached: false };
 
-	public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
-		this.initOptions(args);
-		const lookback = await this.getLookback(message.guildId);
-		const stopWatch = new Stopwatch();
-		const data = await this.getServerData(message.guildId, lookback);
-		const timeTaken = stopWatch.stop().toString();
-		const prefix = args.commandContext.commandPrefix;
-		const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
+	// public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
+	// 	this.initOptions(args);
+	// 	const lookback = await this.getLookback(message.guildId);
+	// 	const stopWatch = new Stopwatch();
+	// 	const data = await this.getServerData(message.guildId, lookback);
+	// 	const timeTaken = stopWatch.stop().toString();
+	// 	const prefix = args.commandContext.commandPrefix;
+	// 	const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
 
-		const embed = new CardinalEmbedBuilder()
-			.setStyle('default')
-			.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
-			.setDescription(
-				`**${message.guild.name}**\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
-			)
-			.addFields(
-				{
-					name: 'Messages',
-					inline: false,
-					value: [
-						`${formattedLookback}: \`${data.messagesLookback.toLocaleString()} Messages\``,
-						`1 Minute: \`${data.messagesPerMinute.toLocaleString()} Messages\``,
-						`1 Hour: \`${data.messagesPerHour.toLocaleString()} Messages\``,
-						`24 Hours: \`${data.messagesPerDay.toLocaleString()} Messages\``,
-						`All time: \`${data.messagesAllTime.toLocaleString()} Messages\``
-					].join('\n')
-				},
-				{
-					name: `Joins ${CardinalEmojis.Join}`,
-					inline: true,
-					value: [
-						`${formattedLookback}: \`${data.joinsLastLookback.toLocaleString()} Members\``,
-						`24 Hour: \`${data.joinsLastDay.toLocaleString()} Members\``,
-						`All time: \`${data.joinsAllTime.toLocaleString()} Members\``
-					].join('\n')
-				},
-				{
-					name: `Leaves ${CardinalEmojis.Leave}`,
-					inline: true,
-					value: [
-						`${formattedLookback}: \`${data.leavesLastLookback.toLocaleString()} Members\``,
-						`24 Hour: \`${data.leavesLastDay.toLocaleString()} Members\``,
-						`All time: \`${data.leavesAlltime.toLocaleString()} Members\``
-					].join('\n')
-				},
-				{
-					name: 'Member Flow 📊',
-					inline: true,
-					value: [
-						`${formattedLookback}: \`${data.joinsLastLookback - data.leavesLastLookback} Members\``,
-						`24 Hour: \`${data.joinsLastDay - data.leavesLastDay} Members\``,
-						`All time: \`${data.joinsAllTime - data.leavesAlltime} Members\``
-					].join('\n')
-				}
-			);
+	// 	const embed = new CardinalEmbedBuilder()
+	// 		.setStyle('default')
+	// 		.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
+	// 		.setDescription(
+	// 			`**${message.guild.name}**\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
+	// 		)
+	// 		.addFields(
+	// 			{
+	// 				name: 'Messages',
+	// 				inline: false,
+	// 				value: [
+	// 					`${formattedLookback}: \`${data.messagesLookback.toLocaleString()} Messages\``,
+	// 					`1 Minute: \`${data.messagesPerMinute.toLocaleString()} Messages\``,
+	// 					`1 Hour: \`${data.messagesPerHour.toLocaleString()} Messages\``,
+	// 					`24 Hours: \`${data.messagesPerDay.toLocaleString()} Messages\``,
+	// 					`All time: \`${data.messagesAllTime.toLocaleString()} Messages\``
+	// 				].join('\n')
+	// 			},
+	// 			{
+	// 				name: `Joins ${CardinalEmojis.Join}`,
+	// 				inline: true,
+	// 				value: [
+	// 					`${formattedLookback}: \`${data.joinsLastLookback.toLocaleString()} Members\``,
+	// 					`24 Hour: \`${data.joinsLastDay.toLocaleString()} Members\``,
+	// 					`All time: \`${data.joinsAllTime.toLocaleString()} Members\``
+	// 				].join('\n')
+	// 			},
+	// 			{
+	// 				name: `Leaves ${CardinalEmojis.Leave}`,
+	// 				inline: true,
+	// 				value: [
+	// 					`${formattedLookback}: \`${data.leavesLastLookback.toLocaleString()} Members\``,
+	// 					`24 Hour: \`${data.leavesLastDay.toLocaleString()} Members\``,
+	// 					`All time: \`${data.leavesAlltime.toLocaleString()} Members\``
+	// 				].join('\n')
+	// 			},
+	// 			{
+	// 				name: 'Member Flow 📊',
+	// 				inline: true,
+	// 				value: [
+	// 					`${formattedLookback}: \`${data.joinsLastLookback - data.leavesLastLookback} Members\``,
+	// 					`24 Hour: \`${data.joinsLastDay - data.leavesLastDay} Members\``,
+	// 					`All time: \`${data.joinsAllTime - data.leavesAlltime} Members\``
+	// 				].join('\n')
+	// 			}
+	// 		);
 
-		send(message, { embeds: [embed] });
-	}
+	// 	send(message, { embeds: [embed] });
+	// }
 
 	public async user(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
@@ -600,118 +596,118 @@ export class statsCommand extends CardinalSubcommand {
 		return data;
 	}
 
-	private async getServerData(guildId: string, lookback: number) {
-		const now = new Date();
-		const lastLookback = new Date(now.getTime() - days(lookback));
+	// private async getServerData(guildId: string, lookback: number) {
+	// 	const now = new Date();
+	// 	const lastLookback = new Date(now.getTime() - days(lookback));
 
-		const joinsLastDay = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'JOIN',
-				createdAt: {
-					gte: new Date(now.getTime() - days(1))
-				}
-			}
-		});
+	// 	const joinsLastDay = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'JOIN',
+	// 			createdAt: {
+	// 				gte: new Date(now.getTime() - days(1))
+	// 			}
+	// 		}
+	// 	});
 
-		const joinsLastLookback = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'JOIN',
-				createdAt: {
-					gte: lastLookback
-				}
-			}
-		});
+	// 	const joinsLastLookback = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'JOIN',
+	// 			createdAt: {
+	// 				gte: lastLookback
+	// 			}
+	// 		}
+	// 	});
 
-		const joinsAllTime = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'JOIN'
-			}
-		});
+	// 	const joinsAllTime = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'JOIN'
+	// 		}
+	// 	});
 
-		const leavesLastDay = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'LEAVE',
-				createdAt: {
-					gte: new Date(now.getTime() - days(1))
-				}
-			}
-		});
+	// 	const leavesLastDay = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'LEAVE',
+	// 			createdAt: {
+	// 				gte: new Date(now.getTime() - days(1))
+	// 			}
+	// 		}
+	// 	});
 
-		const leavesLastLookback = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'LEAVE',
-				createdAt: {
-					gte: lastLookback
-				}
-			}
-		});
+	// 	const leavesLastLookback = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'LEAVE',
+	// 			createdAt: {
+	// 				gte: lastLookback
+	// 			}
+	// 		}
+	// 	});
 
-		const leavesAlltime = await this.container.db.memberActivity.count({
-			where: {
-				guildId,
-				action: 'LEAVE'
-			}
-		});
+	// 	const leavesAlltime = await this.container.db.memberActivity.count({
+	// 		where: {
+	// 			guildId,
+	// 			action: 'LEAVE'
+	// 		}
+	// 	});
 
-		const messagesAllTime = await this.container.db.message.count({
-			where: {
-				guildId
-			}
-		});
+	// 	const messagesAllTime = await this.container.db.message.count({
+	// 		where: {
+	// 			guildId
+	// 		}
+	// 	});
 
-		const messagesLookback = await this.container.db.message.count({
-			where: {
-				guildId,
-				createdAt: {
-					gte: lastLookback
-				}
-			}
-		});
+	// 	const messagesLookback = await this.container.db.message.count({
+	// 		where: {
+	// 			guildId,
+	// 			createdAt: {
+	// 				gte: lastLookback
+	// 			}
+	// 		}
+	// 	});
 
-		const messagesPerDay = await this.container.db.message.count({
-			where: {
-				guildId: guildId,
-				createdAt: {
-					gte: new Date(Date.now() - days(1))
-				}
-			}
-		});
+	// 	const messagesPerDay = await this.container.db.message.count({
+	// 		where: {
+	// 			guildId: guildId,
+	// 			createdAt: {
+	// 				gte: new Date(Date.now() - days(1))
+	// 			}
+	// 		}
+	// 	});
 
-		const messagesPerMinute = await this.container.db.message.count({
-			where: {
-				guildId: guildId,
-				createdAt: {
-					gte: new Date(Date.now() - minutes(1))
-				}
-			}
-		});
+	// 	const messagesPerMinute = await this.container.db.message.count({
+	// 		where: {
+	// 			guildId: guildId,
+	// 			createdAt: {
+	// 				gte: new Date(Date.now() - minutes(1))
+	// 			}
+	// 		}
+	// 	});
 
-		const messagesPerHour = await this.container.db.message.count({
-			where: {
-				guildId: guildId,
-				createdAt: {
-					gte: new Date(Date.now() - hours(1))
-				}
-			}
-		});
+	// 	const messagesPerHour = await this.container.db.message.count({
+	// 		where: {
+	// 			guildId: guildId,
+	// 			createdAt: {
+	// 				gte: new Date(Date.now() - hours(1))
+	// 			}
+	// 		}
+	// 	});
 
-		return {
-			messagesPerDay,
-			messagesPerHour,
-			messagesPerMinute,
-			messagesLookback,
-			messagesAllTime,
-			leavesAlltime,
-			leavesLastLookback,
-			leavesLastDay,
-			joinsAllTime,
-			joinsLastLookback,
-			joinsLastDay
-		};
-	}
+	// 	return {
+	// 		messagesPerDay,
+	// 		messagesPerHour,
+	// 		messagesPerMinute,
+	// 		messagesLookback,
+	// 		messagesAllTime,
+	// 		leavesAlltime,
+	// 		leavesLastLookback,
+	// 		leavesLastDay,
+	// 		joinsAllTime,
+	// 		joinsLastLookback,
+	// 		joinsLastDay
+	// 	};
+	// }
 }
