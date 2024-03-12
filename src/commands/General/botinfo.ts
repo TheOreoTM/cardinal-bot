@@ -33,12 +33,12 @@ export class botinfoCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: CardinalCommand.Message) {
-		return send(message, { embeds: [await this.statsEmbed()], components: [this.supportButton] });
+		return send(message, { embeds: [await this.statsEmbed()], components: [this.buttons] });
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		return interaction.reply({ embeds: [await this.statsEmbed()], components: [this.supportButton] });
+		return interaction.reply({ embeds: [await this.statsEmbed()], components: [this.buttons] });
 	}
 
 	public async statsEmbed() {
@@ -97,14 +97,27 @@ export class botinfoCommand extends CardinalCommand {
 		);
 	}
 
-	private get supportButton() {
-		return new ActionRowBuilder<ButtonBuilder>().addComponents(
+	private get buttons() {
+		const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
 			new ButtonBuilder()
 				.setURL('https://discord.gg/54ZR2b8AYV')
 				.setStyle(ButtonStyle.Link)
 				.setLabel('Support Server')
+				.setEmoji(CardinalEmojis.Cardinal),
+			new ButtonBuilder()
+				.setURL(
+					`https://discord.com/api/oauth2/authorize?client_id=740962735306702858&permissions=1633094593750&scope=applications.commands%20bot`
+				)
+				.setStyle(ButtonStyle.Link)
+				.setLabel('Invite')
+				.setEmoji(CardinalEmojis.Cardinal),
+			new ButtonBuilder()
+				.setURL(`https://cardinal.oreotm.xyz/privacy`)
+				.setStyle(ButtonStyle.Link)
+				.setLabel('Privacy Policy')
 				.setEmoji(CardinalEmojis.Cardinal)
 		);
+		return row;
 	}
 
 	private get generalStatistics(): StatsGeneral {
