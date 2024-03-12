@@ -39,7 +39,6 @@ export const config: Config = {
 		GatewayIntentBits.GuildMessages,
 		GatewayIntentBits.MessageContent,
 		GatewayIntentBits.GuildModeration,
-		GatewayIntentBits.GuildMembers,
 		GatewayIntentBits.DirectMessages,
 		GatewayIntentBits.DirectMessageReactions,
 		GatewayIntentBits.DirectMessageTyping
