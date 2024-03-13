@@ -3,6 +3,7 @@ import { ModerationType } from '#utils/moderationConstants';
 import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
+import decancer from 'decancer';
 
 @ApplyOptions<ModerationCommand.Options>({
 	description: 'Moderate the nickname of a member',
@@ -16,12 +17,13 @@ import { send } from '@sapphire/plugin-editable-commands';
 		usages: ['User', 'User Modnick', 'User --f', 'User Modnick --freeze'],
 		examples: ['@gayballs Golf', '@dick_muncher', '@clink cant change --f']
 	},
-	flags: ['frozen', 'f', 'freeze']
+	flags: ['frozen', 'f', 'freeze', 'decancer']
 })
 export class modnickCommand extends ModerationCommand {
 	public override async messageRun(message: ModerationCommand.Message, args: ModerationCommand.Args) {
 		const target = await args.pick('member').catch(() => null);
 		const isFrozen = args.getFlags('frozen', 'freeze', 'f');
+		const shouldDecancer = args.getFlags('decancer');
 
 		if (!target) {
 			if (message.member.id === '717578903312531476') {
@@ -37,8 +39,12 @@ export class modnickCommand extends ModerationCommand {
 
 		let nick = await args.rest('string').catch(() => '');
 
-		if (nick === '') {
+		if (nick === '' && !shouldDecancer) {
 			nick = `Moderated Nickname ${CardinalIndexBuilder.generateTag(8, false)}`;
+		}
+
+		if (shouldDecancer) {
+			nick = decancer(target.nickname || target.user.username, { retainEmojis: true }).toString();
 		}
 
 		if (!target.moderatable || !target.manageable) {
@@ -65,7 +71,7 @@ export class modnickCommand extends ModerationCommand {
 			embeds: [
 				new CardinalEmbedBuilder()
 					.setStyle('success')
-					.setDescription(`Moderated \`${getTag(target.user)}\` with the nickname \`${fullNick}\``)
+					.setDescription(`${shouldDecancer ? 'Decancered' : 'Moderated'} \`${getTag(target.user)}\` with the nickname \`${fullNick}\``)
 			]
 		});
 	}

@@ -47,6 +47,7 @@
 		"@types/ioredis": "5.0.0",
 		"bullmq": "^4.2.1",
 		"colorette": "^2.0.20",
+		"decancer": "^3.0.2",
 		"discord-api-types": "^0.37.51",
 		"discord.js": "^14.11.0",
 		"enhanced-ms": "^2.3.0",
