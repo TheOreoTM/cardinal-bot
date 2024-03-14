@@ -12,5 +12,7 @@ export class UserEvent extends Listener {
 				name: payload.command.name
 			}
 		});
+
+		this.container.client.analytics.commandUsedCount;
 	}
 }

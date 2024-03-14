@@ -314,6 +314,7 @@ export const hereOrEveryoneMentionRegExp = /@(?:here|everyone)/;
 
 export function logSuccessCommand(payload: ContextMenuCommandSuccessPayload | ChatInputCommandSuccessPayload | MessageCommandSuccessPayload): void {
 	let successLoggerData: ReturnType<typeof getSuccessLoggerData>;
+	container.client.analytics.trackCommandUsage(payload.command.name);
 
 	if ('interaction' in payload) {
 		successLoggerData = getSuccessLoggerData(payload.interaction.guild, payload.interaction.user, payload.command);

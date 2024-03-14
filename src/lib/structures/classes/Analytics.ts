@@ -26,7 +26,13 @@ export class Analytics {
 		}
 	});
 
-	readonly commandUsed = new Gauge({
+	readonly usagesPerCommand = new Gauge({
+		name: 'cardinal_command_usages',
+		help: 'Number of times a command has been used',
+		labelNames: ['command']
+	});
+
+	readonly commandUsedCount = new Gauge({
 		name: 'cardinal_commands_used',
 		help: 'The total number of commands used',
 		async collect() {
@@ -173,6 +179,10 @@ export class Analytics {
 	constructor(private client: CardinalClient) {
 		register.setDefaultLabels({ app: 'cardinal' });
 		collectDefaultMetrics({ register, prefix: 'cardinal_' });
+	}
+
+	trackCommandUsage(commandName: string) {
+		this.usagesPerCommand.labels({ command: commandName }).inc();
 	}
 
 	addGatewayEvent() {
