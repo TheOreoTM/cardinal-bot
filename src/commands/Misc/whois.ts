@@ -5,14 +5,14 @@ import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ApplicationCommandType, EmbedBuilder, GuildMember } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, GuildMember, PermissionFlagsBits } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View information about a member',
 	detailedDescription: {
-		extendedHelp: 'View information a member'
+		extendedHelp: 'View information a member',
 	},
-	aliases: ['w']
+	aliases: ['w', 'who']
 })
 export class WhoisCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
@@ -111,9 +111,34 @@ export class WhoisCommand extends CardinalCommand {
 					name: 'Permissions',
 					value: formattedPerms.join(', ') || 'None',
 					inline: false
+				},
+				{
+					name: "Acknowledgment",
+					value: this.getAcknowledgment(member) || "Unknown",
+					inline: false
 				}
 			);
 
 		return embed;
 	}
+
+	private getAcknowledgment(member: GuildMember) {
+        let result: string = "";
+        if (member.permissions.has(PermissionFlagsBits.ViewChannel)) {
+            result = "Server Member"
+        };
+        if (member.permissions.has(PermissionFlagsBits.KickMembers)) {
+            result = "Server Moderator"
+        };
+        if (member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+            result = "Server Manager"
+        };
+        if (member.permissions.has(PermissionFlagsBits.Administrator)) {
+            result = "Server Admin"
+        };
+        if (member.id === member.guild.ownerId) {
+            result = "Server Owner"
+        };
+        return result
+    }
 }
