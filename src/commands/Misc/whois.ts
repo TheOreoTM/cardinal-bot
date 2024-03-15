@@ -45,11 +45,16 @@ export class WhoisCommand extends CardinalCommand {
 
 	// Chat Input (slash) command–
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		const target: User | GuildMember = (interaction.options.getMember('user') as GuildMember ?? interaction.options.getUser('user') as User ?? interaction.member)
-		const embed = await this.whois(target)
-		interaction.reply({
-			embeds: [embed]
-		});
+		const member = interaction.options.getMember('user') as GuildMember
+		const user = interaction.options.getUser('user') as User
+		const { channel } = interaction
+		interaction.deferReply({})
+		channel?.send(`${member}`)
+		channel?.send(`${user}`)
+		// const embed = await this.whois(target)
+		// interaction.reply({
+		// 	embeds: [embed]
+		// });
 	}
 
 	// Context Menu command
