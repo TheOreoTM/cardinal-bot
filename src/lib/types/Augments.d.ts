@@ -43,7 +43,7 @@ declare module '@skyra/env-utilities' {
 		OAUTH_DOMAIN_OVERWRITE: string;
 
 		WEBHOOK_ERROR_ID: string;
-		WEBHOOK_ERROR_TOKEN: string?;
+		WEBHOOK_ERROR_TOKEN: string;
 	}
 }
 
