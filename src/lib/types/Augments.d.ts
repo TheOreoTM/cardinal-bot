@@ -37,6 +37,7 @@ declare module '@skyra/env-utilities' {
 		WEB_URL: string;
 
 		CARDINAL_API_KEY: string;
+		SENTRY_DSN: string?;
 
 		OAUTH_REDIRECT_URI: string;
 		OAUTH_DOMAIN_OVERWRITE: string;
