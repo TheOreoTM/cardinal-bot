@@ -37,9 +37,9 @@ export class WhoisCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: GuildMessage, args: Args) {
-		let embed;
+		message.channel.send("updated version")
 		const member = await args.pick('member').catch(() => undefined) as GuildMember ?? await args.pick('user').catch(() => undefined) as User ?? undefined
-		embed = member ? await this.whois(member) : new EmbedBuilder().setColor('Red').setTitle('Invalid Arguments provided').setDescription('<:fail:1146683470114996274> Provide a valid argument (ID / Username)')
+		const embed = member ? await this.whois(member) : new EmbedBuilder().setColor('Red').setTitle('Invalid Arguments provided').setDescription('<:fail:1146683470114996274> Provide a valid argument (ID / Username)')
 		send(message, { embeds: [embed] })
 	}
 
