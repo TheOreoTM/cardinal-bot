@@ -1,8 +1,9 @@
 import { CardinalCommand } from '#lib/structures';
 import type { InteractionOrMessage } from '#lib/types';
+import { CardinalEmojis } from '#utils/constants';
 import { ApplyOptions } from '@sapphire/decorators';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ApplicationCommandType, Message } from 'discord.js';
+import { ActionRowBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, EmbedBuilder, Message } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Get the invite link for the bot',
@@ -34,35 +35,53 @@ export class UserCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: CardinalCommand.Message) {
-		return this.sendPing(message);
+		return this.sendInvite(message)
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		return this.sendPing(interaction);
+		return this.sendInvite(interaction)
 	}
 
 	// Context Menu command
 	public async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
-		return this.sendPing(interaction);
+		return this.sendInvite(interaction)
 	}
 
-	private async sendPing(interactionOrMessage: InteractionOrMessage) {
-		const pingMessage =
-			interactionOrMessage instanceof Message
-				? await send(interactionOrMessage, { content: 'Ping?' })
-				: await interactionOrMessage.reply({ content: 'Ping?', fetchReply: true });
-
-		const content = `Pong! WS Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
-			pingMessage.createdTimestamp - interactionOrMessage.createdTimestamp
-		}ms.`;
-
-		if (interactionOrMessage instanceof Message) {
-			return send(interactionOrMessage, { content });
+	private async sendInvite(interactionOrMessage: InteractionOrMessage) {
+		const invites = {
+			dashboard: "https://discord.com/oauth2/authorize?client_id=740962735306702858&response_type=code&redirect_uri=https://cardinal.oreotm.xyz/callback&scope=identify+guilds",
+			invite: "https://discord.com/api/oauth2/authorize?client_id=740962735306702858&permissions=1633094593750&scope=applications.commands%20bot"
 		}
 
-		return interactionOrMessage.editReply({
-			content: content
-		});
+		const { client } = interactionOrMessage
+
+		const object = {
+			embeds: [
+				new EmbedBuilder()
+					.setAuthor({ name: `${client.user.username}'s Invite Links`, iconURL: `${client.user.displayAvatarURL({ forceStatic: false })}` })
+					.setDescription(`The Discord bot to make moderation simple. Equipped with stats tracking, staff management, giveaway and more.`)
+			],
+			components: [
+				new ActionRowBuilder<ButtonBuilder>()
+					.addComponents(
+						new ButtonBuilder()
+							.setStyle(ButtonStyle.Link)
+							.setLabel('Invite')
+							.setEmoji(CardinalEmojis.Cardinal)
+							.setURL(invites.invite),
+
+						new ButtonBuilder()
+							.setStyle(ButtonStyle.Link)
+							.setLabel('Dashboard')
+							.setEmoji(CardinalEmojis.Cardinal)
+							.setURL(invites.dashboard)
+					)
+			]
+		}
+
+		return interactionOrMessage instanceof Message ? send(interactionOrMessage, object) : interactionOrMessage.reply(object)
+
 	}
 }
+
