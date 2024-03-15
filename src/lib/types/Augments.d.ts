@@ -37,9 +37,13 @@ declare module '@skyra/env-utilities' {
 		WEB_URL: string;
 
 		CARDINAL_API_KEY: string;
+		SENTRY_DSN: string?;
 
 		OAUTH_REDIRECT_URI: string;
 		OAUTH_DOMAIN_OVERWRITE: string;
+
+		WEBHOOK_ERROR_ID: string;
+		WEBHOOK_ERROR_TOKEN: string;
 	}
 }
 
@@ -99,6 +103,7 @@ declare module 'discord.js' {
 	interface Client {
 		readonly llrCollectors: Set<LongLivingReactionCollector>;
 		readonly analytics: Analytics;
+		readonly webhookError: WebhookClient | null;
 	}
 
 	interface Guild {

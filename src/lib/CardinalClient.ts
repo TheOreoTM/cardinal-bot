@@ -1,7 +1,7 @@
 import { Enumerable } from '@sapphire/decorators';
 import { SapphireClient, container, type SapphirePrefix, type SapphirePrefixHook } from '@sapphire/framework';
-import type { Message } from 'discord.js';
-import { ClientConfig } from '#config';
+import { WebhookClient, type Message } from 'discord.js';
+import { ClientConfig, WEBHOOK_ERROR } from '#config';
 import { LongLivingReactionCollector } from '#utils/LongLivingReactionCollector';
 import { BotPrefix } from '#constants';
 import { RedisClient, xprisma } from '#lib/database';
@@ -14,6 +14,12 @@ export class CardinalClient<Ready extends boolean = boolean> extends SapphireCli
 
 	@Enumerable(false)
 	public override readonly analytics: Analytics;
+
+	/**
+	 * The webhook to use for the error event
+	 */
+	@Enumerable(false)
+	public override webhookError: WebhookClient | null = WEBHOOK_ERROR ? new WebhookClient(WEBHOOK_ERROR) : null;
 
 	public constructor() {
 		super(ClientConfig);

@@ -5,6 +5,7 @@
 		"rootDir": ".",
 		"baseUrl": ".",
 		"allowJs": true,
+
 		"paths": {
 			"#utils/*": ["lib/util/*"],
 			"#lib/*": ["lib/*"],
@@ -12,8 +13,16 @@
 			"#config": ["config.ts"],
 			"#root/*": ["*"]
 		},
+
 		"skipLibCheck": true,
-		"composite": true
+		"composite": true,
+		"sourceMap": true,
+		"inlineSources": true,
+
+		// Set `sourceRoot` to  "/" to strip the build path prefix
+		// from generated source code references.
+		// This improves issue grouping in Sentry.
+		"sourceRoot": "/"
 	},
 	"include": [".", "./**/*.json"],
 	"exclude": ["./tsconfig.json"]

@@ -746,6 +746,153 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sentry-internal/tracing@npm:7.107.0":
+  version: 7.107.0
+  resolution: "@sentry-internal/tracing@npm:7.107.0"
+  dependencies:
+    "@sentry/core": 7.107.0
+    "@sentry/types": 7.107.0
+    "@sentry/utils": 7.107.0
+  checksum: 13d4127d6fd24425911c64dae5d4ce40683b5bda8e5f44bc8a6565bdd59a0993974c73f6a4248da2b32e168eff82538ecb8a42d589baebb72073671cef5062c0
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-darwin@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-darwin@npm:2.30.2"
+  conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-arm64@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-linux-arm64@npm:2.30.2"
+  conditions: (os=linux | os=freebsd) & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-arm@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-linux-arm@npm:2.30.2"
+  conditions: (os=linux | os=freebsd) & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-i686@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-linux-i686@npm:2.30.2"
+  conditions: (os=linux | os=freebsd) & (cpu=x86 | cpu=ia32)
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-x64@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-linux-x64@npm:2.30.2"
+  conditions: (os=linux | os=freebsd) & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-win32-i686@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-win32-i686@npm:2.30.2"
+  conditions: os=win32 & (cpu=x86 | cpu=ia32)
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-win32-x64@npm:2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli-win32-x64@npm:2.30.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli@npm:^2.30.2":
+  version: 2.30.2
+  resolution: "@sentry/cli@npm:2.30.2"
+  dependencies:
+    "@sentry/cli-darwin": 2.30.2
+    "@sentry/cli-linux-arm": 2.30.2
+    "@sentry/cli-linux-arm64": 2.30.2
+    "@sentry/cli-linux-i686": 2.30.2
+    "@sentry/cli-linux-x64": 2.30.2
+    "@sentry/cli-win32-i686": 2.30.2
+    "@sentry/cli-win32-x64": 2.30.2
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.7
+    progress: ^2.0.3
+    proxy-from-env: ^1.1.0
+    which: ^2.0.2
+  dependenciesMeta:
+    "@sentry/cli-darwin":
+      optional: true
+    "@sentry/cli-linux-arm":
+      optional: true
+    "@sentry/cli-linux-arm64":
+      optional: true
+    "@sentry/cli-linux-i686":
+      optional: true
+    "@sentry/cli-linux-x64":
+      optional: true
+    "@sentry/cli-win32-i686":
+      optional: true
+    "@sentry/cli-win32-x64":
+      optional: true
+  bin:
+    sentry-cli: bin/sentry-cli
+  checksum: 555d6eedd942d8be84f4609e4eb4169826cb8d4416ba05c3e8bf6ecde58a6eda30384af7b173bf9c14ed869d929e09eda5848fa53a9f6cda06a7dca79d3b21a8
+  languageName: node
+  linkType: hard
+
+"@sentry/core@npm:7.107.0":
+  version: 7.107.0
+  resolution: "@sentry/core@npm:7.107.0"
+  dependencies:
+    "@sentry/types": 7.107.0
+    "@sentry/utils": 7.107.0
+  checksum: f0dd7d4f20abf15ceb07d8244bc5daf6dbd3940225ca10fb684111772e3bd35c52e7d95dfb6083c669cecfea75d73f6f34cbc7eb626fcb0858643dda4421ee86
+  languageName: node
+  linkType: hard
+
+"@sentry/integrations@npm:^7.107.0":
+  version: 7.107.0
+  resolution: "@sentry/integrations@npm:7.107.0"
+  dependencies:
+    "@sentry/core": 7.107.0
+    "@sentry/types": 7.107.0
+    "@sentry/utils": 7.107.0
+    localforage: ^1.8.1
+  checksum: 7a623256173ebbbb55dbf8d8b13bb2306d312f2c1b10021ad2ab694b75c54c212e36a07d472fa8c4a38726b62d2694c9f01b3879157eca5bb6a8a3ce688a67f6
+  languageName: node
+  linkType: hard
+
+"@sentry/node@npm:^7.107.0":
+  version: 7.107.0
+  resolution: "@sentry/node@npm:7.107.0"
+  dependencies:
+    "@sentry-internal/tracing": 7.107.0
+    "@sentry/core": 7.107.0
+    "@sentry/types": 7.107.0
+    "@sentry/utils": 7.107.0
+  checksum: 6d4cc0ad0ae4d710debe9ebdbdce94950134609e13ed7e17b4661ac377b2b65d1c8c96ac1ebc82e8abc6ff65b50e07db40a23465beb40dcc6ddc7b8f1262043d
+  languageName: node
+  linkType: hard
+
+"@sentry/types@npm:7.107.0":
+  version: 7.107.0
+  resolution: "@sentry/types@npm:7.107.0"
+  checksum: dbf6b5447016691268da0f29eb7261b98d5a8212d55e949027b4dd9050231cb44fcb3760797f04b017b6efa708468fe05ae734d6431197e1564a2af7e21c2691
+  languageName: node
+  linkType: hard
+
+"@sentry/utils@npm:7.107.0":
+  version: 7.107.0
+  resolution: "@sentry/utils@npm:7.107.0"
+  dependencies:
+    "@sentry/types": 7.107.0
+  checksum: c21d24f9444afcec79450d592a00793c42b7cd54a4ec0058c953a9778ad76551394ef2fdcb8c9d1fbc1d87580bcfa2a5f024abb3da35c58fcec4dc65b2550e07
+  languageName: node
+  linkType: hard
+
 "@skyra/char@npm:^1.0.3":
   version: 1.0.3
   resolution: "@skyra/char@npm:1.0.3"
@@ -1218,6 +1365,9 @@ __metadata:
     "@sapphire/ts-config": ^4.0.1
     "@sapphire/type": ^2.4.0
     "@sapphire/utilities": ^3.13.0
+    "@sentry/cli": ^2.30.2
+    "@sentry/integrations": ^7.107.0
+    "@sentry/node": ^7.107.0
     "@skyra/char": ^1.0.3
     "@skyra/env-utilities": ^1.2.1
     "@types/he": ^1
@@ -2015,6 +2165,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"immediate@npm:~3.0.5":
+  version: 3.0.6
+  resolution: "immediate@npm:3.0.6"
+  checksum: f9b3486477555997657f70318cc8d3416159f208bec4cca3ff3442fd266bc23f50f0c9bd8547e1371a6b5e82b821ec9a7044a4f7b944798b25aa3cc6d5e63e62
+  languageName: node
+  linkType: hard
+
 "imurmurhash@npm:^0.1.4":
   version: 0.1.4
   resolution: "imurmurhash@npm:0.1.4"
@@ -2210,6 +2367,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"lie@npm:3.1.1":
+  version: 3.1.1
+  resolution: "lie@npm:3.1.1"
+  dependencies:
+    immediate: ~3.0.5
+  checksum: 6da9f2121d2dbd15f1eca44c0c7e211e66a99c7b326ec8312645f3648935bc3a658cf0e9fa7b5f10144d9e2641500b4f55bd32754607c3de945b5f443e50ddd1
+  languageName: node
+  linkType: hard
+
 "lilconfig@npm:^2.0.5":
   version: 2.1.0
   resolution: "lilconfig@npm:2.1.0"
@@ -2228,6 +2394,15 @@ __metadata:
   version: 0.2.5
   resolution: "load-tsconfig@npm:0.2.5"
   checksum: 631740833c4a7157bb7b6eeae6e1afb6a6fac7416b7ba91bd0944d5c5198270af2d68bf8347af3cc2ba821adc4d83ef98f66278bd263bc284c863a09ec441503
+  languageName: node
+  linkType: hard
+
+"localforage@npm:^1.8.1":
+  version: 1.10.0
+  resolution: "localforage@npm:1.10.0"
+  dependencies:
+    lie: 3.1.1
+  checksum: f2978b434dafff9bcb0d9498de57d97eba165402419939c944412e179cab1854782830b5ec196212560b22712d1dd03918939f59cf1d4fc1d756fca7950086cf
   languageName: node
   linkType: hard
 
@@ -2907,6 +3082,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"progress@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "progress@npm:2.0.3"
+  checksum: f67403fe7b34912148d9252cb7481266a354bd99ce82c835f79070643bb3c6583d10dbcfda4d41e04bbc1d8437e9af0fb1e1f2135727878f5308682a579429b7
+  languageName: node
+  linkType: hard
+
 "prom-client@npm:^15.1.0":
   version: 15.1.0
   resolution: "prom-client@npm:15.1.0"
@@ -2934,6 +3116,13 @@ __metadata:
     kleur: ^3.0.3
     sisteransi: ^1.0.5
   checksum: d8fd1fe63820be2412c13bfc5d0a01909acc1f0367e32396962e737cb2fc52d004f3302475d5ce7d18a1e8a79985f93ff04ee03007d091029c3f9104bffc007d
+  languageName: node
+  linkType: hard
+
+"proxy-from-env@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "proxy-from-env@npm:1.1.0"
+  checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
   languageName: node
   linkType: hard
 
@@ -3691,7 +3880,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"which@npm:^2.0.1":
+"which@npm:^2.0.1, which@npm:^2.0.2":
   version: 2.0.2
   resolution: "which@npm:2.0.2"
   dependencies:
