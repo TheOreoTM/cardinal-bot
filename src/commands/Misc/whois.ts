@@ -1,18 +1,17 @@
 import { CardinalCommand, Timestamp } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { formatRoles } from '#utils/formatters';
-import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ApplicationCommandType, EmbedBuilder, GuildMember } from 'discord.js';
+import { ApplicationCommandType, ChatInputCommandInteraction, ContextMenuCommandInteraction, EmbedBuilder, GuildMember, Message, PermissionFlagsBits, User, type EmbedField } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View information about a member',
 	detailedDescription: {
-		extendedHelp: 'View information a member'
+		extendedHelp: 'View information a member',
 	},
-	aliases: ['w']
+	aliases: ['w', 'who']
 })
 export class WhoisCommand extends CardinalCommand {
 	// Register Chat Input and Context Menu command
@@ -38,17 +37,17 @@ export class WhoisCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: GuildMessage, args: Args) {
-		const member = await args.pick('member').catch(() => message.member);
-		const embed = await this.whois(member);
+		const member = await args.pick('snowflake')
+		const embed = await this.whois(member, message);
 		send(message, { embeds: [embed] });
 	}
 
 	// Chat Input (slash) command
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		const member = interaction.options.getMember('member') ?? interaction.member;
-		const embed = await this.whois(member);
+		const target: User | GuildMember = ((interaction?.options?.getUser('member') as User) ?? (interaction.member as GuildMember))
+		const embed = await this.whois(undefined, interaction, target);
 		interaction.reply({
-			embeds: [embed]
+		embeds: [embed]
 		});
 	}
 
@@ -56,20 +55,57 @@ export class WhoisCommand extends CardinalCommand {
 	public async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
 		const memberId = interaction.targetId;
 		const member = await interaction.guild.members.fetch({ user: memberId, cache: true });
-		const embed = await this.whois(member);
+		const embed = await this.whois(undefined, interaction, member);
 		interaction.reply({
-			embeds: [embed]
+		embeds: [embed]
 		});
 	}
 
-	private async whois(member: GuildMember) {
-		const memberTag = getTag(member.user);
-		const memberAvatarURL = member.displayAvatarURL();
-		const accountCreatedTimestamp = new Timestamp(member.user.createdTimestamp ?? 0);
-		const memberJoinedTimestamp = new Timestamp(member.joinedTimestamp ?? 0);
-		// const isBot = member.user.bot ? 'Yes' : 'No';
-		const globalName = member.user.globalName;
-		// const highestServerRole = member.roles.highest;
+	private async whois(snowflake?: string, type?: Message | ContextMenuCommandInteraction | ChatInputCommandInteraction, target?: GuildMember | User) {
+		const MemberOrUser = await this.getTarget(snowflake, type, target)
+		return this.getInfo(MemberOrUser)
+	}
+	private async getTarget(snowflake?: string, type?: Message | ContextMenuCommandInteraction | ChatInputCommandInteraction, target?: GuildMember | User): Promise<GuildMember | User> {
+		if (!snowflake && target) return target;
+		return await type?.guild?.members.fetch({ user: snowflake!, cache: true }) ?? await this.container.client.users.fetch(snowflake!, { force: true }) ?? type?.member
+	}
+
+	private getInfo(target: GuildMember | User): EmbedBuilder {
+		const type = typeof target === 'object' && 'roles' in target
+		let roleFormat;
+		let accountCreatedTimestamp = new Timestamp((type ? target.user : target).createdTimestamp ?? 0);
+		; let memberJoinedTimestamp;
+		if (type) {
+			roleFormat = this.getFormattedRoles(target)
+		 	memberJoinedTimestamp = new Timestamp(target.joinedTimestamp ?? 0);
+		}	
+		const fieldsdata: Array<EmbedField> = type ? [
+			{ name: `Roles [${roleFormat?.roles.size}]`, value: `${target.roles.cache.size >= 200 ? "Too many  roles to display" : roleFormat?.formattedRoles ?? "None"}`, inline: false },
+			{ name: "Key Permissions", value: `${type ? (this.getformatPermissions(target)).sort().join(", ") || "None" : "None"}`, inline: false },
+			{ name: "Acknowledgement", value: `${type ? this.getAcknowledgment(target) : "Ghost"}`, inline: false }
+		] : [{ name: "Acknowledgement", value: "Ghost", inline: false }];
+
+		return new EmbedBuilder()
+			.setColor("Blue")
+			.setAuthor({ name: `${(type ? target.user : target).username}`, iconURL: `${(type ? target.user : target).displayAvatarURL({ forceStatic: true })}` })
+			.setDescription(
+				`${target}
+				**General Information:\n**<:User:1153571122697224263> **User ID:** ${target.id}
+				<:HashTag:1153571114606395483> **Username:** ${(type ? target.user : target).username} ${type ? target.nickname ? `${`(${target.nickname})`}` : '' : ''}
+				<:Asterik:1153571108646309918> **Account Created**: ${accountCreatedTimestamp.getLongDate()}
+				<:Bot:1153572049634197504> **Bot?**: ${(type ? target.user : target).bot === false ? "No" : "Yes"}${type ? `
+				<:Role:1153574929669816350> **Highest Server Role**: ${target.roles.highest}` : ""}${type ? `
+				<:Calender:1153575414556545104> **Member Since**: ${memberJoinedTimestamp?.getLongDate() ?? "0"}` : ""}`
+			)
+			.setFields(fieldsdata)
+			.setThumbnail(`${(type ? target.user : target).displayAvatarURL({ forceStatic: false })}`);
+	}
+
+	private getformatPermissions(member: GuildMember) {
+		return formatRoles(member.permissions.toArray().sort(), false);
+	}
+
+	private getFormattedRoles(member: GuildMember) {
 		const roles = member.roles.cache;
 		roles.sort((a, b) => b.position - a.position);
 		roles.delete(member.guild.id);
@@ -78,42 +114,29 @@ export class WhoisCommand extends CardinalCommand {
 				return `<@&${role.id}>`;
 			})
 			.join(' ');
-		const formattedPerms = formatRoles(member.permissions.toArray().sort(), false);
+		return {
+			formattedRoles,
+			roles
+		}
+	}
 
-		const embed = new EmbedBuilder()
-			.setColor(member.displayHexColor)
-			.setAuthor({ name: memberTag, iconURL: memberAvatarURL })
-			.setThumbnail(memberAvatarURL)
-			.setTitle(globalName)
-			.setDescription(`${member}`)
-			.addFields(
-				{
-					name: 'Joined',
-					value: memberJoinedTimestamp.getLongDate(),
-					inline: true
-				},
-				{
-					name: 'Registered',
-					value: accountCreatedTimestamp.getLongDate(),
-					inline: true
-				},
-				// {
-				// 	name: 'Information',
-				// 	value: [`Bot: ${isBot}`, `Highest Role: ${highestServerRole}`].join('\n'),
-				// 	inline: true
-				// },
-				{
-					name: `Roles [${roles.size}]`,
-					value: formattedRoles || 'None',
-					inline: false
-				},
-				{
-					name: 'Permissions',
-					value: formattedPerms.join(', ') || 'None',
-					inline: false
-				}
-			);
-
-		return embed;
+	private getAcknowledgment(member: GuildMember): string {
+		let result: string = "";
+		if (member.permissions.has(PermissionFlagsBits.ViewChannel)) {
+			result = "Server Member"
+		};
+		if (member.permissions.has(PermissionFlagsBits.KickMembers)) {
+			result = "Server Moderator"
+		};
+		if (member.permissions.has(PermissionFlagsBits.ManageGuild)) {
+			result = "Server Manager"
+		};
+		if (member.permissions.has(PermissionFlagsBits.Administrator)) {
+			result = "Server Admin"
+		};
+		if (member.id === member.guild.ownerId) {
+			result = "Server Owner"
+		};
+		return result
 	}
 }
