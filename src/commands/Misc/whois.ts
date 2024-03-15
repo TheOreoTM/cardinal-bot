@@ -4,7 +4,7 @@ import { formatRoles } from '#utils/formatters';
 import { ApplyOptions } from '@sapphire/decorators';
 import type { Args } from '@sapphire/framework';
 import { send } from '@sapphire/plugin-editable-commands';
-import { ApplicationCommandType, ChatInputCommandInteraction, ContextMenuCommandInteraction, EmbedBuilder, GuildMember, Message, PermissionFlagsBits, User, type EmbedField } from 'discord.js';
+import { ApplicationCommandType, EmbedBuilder, GuildMember, PermissionFlagsBits, User, type EmbedField } from 'discord.js';
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'View information about a member',
@@ -32,58 +32,50 @@ export class WhoisCommand extends CardinalCommand {
 		registry.registerContextMenuCommand({
 			name: 'Whois',
 			type: ApplicationCommandType.User
-		});
+		})
 	}
 
 	// Message command
 	public async messageRun(message: GuildMessage, args: Args) {
-		const member = await args.pick('snowflake')
-		const embed = await this.whois(member, message);
-		send(message, { embeds: [embed] });
+		let embed;
+		const member = await args.pick('member') as GuildMember ?? await args.pick('user') as User ?? undefined
+		embed = member ? await this.whois(member) : new EmbedBuilder().setColor('Red').setTitle('Invalid Arguments provided').setDescription('<:fail:1146683470114996274> Provide a valid argument (ID / Username)')
+		send(message, { embeds: [embed] })
 	}
 
-	// Chat Input (slash) command
+	// Chat Input (slash) command–
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
 		const target: User | GuildMember = ((interaction?.options?.getUser('member') as User) ?? (interaction.member as GuildMember))
-		const embed = await this.whois(undefined, interaction, target);
+		const embed = await this.whois(target)
 		interaction.reply({
-		embeds: [embed]
+			embeds: [embed]
 		});
 	}
 
 	// Context Menu command
 	public async contextMenuRun(interaction: CardinalCommand.ContextMenuCommandInteraction) {
-		const memberId = interaction.targetId;
-		const member = await interaction.guild.members.fetch({ user: memberId, cache: true });
-		const embed = await this.whois(undefined, interaction, member);
+		const { targetId, guild, client, member } = interaction;
+		const target = await guild.members.fetch({ user: targetId }) ?? await client.users.fetch(targetId) ?? member
+		const embed = await this.whois(target)
 		interaction.reply({
-		embeds: [embed]
+			embeds: [embed]
 		});
 	}
 
-	private async whois(snowflake?: string, type?: Message | ContextMenuCommandInteraction | ChatInputCommandInteraction, target?: GuildMember | User) {
-		const MemberOrUser = await this.getTarget(snowflake, type, target)
-		return this.getInfo(MemberOrUser)
-	}
-	private async getTarget(snowflake?: string, type?: Message | ContextMenuCommandInteraction | ChatInputCommandInteraction, target?: GuildMember | User): Promise<GuildMember | User> {
-		if (!snowflake && target) return target;
-		return await type?.guild?.members.fetch({ user: snowflake!, cache: true }) ?? await this.container.client.users.fetch(snowflake!, { force: true }) ?? type?.member
-	}
-
-	private getInfo(target: GuildMember | User): EmbedBuilder {
+	private async whois(target: GuildMember | User) {
 		const type = typeof target === 'object' && 'roles' in target
-		let roleFormat;
-		let accountCreatedTimestamp = new Timestamp((type ? target.user : target).createdTimestamp ?? 0);
-		; let memberJoinedTimestamp;
+		let roleFormat
+		const accountCreatedTimestamp = new Timestamp((type ? target.user : target).createdTimestamp ?? 0)
+		let memberJoinedTimestamp
 		if (type) {
 			roleFormat = this.getFormattedRoles(target)
-		 	memberJoinedTimestamp = new Timestamp(target.joinedTimestamp ?? 0);
-		}	
+			memberJoinedTimestamp = new Timestamp(target.joinedTimestamp ?? 0)
+		}
 		const fieldsdata: Array<EmbedField> = type ? [
 			{ name: `Roles [${roleFormat?.roles.size}]`, value: `${target.roles.cache.size >= 200 ? "Too many  roles to display" : roleFormat?.formattedRoles ?? "None"}`, inline: false },
 			{ name: "Key Permissions", value: `${type ? (this.getformatPermissions(target)).sort().join(", ") || "None" : "None"}`, inline: false },
 			{ name: "Acknowledgement", value: `${type ? this.getAcknowledgment(target) : "Ghost"}`, inline: false }
-		] : [{ name: "Acknowledgement", value: "Ghost", inline: false }];
+		] : [{ name: "Acknowledgement", value: "Ghost", inline: false }]
 
 		return new EmbedBuilder()
 			.setColor("Blue")
@@ -98,11 +90,11 @@ export class WhoisCommand extends CardinalCommand {
 				<:Calender:1153575414556545104> **Member Since**: ${memberJoinedTimestamp?.getLongDate() ?? "0"}` : ""}`
 			)
 			.setFields(fieldsdata)
-			.setThumbnail(`${(type ? target.user : target).displayAvatarURL({ forceStatic: false })}`);
+			.setThumbnail(`${(type ? target.user : target).displayAvatarURL({ forceStatic: false })}`)
 	}
 
 	private getformatPermissions(member: GuildMember) {
-		return formatRoles(member.permissions.toArray().sort(), false);
+		return formatRoles(member.permissions.toArray().sort(), false)
 	}
 
 	private getFormattedRoles(member: GuildMember) {
