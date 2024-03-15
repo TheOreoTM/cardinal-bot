@@ -8,7 +8,8 @@ import {
 	type ClientOptions,
 	type MessageMentionOptions,
 	type PresenceData,
-	OAuth2Scopes
+	OAuth2Scopes,
+	type WebhookClientData
 } from 'discord.js';
 import { BotClientID, BotPrefix, CooldownFiltered } from '#constants';
 import { envParseNumber, envParseString } from '@skyra/env-utilities';
@@ -113,3 +114,15 @@ interface Config {
 	tasks: ScheduledTaskHandlerOptions;
 	api: ServerOptions;
 }
+
+function parseWebhookError(): WebhookClientData | null {
+	const { WEBHOOK_ERROR_TOKEN } = process.env;
+	if (!WEBHOOK_ERROR_TOKEN) return null;
+
+	return {
+		id: envParseString('WEBHOOK_ERROR_ID'),
+		token: WEBHOOK_ERROR_TOKEN
+	};
+}
+
+export const WEBHOOK_ERROR = parseWebhookError();
