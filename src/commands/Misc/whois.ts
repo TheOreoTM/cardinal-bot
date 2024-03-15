@@ -37,15 +37,15 @@ export class WhoisCommand extends CardinalCommand {
 
 	// Message command
 	public async messageRun(message: GuildMessage, args: Args) {
-		message.channel.send("updated version")
+		let embed;
 		const member = await args.pick('member').catch(() => undefined) as GuildMember ?? await args.pick('user').catch(() => undefined) as User ?? undefined
-		const embed = member ? await this.whois(member) : new EmbedBuilder().setColor('Red').setTitle('Invalid Arguments provided').setDescription('<:fail:1146683470114996274> Provide a valid argument (ID / Username)')
+		embed = member ? await this.whois(member) : new EmbedBuilder().setColor('Red').setTitle('Invalid Arguments provided').setDescription('<:fail:1146683470114996274> Provide a valid argument (ID / Username)')
 		send(message, { embeds: [embed] })
 	}
 
 	// Chat Input (slash) command–
 	public async chatInputRun(interaction: CardinalCommand.ChatInputCommandInteraction) {
-		const target: User | GuildMember = ((interaction?.options?.getUser('member') as User) ?? (interaction.member as GuildMember))
+		const target: User | GuildMember = (interaction.options.getMember('user') as GuildMember ?? interaction.options.getUser('user') as User ?? interaction.member)
 		const embed = await this.whois(target)
 		interaction.reply({
 			embeds: [embed]
