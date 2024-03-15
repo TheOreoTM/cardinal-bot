@@ -47,7 +47,7 @@ export class kickCommand extends ModerationCommand {
 
 		await sendMessageAsGuild(target.user, target.guild, {
 			embeds: [new CardinalEmbedBuilder().setStyle('info').setDescription(`You have been kicked for the reason: ${reason ?? 'No reason'}`)]
-		});
+		}, "https://dyno.gg/form/11eb2aa1");
 
 		await modlog.createKick();
 
