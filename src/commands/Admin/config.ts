@@ -18,71 +18,109 @@ import { send } from '@sapphire/plugin-editable-commands';
 })
 export class setupCommand extends ModerationCommand {
 	public override registerApplicationCommands(registry: ModerationCommand.Registry) {
-		registry.registerChatInputCommand((builder) =>
-			builder //
-				.setName(this.name)
-				.setDescription(this.description)
-				.addSubcommand((subcommand) =>
-					subcommand
-						.setName('moderation')
-						.setDescription('Config the moderation sub-system of the bot')
-						.addRoleOption((option) =>
-							option //
-								.setName('trainee_role')
-								.setDescription('The role that should be considered as trainee')
-						)
-						.addRoleOption((option) =>
-							option //
-								.setName('staff_role')
-								.setDescription('The role that should be considered as staff')
-						)
-						.addRoleOption((option) =>
-							option //
-								.setName('mod_role')
-								.setDescription('The role that should be considered as moderator')
-						)
-						.addRoleOption((option) =>
-							option //
-								.setName('admin_role')
-								.setDescription('The role that should be considered as admin')
-						)
-						.addRoleOption((option) =>
-							option //
-								.setName('mute_role')
-								.setDescription('The role that should be given when muting someone')
-						)
-						.addChannelOption((option) =>
-							option //
-								.setName('modlog_channel')
-								.setDescription('The channel where the modlogs should be sent to')
-						)
-						.addStringOption((option) =>
-							option.setName('appeal_link').setDescription("The link that member will get DM'd when they get warned/banned")
-						)
-				)
-				.addSubcommand((subcommand) =>
-					subcommand
-						.setName('suggestion')
-						.setDescription('Setup the suggestion sub-system of the bot')
-						.addChannelOption((option) =>
-							option.setName('suggestion_channel').setDescription('The channel where the suggestions whould be sent to')
-						)
-						.addStringOption((option) =>
-							option
-								.setName('create_thread')
-								.setDescription('Whether the bot should create a new discussion thread of each new suggestion')
-								.addChoices(
-									{
-										name: 'Yes',
-										value: 'true'
-									},
-									{
-										name: 'No',
-										value: 'false'
-									}
-								)
-						)
-				)
+		registry.registerChatInputCommand(
+			(builder) =>
+				builder //
+					.setName(this.name)
+					.setDescription(this.description)
+					.addSubcommand((subcommand) =>
+						subcommand
+							.setName('moderation')
+							.setDescription('Config the moderation sub-system of the bot')
+							.addRoleOption((option) =>
+								option //
+									.setName('trainee_role')
+									.setDescription('The role that should be considered as trainee')
+							)
+							.addRoleOption((option) =>
+								option //
+									.setName('staff_role')
+									.setDescription('The role that should be considered as staff')
+							)
+							.addRoleOption((option) =>
+								option //
+									.setName('mod_role')
+									.setDescription('The role that should be considered as moderator')
+							)
+							.addRoleOption((option) =>
+								option //
+									.setName('admin_role')
+									.setDescription('The role that should be considered as admin')
+							)
+							.addRoleOption((option) =>
+								option //
+									.setName('mute_role')
+									.setDescription('The role that should be given when muting someone')
+							)
+							.addChannelOption((option) =>
+								option //
+									.setName('modlog_channel')
+									.setDescription('The channel where the modlogs should be sent to')
+							)
+							.addStringOption((option) =>
+								option.setName('appeal_link').setDescription("The link that member will get DM'd when they get warned/banned")
+							)
+					)
+					.addSubcommand((subcommand) =>
+						subcommand
+							.setName('suggestion')
+							.setDescription('Setup the suggestion sub-system of the bot')
+							.addChannelOption((option) =>
+								option.setName('suggestion_channel').setDescription('The channel where the suggestions whould be sent to')
+							)
+							.addStringOption((option) =>
+								option
+									.setName('create_thread')
+									.setDescription('Whether the bot should create a new discussion thread of each new suggestion')
+									.addChoices(
+										{
+											name: 'Yes',
+											value: 'true'
+										},
+										{
+											name: 'No',
+											value: 'false'
+										}
+									)
+							)
+					)
+			// .addSubcommandGroup((subcommand) =>
+			// 	subcommand
+			// 		.setName('starboard')
+			// 		.setDescription('Setup the starboard sub-system of the bot')
+			// 		.addSubcommand((subcommand) =>
+			// 			subcommand
+			// 				.setName('channel')
+			// 				.setDescription('The channel where the starboard should be sent to')
+			// 				.addChannelOption((option) =>
+			// 					option.setName('starboard_channel').setDescription('The channel where the starboard should be sent to')
+			// 				)
+			// 		)
+			// 		.addSubcommand((subcommand) =>
+			// 			subcommand
+			// 				.setName('emoji')
+			// 				.setDescription('The emoji that should be used for the starboard')
+			// 				.addStringOption((option) =>
+			// 					option.setName('starboard_emoji').setDescription('The emoji that should be used for the starboard')
+			// 				)
+			// 		)
+			// 		.addSubcommand((subcommand) =>
+			// 			subcommand
+			// 				.setName('amount')
+			// 				.setDescription('The amount of stars required for the starboard')
+			// 				.addIntegerOption((option) =>
+			// 					option.setName('starboard_amount').setDescription('The amount of stars required for the starboard')
+			// 				)
+			// 		)
+			// 		.addSubcommand((subcommand) =>
+			// 			subcommand
+			// 				.setName('selfstar')
+			// 				.setDescription('Whether the bot should allow self-starring')
+			// 				.addBooleanOption((option) =>
+			// 					option.setName('starboard_selfstar').setDescription('Whether the bot should allow self-starring')
+			// 				)
+			// 		)
+			// )
 		);
 	}
 

@@ -217,6 +217,13 @@ model Guild {
   channelSuggestion String?
   channelAppeal     String?
 
+  // Starboard
+  starboardChannel      String?
+  starboardWebhookId    String?
+  starboardWebhookToken String?
+  starboardReaction     String  @default("⭐")
+  starboardThreshold    Int     @default(5)
+
   suggestionCreateThread Boolean?
 
   appealLink String?
