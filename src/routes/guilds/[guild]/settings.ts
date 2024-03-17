@@ -94,7 +94,7 @@ export class UserRoute extends Route {
 					}
 				});
 
-				return;
+				return response.status(HttpCodes.OK).json({ ...data });
 			}
 
 			await this.container.db.guild.upsert({
