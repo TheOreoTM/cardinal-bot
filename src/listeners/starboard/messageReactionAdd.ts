@@ -59,6 +59,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 		if (existingStarboardMessage) {
 			const starboardMessage = await starboardChannel.messages.fetch(existingStarboardMessage.starboardMessageId);
 			if (!starboardMessage) return;
+			console.log('message found');
 
 			const reactionCount = messageReaction.count;
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
@@ -80,7 +81,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			const content = `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`;
 
 			const messageOnStarboard = await starboardWebhook.send({
-				avatarURL: this.container.client.user?.displayAvatarURL(),
+				avatarURL: this.container.client.user?.displayAvatarURL() ?? undefined,
 				username: 'Cardinal',
 				content,
 				embeds,
