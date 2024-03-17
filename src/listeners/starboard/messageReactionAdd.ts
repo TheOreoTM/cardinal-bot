@@ -38,7 +38,6 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 				}
 			}
 		});
-		console.log('🚀 ~ UserEvent ~ overriderun ~ existingStarboardMessage:', existingStarboardMessage);
 
 		const webhooks = await starboardChannel.fetchWebhooks();
 		let starboardWebhook = webhooks.find((webhook) => webhook.token === data.starboardWebhookToken);
