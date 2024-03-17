@@ -1,6 +1,9 @@
+import { CardinalEmbedBuilder } from '#lib/structures';
+import { getTag } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
-import { isTextChannel } from '@sapphire/discord.js-utilities';
+import { MessageLimits, isTextChannel } from '@sapphire/discord.js-utilities';
 import { Events, Listener } from '@sapphire/framework';
+import { cutText } from '@sapphire/utilities';
 import { type MessageReaction, type PartialMessageReaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.MessageReactionAdd })
@@ -75,10 +78,28 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 		// Create new starboard message
 		const reactionCount = messageReaction.count;
 		if (reactionCount >= data.starboardThreshold) {
+			let starboardEmbed = new CardinalEmbedBuilder().setStyle('info').setAuthor({
+				name: getTag(targetMessage.author),
+				iconURL: targetMessage.author.displayAvatarURL()
+			});
+			const content = targetMessage.content.length > 0 ? cutText(targetMessage.content, MessageLimits.MaximumLength) : null;
+
+			if (content) {
+				starboardEmbed.setDescription(content);
+			}
+
+			if (targetMessage.attachments.size > 0) {
+				starboardEmbed.setImage(targetMessage.attachments.first()!.url);
+			}
+
+			if (targetMessage.embeds.length > 0) {
+				starboardEmbed = new CardinalEmbedBuilder(targetMessage.embeds[0].data);
+			}
+
 			try {
 				const starboardMessage = await starboardWebhook.send({
 					content: `**${reactionCount}** ${data.starboardReaction} ${targetMessage.channel} [Jump!](${targetMessage.url})`,
-					embeds: [targetMessage.embeds[0]]
+					embeds: [starboardEmbed]
 				});
 				await this.container.db.starboardMessage.create({
 					data: {
