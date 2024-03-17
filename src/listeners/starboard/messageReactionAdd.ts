@@ -67,7 +67,8 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 					await starboardWebhook.editMessage(starboardMessage, {
 						content: `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`
 					});
-				} catch {
+				} catch (error) {
+					console.log(error);
 					return;
 				}
 			}
