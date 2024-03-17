@@ -49,65 +49,68 @@ export class UserRoute extends Route {
 
 		const data = result.unwrap();
 
-		if (data.setting.startsWith('starboard')) {
-			const dataToAdd: Record<string, any> = {};
-			if (data.setting === 'starboardChannel') {
-				if (typeof data.value !== 'string') {
-					return response.error(HttpCodes.BadRequest);
-				}
-				const channel = guild.channels.cache.get(data.value);
-				if (!channel || isTextChannel(channel) === false) {
-					return response.error(HttpCodes.BadRequest);
-				}
-
-				dataToAdd['starboardChannel'] = data.value;
-
-				const existingWebhooks = await channel.fetchWebhooks();
-				if (existingWebhooks.size > 0) {
-					const webhook = existingWebhooks.first();
-					if (webhook?.name === 'Starboard') {
-						dataToAdd['starboardWebhookId'] = webhook.id;
-						dataToAdd['starboardWebhookToken'] = webhook.token;
+		try {
+			if (data.setting.startsWith('starboard')) {
+				const dataToAdd: Record<string, any> = {};
+				if (data.setting === 'starboardChannel') {
+					if (typeof data.value !== 'string') {
+						return response.error(HttpCodes.BadRequest);
 					}
-				} else {
-					try {
-						const webhook = await channel.createWebhook({ name: 'Starboard' });
-						dataToAdd['starboardWebhookId'] = webhook.id;
-						dataToAdd['starboardWebhookToken'] = webhook.token;
-					} catch {
-						return response.error(HttpCodes.BadRequest, { error: 'Failed to create webhook' });
+					const channel = guild.channels.cache.get(data.value);
+					if (!channel || isTextChannel(channel) === false) {
+						return response.error(HttpCodes.BadRequest);
+					}
+
+					dataToAdd['starboardChannel'] = data.value;
+
+					const existingWebhooks = await channel.fetchWebhooks();
+					if (existingWebhooks.size > 0) {
+						const webhook = existingWebhooks.first();
+						if (webhook?.name === 'Starboard') {
+							dataToAdd['starboardWebhookId'] = webhook.id;
+							dataToAdd['starboardWebhookToken'] = webhook.token;
+						}
+					} else {
+						try {
+							const webhook = await channel.createWebhook({ name: 'Starboard' });
+							dataToAdd['starboardWebhookId'] = webhook.id;
+							dataToAdd['starboardWebhookToken'] = webhook.token;
+						} catch {
+							return response.error(HttpCodes.BadRequest, { error: 'Failed to create webhook' });
+						}
 					}
 				}
-
 				dataToAdd[data.setting] = data.value;
+
+				await this.container.db.guild.upsert({
+					where: {
+						guildId: guild.id
+					},
+					create: {
+						guildId: guild.id
+					},
+					update: {
+						...dataToAdd
+					}
+				});
+
+				return;
 			}
 
 			await this.container.db.guild.upsert({
 				where: {
-					guildId: guild.id
+					guildId
 				},
 				create: {
-					guildId: guild.id
+					guildId
 				},
 				update: {
-					...dataToAdd
+					[data.setting]: data.value
 				}
 			});
-
-			return;
+		} catch (error) {
+			return response.error(HttpCodes.BadRequest);
 		}
-
-		await this.container.db.guild.upsert({
-			where: {
-				guildId
-			},
-			create: {
-				guildId
-			},
-			update: {
-				[data.setting]: data.value
-			}
-		});
 
 		return response.status(HttpCodes.OK).json({ ...data });
 	}
