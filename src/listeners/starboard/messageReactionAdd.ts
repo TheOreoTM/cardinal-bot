@@ -38,6 +38,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 				}
 			}
 		});
+		console.log('🚀 ~ UserEvent ~ overriderun ~ existingStarboardMessage:', existingStarboardMessage);
 
 		const webhooks = await starboardChannel.fetchWebhooks();
 		let starboardWebhook = webhooks.find((webhook) => webhook.token === data.starboardWebhookToken);
@@ -85,7 +86,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 				components: [buildLinkButtons(targetMessage, targetMessage.channel.id, targetMessage.guild.id)]
 			});
 
-			await this.container.db.starboardMessage.create({
+			const posted = await this.container.db.starboardMessage.create({
 				data: {
 					authorId: targetMessage.author.id,
 					channelId: targetMessage.channel.id,
@@ -95,6 +96,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 					starboardMessageId: messageOnStarboard.id
 				}
 			});
+			console.log('🚀 ~ UserEvent ~ overriderun ~ posted:', posted);
 		}
 	}
 }
