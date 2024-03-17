@@ -65,12 +65,10 @@ export class UserRoute extends Route {
 					dataToAdd['starboardChannel'] = data.value;
 
 					const existingWebhooks = await channel.fetchWebhooks();
-					if (existingWebhooks.size > 0) {
-						const webhook = existingWebhooks.find((webhook) => webhook.name === 'Starboard');
-						if (webhook) {
-							dataToAdd['starboardWebhookId'] = webhook.id;
-							dataToAdd['starboardWebhookToken'] = webhook.token;
-						}
+					const webhook = existingWebhooks.find((webhook) => webhook.name === 'Starboard');
+					if (webhook) {
+						dataToAdd['starboardWebhookId'] = webhook.id;
+						dataToAdd['starboardWebhookToken'] = webhook.token;
 					} else {
 						try {
 							const webhook = await channel.createWebhook({ name: 'Starboard' });
