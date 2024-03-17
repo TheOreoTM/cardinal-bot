@@ -57,12 +57,11 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 
 		// Update reaction count on starboard message
 		if (existingStarboardMessage) {
-			console.log('🚀 ~ UserEvent ~ overriderun ~ existingStarboardMessage:', existingStarboardMessage);
 			const starboardMessage = await starboardChannel.messages.fetch(existingStarboardMessage.starboardMessageId);
 			if (!starboardMessage) return;
-			console.log('🚀 ~ UserEvent ~ overriderun ~ starboardMessage:', starboardMessage);
 
 			const reactionCount = messageReaction.count;
+			console.log(reactionCount, existingStarboardMessage.starCount, starboardMessage.editable);
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
 				try {
 					await starboardWebhook.editMessage(starboardMessage, {
