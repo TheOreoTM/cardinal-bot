@@ -61,9 +61,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			if (!starboardMessage) return;
 
 			const reactionCount = messageReaction.count;
-			starboardChannel.send(`${reactionCount > existingStarboardMessage.starCount}`);
-			console.log(reactionCount, existingStarboardMessage.starCount, starboardMessage.editable);
-			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
+			if (reactionCount > existingStarboardMessage.starCount) {
 				try {
 					await starboardWebhook.editMessage(starboardMessage, {
 						content: `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`
