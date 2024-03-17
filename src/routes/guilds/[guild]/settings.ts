@@ -48,6 +48,7 @@ export class UserRoute extends Route {
 		}
 
 		const data = result.unwrap();
+		console.log('🚀 ~ UserRoute ~ data:', data);
 
 		try {
 			if (data.setting.startsWith('starboard')) {
@@ -81,6 +82,7 @@ export class UserRoute extends Route {
 					}
 				}
 				dataToAdd[data.setting] = data.value;
+				console.log('🚀 ~ UserRoute ~ dataToAdd:', dataToAdd);
 
 				await this.container.db.guild.upsert({
 					where: {
