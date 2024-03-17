@@ -31,10 +31,10 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 		const existingStarboardMessage = await this.container.db.starboardMessage.findUnique({
 			where: {
 				messageId_channelId_guildId_authorId: {
-					messageId: targetMessage.id,
+					authorId: targetMessage.author.id,
 					channelId: targetMessage.channel.id,
 					guildId: targetMessage.guild.id,
-					authorId: targetMessage.author.id
+					messageId: targetMessage.id
 				}
 			}
 		});
