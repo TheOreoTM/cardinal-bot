@@ -221,8 +221,9 @@ model Guild {
   starboardChannel      String?
   starboardWebhookId    String?
   starboardWebhookToken String?
-  starboardReaction     String  @default("⭐")
-  starboardThreshold    Int     @default(5)
+  starboardReaction     String             @default("⭐")
+  starboardThreshold    Int                @default(5)
+  starboardMessages     StarboardMessage[]
 
   suggestionCreateThread Boolean?
 
@@ -247,6 +248,19 @@ model Guild {
   automodStickersGuildId       String?
 
   @@index([guildId])
+}
+
+model StarboardMessage {
+  messageId String
+  channelId String
+  guildId   String
+  authorId  String
+  starCount Int
+  content   String
+  createdAt DateTime @default(now())
+  guild     Guild?   @relation(fields: [guildId], references: [guildId])
+
+  @@id([messageId, channelId, guildId, authorId])
 }
 
 model Message {

@@ -1,5 +1,6 @@
 import { authenticated } from '#lib/api/util';
 import { ApplyOptions } from '@sapphire/decorators';
+import { isTextChannel } from '@sapphire/discord.js-utilities';
 import { methods, Route, type ApiRequest, type ApiResponse, HttpCodes } from '@sapphire/plugin-api';
 import { s } from '@sapphire/shapeshift';
 
@@ -36,12 +37,61 @@ export class UserRoute extends Route {
 		const body = _request.body;
 		const guildId = _request.params.guild;
 
+		const guild = this.container.client.guilds.cache.get(guildId);
+		if (!guild) {
+			return response.error(HttpCodes.BadRequest);
+		}
+
 		const result = this.parseIncomingData(body);
 		if (result.error) {
 			return response.error(HttpCodes.BadRequest);
 		}
 
 		const data = result.unwrap();
+
+		if (data.setting.startsWith('starboard')) {
+			const dataToAdd: Record<string, any> = {};
+			if (data.setting === 'starboardChannel') {
+				if (typeof data.value !== 'string') {
+					return response.error(HttpCodes.BadRequest);
+				}
+				const channel = guild.channels.cache.get(data.value);
+				if (!channel || isTextChannel(channel) === false) {
+					return response.error(HttpCodes.BadRequest);
+				}
+
+				dataToAdd['starboardChannel'] = data.value;
+
+				const existingWebhooks = await channel.fetchWebhooks();
+				if (existingWebhooks.size > 0) {
+					const webhook = existingWebhooks.first();
+					if (webhook?.name === 'Starboard') {
+						dataToAdd['starboardWebhookId'] = webhook.id;
+						dataToAdd['starboardWebhookToken'] = webhook.token;
+					}
+				} else {
+					const webhook = await channel.createWebhook({ name: 'Starboard' });
+					dataToAdd['starboardWebhookId'] = webhook.id;
+					dataToAdd['starboardWebhookToken'] = webhook.token;
+				}
+
+				dataToAdd[data.setting] = data.value;
+			}
+
+			await this.container.db.guild.upsert({
+				where: {
+					guildId: guild.id
+				},
+				create: {
+					guildId: guild.id
+				},
+				update: {
+					...dataToAdd
+				}
+			});
+
+			return;
+		}
 
 		await this.container.db.guild.upsert({
 			where: {
