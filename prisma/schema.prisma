@@ -251,14 +251,14 @@ model Guild {
 }
 
 model StarboardMessage {
-  messageId String
-  channelId String
-  guildId   String
-  authorId  String
-  starCount Int
-  content   String
-  createdAt DateTime @default(now())
-  guild     Guild?   @relation(fields: [guildId], references: [guildId])
+  messageId          String
+  channelId          String
+  guildId            String
+  authorId           String
+  starCount          Int
+  starboardMessageId String   @unique
+  createdAt          DateTime @default(now())
+  guild              Guild?   @relation(fields: [guildId], references: [guildId])
 
   @@id([messageId, channelId, guildId, authorId])
 }
