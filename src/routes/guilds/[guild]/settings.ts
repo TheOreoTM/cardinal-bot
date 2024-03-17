@@ -70,9 +70,13 @@ export class UserRoute extends Route {
 						dataToAdd['starboardWebhookToken'] = webhook.token;
 					}
 				} else {
-					const webhook = await channel.createWebhook({ name: 'Starboard' });
-					dataToAdd['starboardWebhookId'] = webhook.id;
-					dataToAdd['starboardWebhookToken'] = webhook.token;
+					try {
+						const webhook = await channel.createWebhook({ name: 'Starboard' });
+						dataToAdd['starboardWebhookId'] = webhook.id;
+						dataToAdd['starboardWebhookToken'] = webhook.token;
+					} catch {
+						return response.error(HttpCodes.BadRequest, { error: 'Failed to create webhook' });
+					}
 				}
 
 				dataToAdd[data.setting] = data.value;
