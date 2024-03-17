@@ -57,7 +57,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 
 		// Update reaction count on starboard message
 		if (existingStarboardMessage) {
-			const starboardMessage = await starboardWebhook.fetchMessage(existingStarboardMessage.starboardMessageId);
+			const starboardMessage = await starboardChannel.messages.fetch(existingStarboardMessage.starboardMessageId);
 			if (!starboardMessage) return;
 
 			const reactionCount = messageReaction.count;
