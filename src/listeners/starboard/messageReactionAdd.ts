@@ -1,12 +1,11 @@
 import { ApplyOptions } from '@sapphire/decorators';
 import { isTextChannel } from '@sapphire/discord.js-utilities';
 import { Events, Listener } from '@sapphire/framework';
-import type { User } from '@sentry/node';
-import { type MessageReaction, type PartialMessageReaction, type PartialUser } from 'discord.js';
+import { type MessageReaction, type PartialMessageReaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.MessageReactionAdd })
 export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
-	public override async run(partialMessageReaction: MessageReaction | PartialMessageReaction, _: User | PartialUser) {
+	public override async run(partialMessageReaction: MessageReaction | PartialMessageReaction) {
 		const messageReaction = await partialMessageReaction.fetch();
 		const targetMessage = await messageReaction.message.fetch();
 		if (!targetMessage.guild) return;
