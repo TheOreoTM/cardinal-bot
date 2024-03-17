@@ -66,8 +66,8 @@ export class UserRoute extends Route {
 
 					const existingWebhooks = await channel.fetchWebhooks();
 					if (existingWebhooks.size > 0) {
-						const webhook = existingWebhooks.first();
-						if (webhook?.name === 'Starboard') {
+						const webhook = existingWebhooks.find((webhook) => webhook.name === 'Starboard');
+						if (webhook) {
 							dataToAdd['starboardWebhookId'] = webhook.id;
 							dataToAdd['starboardWebhookToken'] = webhook.token;
 						}
