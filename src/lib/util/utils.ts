@@ -26,7 +26,7 @@ import {
 	TextChannel
 } from 'discord.js';
 import { CardinalColors, ZeroWidthSpace } from '#constants';
-import { chunk, isNullishOrEmpty, type Nullish } from '@sapphire/utilities';
+import { chunk, isNullishOrEmpty, tryParseURL, type Nullish } from '@sapphire/utilities';
 import { CardinalEmbedBuilder, Modlog } from '#lib/structures';
 import type { GuildMessage } from '#lib/types';
 import { send } from '@sapphire/plugin-editable-commands';
@@ -505,4 +505,32 @@ export async function canManageGuild(guild: Guild, member: GuildMember | null): 
 		container.logger.error(error);
 		return false;
 	}
+}
+
+const IMAGE_EXTENSION = /\.(bmp|jpe?g|png|gif|webp)$/i;
+/**
+ * Parses an URL and checks if the extension is valid.
+ * @param url The url to check
+ */
+export function getImageUrl(url: string | undefined): string | undefined {
+	if (!url) return undefined;
+
+	const parsed = tryParseURL(url);
+	return parsed && IMAGE_EXTENSION.test(parsed.pathname) ? parsed.href : undefined;
+}
+
+const ImageUrlExtractionRegex = /(?<url>http(?:s)?:?(?:\/\/[^"' ]*\.(bmp|jpe?g|png|gif|webp)))/gi;
+export function extractImageUrl(content: string): ExtractImageUrl | undefined {
+	const match = ImageUrlExtractionRegex.exec(content)?.groups?.url;
+
+	if (!match) return undefined;
+	return {
+		imageUrl: getImageUrl(match),
+		contentWithoutImageUrl: content.replace(new RegExp(`${match} ?`), '')
+	};
+}
+
+interface ExtractImageUrl {
+	imageUrl: string | undefined;
+	contentWithoutImageUrl: string;
 }

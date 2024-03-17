@@ -1,10 +1,8 @@
-import { CardinalEmbedBuilder } from '#lib/structures';
-import { getTag } from '#utils/utils';
+import { buildEmbeds, buildLinkButtons } from '#utils/functions/starboard';
 import { ApplyOptions } from '@sapphire/decorators';
-import { MessageLimits, isTextChannel } from '@sapphire/discord.js-utilities';
+import { isTextChannel } from '@sapphire/discord.js-utilities';
 import { Events, Listener } from '@sapphire/framework';
-import { cutText } from '@sapphire/utilities';
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageReaction, type PartialMessageReaction } from 'discord.js';
+import { channelMention, type MessageReaction, type PartialMessageReaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.MessageReactionAdd })
 export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
@@ -66,7 +64,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
 				try {
 					await starboardMessage.edit({
-						content: `${data.starboardReaction} **${reactionCount}** | ${targetMessage.channel}`
+						content: `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`
 					});
 				} catch {
 					return;
@@ -78,56 +76,25 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 		// Create new starboard message
 		const reactionCount = messageReaction.count;
 		if (reactionCount >= data.starboardThreshold) {
-			let starboardEmbed = new CardinalEmbedBuilder().setStyle('info').setAuthor({
-				name: getTag(targetMessage.author),
-				iconURL: targetMessage.author.displayAvatarURL()
+			const embeds = await buildEmbeds(targetMessage, reactionCount);
+			const content = `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`;
+
+			const messageOnStarboard = await starboardChannel.send({
+				content,
+				embeds,
+				components: [buildLinkButtons(targetMessage, targetMessage.channel.id, targetMessage.guild.id)]
 			});
-			const content = targetMessage.content.length > 0 ? cutText(targetMessage.content, MessageLimits.MaximumLength) : null;
 
-			if (content) {
-				starboardEmbed.setDescription(content);
-			}
-
-			if (targetMessage.attachments.size > 0) {
-				starboardEmbed.setImage(targetMessage.attachments.first()!.url);
-			}
-
-			if (targetMessage.embeds.length > 0) {
-				starboardEmbed = new CardinalEmbedBuilder(targetMessage.embeds[0].data);
-			}
-
-			try {
-				const jumpToMessage = new ButtonBuilder().setURL(targetMessage.url).setLabel('Jump to message').setStyle(ButtonStyle.Link);
-				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(jumpToMessage);
-
-				const referencedMessage = await targetMessage.fetchReference().catch(() => null);
-
-				if (referencedMessage) {
-					const referencedJumpToMessage = new ButtonBuilder()
-						.setURL(referencedMessage.url)
-						.setLabel('Jump to replied message')
-						.setStyle(ButtonStyle.Link);
-					row.addComponents(referencedJumpToMessage);
+			await this.container.db.starboardMessage.create({
+				data: {
+					authorId: targetMessage.author.id,
+					channelId: targetMessage.channel.id,
+					guildId: targetMessage.guild.id,
+					messageId: targetMessage.id,
+					starCount: reactionCount,
+					starboardMessageId: messageOnStarboard.id
 				}
-
-				const starboardMessage = await starboardWebhook.send({
-					content: `**${reactionCount}** ${data.starboardReaction} ${targetMessage.channel} [Jump!](${targetMessage.url})`,
-					embeds: [starboardEmbed],
-					components: [row]
-				});
-				await this.container.db.starboardMessage.create({
-					data: {
-						authorId: targetMessage.author.id,
-						channelId: targetMessage.channel.id,
-						guildId: targetMessage.guild.id,
-						messageId: targetMessage.id,
-						starboardMessageId: starboardMessage.id,
-						starCount: reactionCount
-					}
-				});
-			} catch {
-				return;
-			}
+			});
 		}
 	}
 }
