@@ -61,7 +61,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			if (!starboardMessage) return;
 
 			const reactionCount = messageReaction.count;
-			startBoardChannel.send(`${reactionCount > existingStarboardMessage.starCount}`)
+			starboardChannel.send(`${reactionCount > existingStarboardMessage.starCount}`);
 			console.log(reactionCount, existingStarboardMessage.starCount, starboardMessage.editable);
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
 				try {
