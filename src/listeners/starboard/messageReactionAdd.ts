@@ -57,13 +57,13 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 
 		// Update reaction count on starboard message
 		if (existingStarboardMessage) {
-			const starboardMessage = await starboardChannel.messages.fetch(existingStarboardMessage.starboardMessageId);
+			const starboardMessage = await starboardWebhook.fetchMessage(existingStarboardMessage.starboardMessageId);
 			if (!starboardMessage) return;
 
 			const reactionCount = messageReaction.count;
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
 				try {
-					await starboardMessage.edit({
+					await starboardWebhook.editMessage(starboardMessage, {
 						content: `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`
 					});
 				} catch {
@@ -79,13 +79,15 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			const embeds = await buildEmbeds(targetMessage, reactionCount);
 			const content = `${data.starboardReaction} **${reactionCount}** | ${channelMention(targetMessage.channel.id)}`;
 
-			const messageOnStarboard = await starboardChannel.send({
+			const messageOnStarboard = await starboardWebhook.send({
+				avatarURL: this.container.client.user?.displayAvatarURL(),
+				username: 'Cardinal',
 				content,
 				embeds,
 				components: [buildLinkButtons(targetMessage, targetMessage.channel.id, targetMessage.guild.id)]
 			});
 
-			const posted = await this.container.db.starboardMessage.create({
+			await this.container.db.starboardMessage.create({
 				data: {
 					authorId: targetMessage.author.id,
 					channelId: targetMessage.channel.id,
@@ -95,7 +97,6 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 					starboardMessageId: messageOnStarboard.id
 				}
 			});
-			console.log('🚀 ~ UserEvent ~ overriderun ~ posted:', posted);
 		}
 	}
 }
