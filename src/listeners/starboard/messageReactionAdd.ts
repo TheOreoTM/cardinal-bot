@@ -4,7 +4,7 @@ import { ApplyOptions } from '@sapphire/decorators';
 import { MessageLimits, isTextChannel } from '@sapphire/discord.js-utilities';
 import { Events, Listener } from '@sapphire/framework';
 import { cutText } from '@sapphire/utilities';
-import { type MessageReaction, type PartialMessageReaction } from 'discord.js';
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle, type MessageReaction, type PartialMessageReaction } from 'discord.js';
 
 @ApplyOptions<Listener.Options>({ event: Events.MessageReactionAdd })
 export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
@@ -66,7 +66,7 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			if (reactionCount > existingStarboardMessage.starCount && starboardMessage.editable) {
 				try {
 					await starboardMessage.edit({
-						content: `**${reactionCount}** ${data.starboardReaction} ${targetMessage.channel} [Jump!](${targetMessage.url})`
+						content: `${data.starboardReaction} **${reactionCount}** | ${targetMessage.channel}`
 					});
 				} catch {
 					return;
@@ -97,9 +97,23 @@ export class UserEvent extends Listener<typeof Events.MessageReactionAdd> {
 			}
 
 			try {
+				const jumpToMessage = new ButtonBuilder().setURL(targetMessage.url).setLabel('Jump to message').setStyle(ButtonStyle.Link);
+				const row = new ActionRowBuilder<ButtonBuilder>().addComponents(jumpToMessage);
+
+				const referencedMessage = await targetMessage.fetchReference().catch(() => null);
+
+				if (referencedMessage) {
+					const referencedJumpToMessage = new ButtonBuilder()
+						.setURL(referencedMessage.url)
+						.setLabel('Jump to replied message')
+						.setStyle(ButtonStyle.Link);
+					row.addComponents(referencedJumpToMessage);
+				}
+
 				const starboardMessage = await starboardWebhook.send({
 					content: `**${reactionCount}** ${data.starboardReaction} ${targetMessage.channel} [Jump!](${targetMessage.url})`,
-					embeds: [starboardEmbed]
+					embeds: [starboardEmbed],
+					components: [row]
 				});
 				await this.container.db.starboardMessage.create({
 					data: {
