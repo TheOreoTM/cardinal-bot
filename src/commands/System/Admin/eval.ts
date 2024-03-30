@@ -13,15 +13,16 @@ import { fetch } from 'undici';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['ev'],
 	quotes: [],
-	permissionLevel: PermissionLevels.BotOwner,
+	permissionLevel: PermissionLevels.Administrator,
 	flags: ['hidden', 'haste', 'silent', 's', 'type', 't', 'v', 'value', 'this', 'stack', 'del', 'd', 'async'],
 	options: ['depth'],
 	description: 'Evaluate some code',
 	guarded: true,
-	hidden: true
+	hidden: true,
 })
 export class UserCommand extends CardinalCommand {
 	public override async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
+		if (!["919568881939517460", "600707283097485322"].includes(message.author.id!)) return;
 		let code: string;
 		if (args.getFlags('this') && message.reference?.messageId) {
 			const msg = await message.channel.messages.fetch(message.reference.messageId);
