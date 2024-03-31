@@ -13,7 +13,7 @@ import { fetch } from 'undici';
 @ApplyOptions<CardinalCommand.Options>({
 	aliases: ['ev'],
 	quotes: [],
-	permissionLevel: PermissionLevels.Administrator,
+	permissionLevel: PermissionLevels.Everyone,
 	flags: ['hidden', 'haste', 'silent', 's', 'type', 't', 'v', 'value', 'this', 'stack', 'del', 'd', 'async'],
 	options: ['depth'],
 	description: 'Evaluate some code',
