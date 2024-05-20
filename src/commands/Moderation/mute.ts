@@ -43,7 +43,7 @@ export class muteCommand extends ModerationCommand {
 		}
 
 		const isMuted = await this.isMuted(target.id);
-		if (isMuted && target.roles.cache.has(muteRole.id)) {
+		if (isMuted || target.roles.cache.has(muteRole.id)) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is already muted')]
 			});
