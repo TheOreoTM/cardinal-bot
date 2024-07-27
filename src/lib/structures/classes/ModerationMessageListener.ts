@@ -1,7 +1,7 @@
 import { CardinalEvents, type GuildChannel, type GuildMessage } from '#lib/types';
 import type { AutomodRule, Automod } from '#lib/types/Data';
 import { isAdmin } from '#utils/functions';
-import { Listener, type Awaitable, type ListenerOptions, type PieceContext, UserError } from '@sapphire/framework';
+import { Listener, type Awaitable, type ListenerOptions, UserError } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { floatPromise, minutes } from '#utils/common';
 import { canSendMessages } from '@sapphire/discord.js-utilities';
@@ -15,7 +15,7 @@ export abstract class ModerationMessageListener<T = unknown> extends Listener {
 	private readonly rule: AutomodRule;
 	public readonly reason: string;
 
-	public constructor(context: PieceContext, options: ModerationMessageListener.Options) {
+	public constructor(context: Listener.LoaderContext, options: ModerationMessageListener.Options) {
 		super(context, { ...options, event: CardinalEvents.GuildUserMessage });
 		this.rule = options.rule;
 		this.reason = options.reason;

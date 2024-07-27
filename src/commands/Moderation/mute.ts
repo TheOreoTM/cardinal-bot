@@ -56,10 +56,11 @@ export class muteCommand extends ModerationCommand {
 				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 			});
 		} catch (e) {
-			console.log(e);
+			
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I could not mute that member')]
 			});
+			throw new Error(`${e}`)
 		}
 
 		return;
