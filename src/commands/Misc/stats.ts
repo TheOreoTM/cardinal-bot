@@ -1,7 +1,7 @@
 import { PermissionLevel } from '#lib/decorators';
 import { ChannelStatsService, UserStatsService } from '#lib/services';
 import { CardinalEmbedBuilder, CardinalSubcommand } from '#lib/structures';
-import { days, minutes, seconds } from '#utils/common';
+import { days, minutes } from '#utils/common';
 import { CardinalColors } from '#utils/constants';
 import { getTag, isGuildPremium } from '#utils/utils';
 import { ApplyOptions } from '@sapphire/decorators';
@@ -41,7 +41,6 @@ import { EmbedBuilder, type GuildBasedChannel, type Role } from 'discord.js';
 	options: ['limit'],
 	flags: ['cached'],
 	aliases: ['stat', 's'],
-	cooldownDelay: seconds(6),
 	subcommands: [
 		{
 			name: 'lookback',
