@@ -73,65 +73,6 @@ export class statsCommand extends CardinalSubcommand {
 	public take: number = 5;
 	private cached: { cached: boolean } = { cached: false };
 
-	// public async server(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
-	// 	this.initOptions(args);
-	// 	const lookback = await this.getLookback(message.guildId);
-	// 	const stopWatch = new Stopwatch();
-	// 	const data = await this.getServerData(message.guildId, lookback);
-	// 	const timeTaken = stopWatch.stop().toString();
-	// 	const prefix = args.commandContext.commandPrefix;
-	// 	const formattedLookback = `__${lookback === 1 ? `${lookback} Day` : `${lookback} Days`}__`;
-
-	// 	const embed = new CardinalEmbedBuilder()
-	// 		.setStyle('default')
-	// 		.setFooter({ text: `⏲️ Time taken: ${timeTaken}` })
-	// 		.setDescription(
-	// 			`**${message.guild.name}**\nServer stats in the past ${formattedLookback} (change with the \`${prefix}stats lookback\` command)`
-	// 		)
-	// 		.addFields(
-	// 			{
-	// 				name: 'Messages',
-	// 				inline: false,
-	// 				value: [
-	// 					`${formattedLookback}: \`${data.messagesLookback.toLocaleString()} Messages\``,
-	// 					`1 Minute: \`${data.messagesPerMinute.toLocaleString()} Messages\``,
-	// 					`1 Hour: \`${data.messagesPerHour.toLocaleString()} Messages\``,
-	// 					`24 Hours: \`${data.messagesPerDay.toLocaleString()} Messages\``,
-	// 					`All time: \`${data.messagesAllTime.toLocaleString()} Messages\``
-	// 				].join('\n')
-	// 			},
-	// 			{
-	// 				name: `Joins ${CardinalEmojis.Join}`,
-	// 				inline: true,
-	// 				value: [
-	// 					`${formattedLookback}: \`${data.joinsLastLookback.toLocaleString()} Members\``,
-	// 					`24 Hour: \`${data.joinsLastDay.toLocaleString()} Members\``,
-	// 					`All time: \`${data.joinsAllTime.toLocaleString()} Members\``
-	// 				].join('\n')
-	// 			},
-	// 			{
-	// 				name: `Leaves ${CardinalEmojis.Leave}`,
-	// 				inline: true,
-	// 				value: [
-	// 					`${formattedLookback}: \`${data.leavesLastLookback.toLocaleString()} Members\``,
-	// 					`24 Hour: \`${data.leavesLastDay.toLocaleString()} Members\``,
-	// 					`All time: \`${data.leavesAlltime.toLocaleString()} Members\``
-	// 				].join('\n')
-	// 			},
-	// 			{
-	// 				name: 'Member Flow 📊',
-	// 				inline: true,
-	// 				value: [
-	// 					`${formattedLookback}: \`${data.joinsLastLookback - data.leavesLastLookback} Members\``,
-	// 					`24 Hour: \`${data.joinsLastDay - data.leavesLastDay} Members\``,
-	// 					`All time: \`${data.joinsAllTime - data.leavesAlltime} Members\``
-	// 				].join('\n')
-	// 			}
-	// 		);
-
-	// 	send(message, { embeds: [embed] });
-	// }
-
 	public async user(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		this.initOptions(args);
 
