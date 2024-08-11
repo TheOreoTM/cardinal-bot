@@ -33,7 +33,6 @@ export class afkCommand extends CardinalCommand {
 	}
 
 	public async messageRun(message: CardinalCommand.Message, args: CardinalCommand.Args) {
-		await args.repeat('url', { times: 50 }).catch(() => null); // remove urls from the message
 		const isAfk = await this.container.db.afk.count({
 			where: {
 				memberId: message.member.id,
@@ -47,7 +46,14 @@ export class afkCommand extends CardinalCommand {
 			});
 		}
 
-		let afkMessage = (await args.rest('string').catch(() => 'AFK')).slice(0, 250);
+		let afkMessage = await args.rest('string', { maximum: 250 }).catch(() => 'AFK');
+		const urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/g;
+
+		afkMessage
+			.replaceAll(urlRegex, '')
+			.replaceAll(/\s{2,}/g, ' ')
+			.trim();
+
 		return await this.goAfk(message, afkMessage);
 	}
 

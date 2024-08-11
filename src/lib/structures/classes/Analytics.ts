@@ -3,21 +3,7 @@ import { container } from '@sapphire/pieces';
 import { Gauge, collectDefaultMetrics, register } from 'prom-client';
 
 export class Analytics {
-	// readonly guildCreate = new Gauge({
-	// 	name: 'guild_create',
-	// 	help: 'the number of guilds joined',
-	// 	async collect() {
-	// 		this.set(container.client.guilds.cache.size);
-	// 	}
-	// });
-
-	// readonly guildDelete = new Gauge({
-	// 	name: 'guild_delete',
-	// 	help: 'the number of guilds left'
-	// });
-
 	// Client Start
-
 	readonly guildCount = new Gauge({
 		name: 'cardinal_guild_count',
 		help: 'the number of servers the bot is in',

@@ -1,6 +1,6 @@
 import { getRootData } from '@sapphire/pieces';
 import { envParseArray, envParseString } from '@skyra/env-utilities';
-import pkg from '../../../package.json' assert { type: 'json' };
+import pkg from '../../../package.json' with { type: 'json' };
 import { join } from 'path';
 
 export const mainFolder = getRootData().root;
