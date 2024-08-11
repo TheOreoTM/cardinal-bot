@@ -45,7 +45,6 @@ export const config: Config = {
 		GatewayIntentBits.DirectMessageTyping
 	],
 	cooldown_options: {
-		delay: seconds(5),
 		filteredUsers: CooldownFiltered,
 		scope: BucketScope.User
 	},
