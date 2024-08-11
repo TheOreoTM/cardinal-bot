@@ -7,7 +7,7 @@ import type { ChatInputCommandInteraction, ContextMenuCommandInteraction, Messag
 
 @ApplyOptions<Precondition.Options>({
 	position: 1,
-	enabled: true
+	enabled: false
 })
 export class UserPrecondition extends Precondition {
 	public override messageRun(message: Message, command: MessageCommand) {
