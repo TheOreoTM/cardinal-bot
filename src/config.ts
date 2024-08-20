@@ -46,6 +46,7 @@ export const config: Config = {
 	],
 	cooldown_options: {
 		filteredUsers: CooldownFiltered,
+		delay: seconds(5),
 		scope: BucketScope.User
 	},
 	mentions: {

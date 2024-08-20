@@ -100,5 +100,5 @@
         "sentry:sourcemaps": "sentry-cli sourcemaps inject --org theoreotm --project cardinal ./dist && sentry-cli sourcemaps upload --org theoreotm --project cardinal ./dist"
     },
     "prettier": "@sapphire/prettier-config",
-    "packageManager": "yarn@1.22.21"
+    "packageManager": "yarn@4.4.0"
 }
