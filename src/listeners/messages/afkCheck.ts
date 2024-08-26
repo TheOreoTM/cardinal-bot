@@ -37,7 +37,7 @@ export class UserEvent extends Listener {
 			});
 
 			if (user.manageable) {
-				user.setNickname(user.displayName.toLowerCase().replaceAll('[afk]', ''));
+				user.setNickname(afkData.afkNick.replaceAll('[AFK] ', ''));
 			}
 
 			const afkPings = afkData.afkPingMessages;
