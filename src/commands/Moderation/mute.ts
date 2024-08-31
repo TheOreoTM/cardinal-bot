@@ -42,8 +42,7 @@ export class muteCommand extends ModerationCommand {
 			});
 		}
 
-		const isMuted = await this.isMuted(target.id);
-		if (isMuted || target.roles.cache.has(muteRole.id)) {
+		if (target.roles.cache.has(muteRole.id)) {
 			return send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('That member is already muted')]
 			});
@@ -56,11 +55,10 @@ export class muteCommand extends ModerationCommand {
 				embeds: [new CardinalEmbedBuilder().setStyle('success').setDescription(`Muted ${getTag(target.user)} ${reason ? `| ${reason}` : ''}`)]
 			});
 		} catch (e) {
-			
 			send(message, {
 				embeds: [new CardinalEmbedBuilder().setStyle('fail').setDescription('I could not mute that member')]
 			});
-			throw new Error(`${e}`)
+			throw new Error(`${e}`);
 		}
 
 		return;
@@ -132,15 +130,5 @@ export class muteCommand extends ModerationCommand {
 		}
 
 		return { keepRoles, removedRoles };
-	}
-
-	private async isMuted(memberId: string) {
-		const muteCount = await this.container.db.mute.count({
-			where: {
-				memberId
-			}
-		});
-
-		return muteCount > 1;
 	}
 }
