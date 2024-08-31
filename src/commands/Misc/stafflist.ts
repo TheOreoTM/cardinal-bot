@@ -4,7 +4,7 @@ import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
 import { send } from '@sapphire/plugin-editable-commands';
 import { sendInteractionOrMessage } from '#utils/functions';
 
-const DISABLED_DUE_TO_INTENTS = true;
+const DISABLED_DUE_TO_INTENTS = false;
 
 @ApplyOptions<CardinalCommand.Options>({
 	description: 'Show the staff list',
