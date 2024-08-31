@@ -1,5 +1,5 @@
 import { ApplyOptions } from '@sapphire/decorators';
-import { Message, TextChannel } from 'discord.js';
+import { Message } from 'discord.js';
 import { CardinalCommand, CardinalEmbedBuilder } from '#lib/structures';
 import { send } from '@sapphire/plugin-editable-commands';
 import { sendInteractionOrMessage } from '#utils/functions';
@@ -45,19 +45,12 @@ export class stafflistCommand extends CardinalCommand {
 
 		const { guild } = interactionOrMessage;
 
-		const channel = interactionOrMessage.channel as TextChannel;
-
 		await guild.members.fetch();
 
 		const adminRoleId = await interactionOrMessage.guild?.settings.roles.admin();
 		const modRoleId = await interactionOrMessage.guild?.settings.roles.moderator();
 		const staffRoleId = await interactionOrMessage.guild?.settings.roles.staff();
 		const traineeRoleId = await interactionOrMessage.guild?.settings.roles.trainee();
-
-		channel.send(adminRoleId);
-		channel.send(modRoleId);
-		channel.send(staffRoleId);
-		channel.send(traineeRoleId);
 
 		const adminRole = guild?.roles.cache.get(adminRoleId ?? '0');
 		const modRole = guild?.roles.cache.get(modRoleId ?? '0');
