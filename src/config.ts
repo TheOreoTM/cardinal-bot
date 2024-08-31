@@ -42,7 +42,8 @@ export const config: Config = {
 		GatewayIntentBits.GuildModeration,
 		GatewayIntentBits.DirectMessages,
 		GatewayIntentBits.DirectMessageReactions,
-		GatewayIntentBits.DirectMessageTyping
+		GatewayIntentBits.DirectMessageTyping,
+		GatewayIntentBits.GuildMembers
 	],
 	cooldown_options: {
 		filteredUsers: CooldownFiltered,
