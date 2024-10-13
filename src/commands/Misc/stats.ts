@@ -323,7 +323,7 @@ export class statsCommand extends CardinalSubcommand {
 		return display.run(message, message.author);
 	}
 
-	@PermissionLevel('Moderator')
+	@PermissionLevel('Trainee')
 	public async lookback(message: CardinalSubcommand.Message, args: CardinalSubcommand.Args) {
 		const lookback = await args.pick('number').catch(() => null);
 
