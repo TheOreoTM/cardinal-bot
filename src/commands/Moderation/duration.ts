@@ -75,6 +75,10 @@ export class durationCommand extends ModerationCommand {
 					expiresAt: newDuration.fromNow
 				}
 			});
+
+			// update task duration
+			const taskList = this.container.tasks.client.getJobs('active');
+			console.log(taskList);
 		} catch (ignored) {}
 
 		return send(message, {

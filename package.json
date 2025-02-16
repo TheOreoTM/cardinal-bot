@@ -19,8 +19,7 @@
         "#utils/*": "./dist/lib/util/*.js",
         "#utils/common": "./dist/lib/util/common/index.js",
         "#utils/functions": "./dist/lib/util/functions/index.js",
-        "#root/*": "./dist/*.js",
-        "@prisma/client/runtime/library": "@prisma/client/runtime/library.js"
+        "#root/*": "./dist/*.js"
     },
     "dependencies": {
         "@prisma/client": "^5.0.0",
