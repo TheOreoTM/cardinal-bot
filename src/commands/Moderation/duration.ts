@@ -77,8 +77,15 @@ export class durationCommand extends ModerationCommand {
 			});
 
 			// update task duration
-			const taskList = await this.container.tasks.client.getJobs();
-			console.log(taskList);
+			const allTaskList = await this.container.tasks.client.getJobs();
+			const mutesAndBans = allTaskList.filter((task) => task.name.includes('MuteMemberTask') || task.name.includes('UnbanMemberTask'));
+			mutesAndBans.forEach(async (task) => {
+				const taskData = task.data as { muteId?: number; banId?: number };
+				if (taskData.muteId === caseData.id) {
+					await task.remove();
+					this.container.tasks.create('UnmuteMemberTask', taskData.muteId, newDuration.offset);
+				}
+			});
 		} catch (ignored) {}
 
 		return send(message, {
