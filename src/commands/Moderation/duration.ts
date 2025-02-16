@@ -77,7 +77,7 @@ export class durationCommand extends ModerationCommand {
 			});
 
 			// update task duration
-			const taskList = await this.container.tasks.client.getJobs('waiting');
+			const taskList = await this.container.tasks.client.getJobs();
 			console.log(taskList);
 		} catch (ignored) {}
 
